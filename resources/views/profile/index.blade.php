@@ -1,0 +1,24 @@
+@extends('layout')
+
+@section('content')
+<div id="profile">
+	<div id="profile-info" class="left-col">
+		<h2>{{ $profile->first_name }} {{ $profile->last_name }}</h2>
+		<h4 id="profile-username">{{ $profile->username }}</h4>
+		@yield('friendship')
+		@yield('personal')
+	</div>
+	<div id="profile-feed" class="right-col">
+		<h2>Profile Feed</h2>
+		<p>{{ $profile->first_name }} did something.</p>
+		<p>{{ $profile->first_name }} did something else.</p>
+		<p>{{ $profile->first_name }} did something else... again.</p>
+	</div>
+</div>
+@stop
+
+@section('vue')
+    <script>
+        new Vue({ el: '#app' });
+    </script>
+@stop
