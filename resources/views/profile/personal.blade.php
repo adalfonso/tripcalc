@@ -2,13 +2,13 @@
 
 @section('personal')
 
-	@if($friendRequests->count() > 0)
-		<request-popup :type="'friend'" :requests="{{$friendRequests}}">
+	@if($friendRequests > 0)
+		<request-popup :type="'friend'" >
     	</request-popup>
 	@endif
 
-	@if($tripRequests->count() > 0)
-		<request-popup :type="'trip'" :requests="{{$tripRequests}}">
+	@if($tripRequests > 0)
+		<request-popup :type="'trip'" >
     	</request-popup>
 	@endif
 

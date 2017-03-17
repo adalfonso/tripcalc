@@ -109,6 +109,36 @@ class FriendController extends Controller
         });
     }
 
+
+    public function sendRequest(User $friend) {
+        $user = Auth::user();
+
+        Friend::updateOrCreate([
+            'requester_id' => $user->id,
+            'recipient_id' => $friend->id
+        ]);
+    }
+
+    public function getPendingRequests() {
+    	return Auth::user()
+    		->pendingFriendRequests
+    		->pluck('full_name', 'id');
+    }
+
+    public function resolveFriendRequest(Request $request, $friend) {
+        $this->validate($request, [
+            'resolution' => 'required|regex:/^-?1$/'
+        ]);
+
+        Friend::where([
+            'requester_id' => $friend,
+            'recipient_id' => Auth::user()->id,
+            'confirmed'    => 0
+        ])->update(['confirmed' => $request->resolution]);
+
+        return $this->getPendingRequests();
+    }
+
     public function sendInvitationEmail($email) {
     	Mail::send('emails.account.invitation', [], function ($message) use ($email) {
 		    $message->to($email);

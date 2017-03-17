@@ -22,13 +22,8 @@ class ProfileController extends Controller {
     		->with('pendingFriendRequests', 'pendingTripRequests')
     		->first();
 
-    	$friendRequests = Auth::user()
-            ->pendingFriendRequests
-            ->pluck('full_name', 'id');
-
-    	$tripRequests = Auth::user()
-            ->pendingTripRequests
-            ->pluck('name', 'id');
+    	$friendRequests = Auth::user()->pendingFriendRequests->count();
+    	$tripRequests = Auth::user()->pendingTripRequests->count();
 
     	$friends = $user->friends;
 

@@ -18,9 +18,15 @@ Route::get('/login', 'Auth\LoginController@loginForm');
 Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/signup', 'Auth\RegisterController@registerform');
 
+Route::get('/friend/requests', 'FriendController@getPendingRequests');
+Route::post('/friend/requests/{friend}', 'FriendController@resolveFriendRequest');
+
 Route::get('/profile', 'ProfileController@personal');
 Route::get('/profile/{username}', 'ProfileController@show');
 
+
+Route::get('/trip/requests', 'TripController@getPendingRequests');
+Route::post('/trip/requests/{trip}', 'TripController@resolveTripRequest');
 Route::post('/trips', 'TripController@store');
 Route::get('/trips/dashboard', 'TripController@index');
 
@@ -35,13 +41,9 @@ Route::group(['middleware' => 'canAccessTrip'], function() {
 	Route::get('/trips/{trip}/transactions/{transaction}', 'TransactionController@byTrip');
 	Route::post('/trips/{trip}/transactions/{transaction}', 'TransactionController@update');
 	Route::post('/trips/{trip}/transactions/{transaction}/delete', 'TransactionController@destroy');
-
 	Route::get('/trips/{trip}/travelers', 'TripController@travelers');
 });
 
 Route::post('/users/search', 'UserController@search');
+Route::post('/users/{friend}/request', 'FriendController@sendRequest');
 
-Route::get('/requests/friend', 'RequestController@friend');
-Route::get('/requests/trip', 'RequestController@trip');
-Route::post('/requests/friend', 'RequestController@resolveFriend');
-Route::post('/requests/trip', 'RequestController@resolveTrip');

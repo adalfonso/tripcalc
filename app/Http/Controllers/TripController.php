@@ -93,6 +93,26 @@ class TripController extends Controller {
         return $trip->makeHidden(['id', 'created_at', 'updated_at']);
     }
 
+    public function getPendingRequests() {
+        return Auth::user()
+            ->pendingTripRequests
+            ->pluck('name', 'id');
+    }
+
+    public function resolveTripRequest(Request $request, $trip) {
+        $this->validate($request, [
+            'resolution' => 'required|regex:/^-?1$/'
+        ]);
+
+        TripUser::where([
+            'user_id' => Auth::user()->id,
+            'trip_id' => $trip,
+            'active'  => 0
+        ])->update(['active' => $request->resolution]);
+
+        return $this->getPendingRequests();
+    }
+
     public function validateTripData() {
         $messages = [
             'end_date.after_or_equal' => 'The end date can\'t be before the start date.'

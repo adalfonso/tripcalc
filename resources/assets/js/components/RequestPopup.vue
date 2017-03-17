@@ -25,12 +25,17 @@
 <script>
     export default {
 
-        props: ['type', 'requests'],
+        props: ['type'],
 
         data() {
             return {
-                visible: false
+                visible: false,
+                requests: []
             };
+        },
+
+        created() {
+            this.get();
         },
 
         computed: {
@@ -45,15 +50,21 @@
 
         methods: {
 
-            accept(item) {
-                axios.post('/requests/' + this.type, {'resolution': 1, id: item})
+            accept(id) { return this.resolve(id, 1); },
+
+            decline(id) { return this.resolve(id, -1); },
+
+            resolve(id, resolution) {
+                axios.post(`/${this.type}/requests/${id}`, {
+                    resolution: resolution
+                })
                 .then(response => {
                     this.requests = response.data;
                 });
             },
 
-            decline(item) {
-                axios.post('/requests/' + this.type, {'resolution': -1, id: item})
+            get() {
+                axios.get(`/${this.type}/requests/`)
                 .then(response => {
                     this.requests = response.data;
                 });
