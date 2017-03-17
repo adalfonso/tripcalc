@@ -171,7 +171,7 @@ export default {
             this.startLoading();
 
             axios.post(
-                '/trips/' + this.trip_id + '/inviteFriends', {
+                `/trips/${this.trip_id}/inviteFriends`, {
                     friends: this.queue.items,
                     trip_id: this.trip_id
                 }
