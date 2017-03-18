@@ -1,6 +1,4 @@
-<?php
-
-namespace Tests\Feature;
+<?php namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -16,8 +14,6 @@ class ExampleTest extends TestCase
      */
     public function testBasicTest()
     {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
+        $this->get('/')->assertStatus(200);
     }
 }
