@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\ActivationService;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use App\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
@@ -22,6 +25,8 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
+    protected $activationService;
+
     /**
      * Where to redirect users after registration.
      *
@@ -34,9 +39,10 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ActivationService $activationService)
     {
         $this->middleware('guest');
+        $this->activationService = $activationService;
     }
 
     /**
@@ -71,6 +77,19 @@ class RegisterController extends Controller
             'email'      => $data['email'],
             'password'   => bcrypt($data['password']),
         ]);
+    }
+
+    // Override in order to send activation email
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        $this->activationService->sendActivationMail($user);
+
+        return redirect('/login')
+            ->with('status', 'We sent you an activation code. Please check your email.');
     }
 
     public function registerForm()

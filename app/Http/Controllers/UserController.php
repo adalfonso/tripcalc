@@ -19,7 +19,7 @@ class UserController extends Controller
 				(first_name LIKE :input1 OR last_name LIKE :input2)
 				OR (CONCAT(first_name, ' ', last_name) LIKE :input3)
 			)
-			AND activation_code IS NULL
+			AND activated = true
 			ORDER BY last_name, first_name
 			LIMIT 5
 			", [

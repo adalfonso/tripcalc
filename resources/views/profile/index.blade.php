@@ -5,7 +5,9 @@
 	<div id="profile-info" class="left-col">
 		<h2>{{ $profile->first_name }} {{ $profile->last_name }}</h2>
 		<h4 id="profile-username">{{ $profile->username }}</h4>
-		@yield('friendship')
+		@if(Auth::user()->activated)
+			@yield('friendship')
+		@endif
 		@yield('personal')
 	</div>
 	<div id="profile-feed" class="right-col">

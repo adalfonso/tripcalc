@@ -17,6 +17,7 @@
         <div id="app">
             @if(Auth::check())
                 @include('nav.navbar')
+                @yield('nav')
             @endif
 
             <div id="main" class=" clearfix">

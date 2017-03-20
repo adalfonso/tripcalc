@@ -2,6 +2,14 @@
 
 @section('form')
 <form id="login" role="form" method="POST" action="{{ url('/login') }}">
+
+    @if (session('status'))
+        <p><strong>{{ session('status') }}</strong></p>
+    @endif
+    @if (session('warning'))
+        <p><strong>{{ session('warning') }}</strong></p>
+    @endif
+
     <h2>Log In</h2>
     <p>Don't have an account? <a href="/signup">Sign up</a></p>
     <p>
