@@ -3,6 +3,7 @@
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Auth;
 
 class LoginController extends Controller
 {
@@ -20,19 +21,23 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/trips/dashboard';
-
-    /**
      * Create a new controller instance.
      *
      * @return void
      */
     public function __construct() {
         $this->middleware('guest', ['except' => 'logout']);
+    }
+
+    /**
+     * Where to redirect users after login.
+     *
+     * @return string
+     */
+    protected function redirectTo() {
+        return (Auth::user()->activated)
+            ? '/profile'
+            : '/user/activation/pending';
     }
 
     /**
