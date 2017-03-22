@@ -12,8 +12,8 @@ use DB;
 use Validator;
 use Mail;
 
-class FriendController extends Controller
-{
+class FriendController extends Controller {
+
     public function searchEligibleFriends(Request $request, Trip $trip) {
     	$string = $request->input;
     	$trip_id = $request->trip_id;
@@ -37,9 +37,9 @@ class FriendController extends Controller
 			',
 			[
 				'user_id1' => Auth::user()->id,
-				'user_id2' => Auth::user()->id,
+                'user_id2' => Auth::user()->id,
 				'search_input1' => "%$string%",
-				'search_input2' => "%$string%",
+                'search_input2' => "%$string%",
 				'search_input3' => "%$string%",
 				'trip_id' => $trip_id
 			]
@@ -66,8 +66,7 @@ class FriendController extends Controller
        		}
        	});
 
-       	DB::Transaction(function() use ($addByEmail, $addById, $request){
-
+       	DB::Transaction( function() use ($addByEmail, $addById, $request) {
 	       	// Invite unregistered users
 	        $addByEmail->each(function($email) use ($request) {
 	            $invite = PendingEmailTrip::firstOrCreate([
@@ -108,7 +107,6 @@ class FriendController extends Controller
         	return (int) $item['data'];
         });
     }
-
 
     public function sendRequest(User $friend) {
         $user = Auth::user();
