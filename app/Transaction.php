@@ -7,7 +7,7 @@ use \App\User;
 class Transaction extends Model
 {
     protected $fillable = [
-    	'trip_id', 'user_id', 'amount', 'date', 'description', 'hashtags'
+    	'trip_id', 'user_id', 'amount', 'date', 'description', 'hashtags', 'created_by', 'updated_by'
     ];
 
     protected $casts = [

@@ -22,7 +22,6 @@ class Trip extends Model {
 		$start = Carbon::parse($this->start_date);
 		$end = Carbon::parse($this->end_date);
 
-
 		if ($start->diffInDays($end) == 0) {
 			return $start->format('F d, Y');
 

@@ -11,11 +11,9 @@ use Auth;
 use Hash;
 use Response;
 
+class TransactionController extends Controller {
 
-class TransactionController extends Controller
-{
    	public function byTrip(Trip $trip, Transaction $transaction) {
-
    		$transaction = Transaction::where([
    			'id' => $transaction->id,
    			'trip_id' => $trip->id
@@ -60,11 +58,12 @@ class TransactionController extends Controller
            	// Update transaction data
             $transaction = Transaction::create([
             	'trip_id' => $trip->id,
-            	'user_id' => Auth::user()->id,
                 'amount' => request('amount'),
                 'date' => request('date'),
                 'description' => request('description'),
-                'hashtags' => $hashtags
+                'hashtags' => $hashtags,
+                'created_by' => Auth::user()->id,
+                'updated_by' => Auth::user()->id
             ]);
 
             // Filter updated travelers to get spenders
@@ -101,7 +100,8 @@ class TransactionController extends Controller
                 'date' => request('date'),
                 'amount' => request('amount'),
                 'description' => request('description'),
-                'hashtags' => $hashtags
+                'hashtags' => $hashtags,
+                'updated_by' => Auth::user()->id
             ]);
 
             // Filter updated travelers to get spenders
@@ -129,23 +129,23 @@ class TransactionController extends Controller
 
    	public function destroy(Request $request, Trip $trip, Transaction $transaction) {
 
-   		// TODO use created_by and updated_by instead
-   		// If any user can delete a trip, any user should be able to
-   		// modify and update a transaction
-
-        if (Hash::check($request->password, Auth::user()->password)) {
-        	if ($transaction->user_id === Auth::user()->id) {
-            	Transaction::destroy($transaction->id);
-           		return ['success' => true];
-           	}
-           	return Response::json([
-                'password' => ['You are not authorized to delete this transaction.']
+        // Check that transaction & trip are related
+        if ($transaction->trip_id !== $trip->id) {
+            return Response::json([
+                'password' => ['An error has occurred.']
             ], 422);
         }
 
-        return Response::json([
-            'password' => ['The password you entered is incorrect.']
-        ], 422);
+        // Verify user's password
+        if (!Hash::check($request->password, Auth::user()->password)) {
+            return Response::json([
+                'password' => ['The password you entered is incorrect.']
+            ], 422);
+        }
+
+    	$transaction->delete();
+
+   		return ['success' => true];
    	}
 
     public function validateTransaction() {
