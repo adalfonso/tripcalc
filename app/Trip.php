@@ -14,6 +14,10 @@ class Trip extends Model {
 	    'description'
 	];
 
+	public function transactions() {
+        return $this->hasMany('\App\Transaction');
+    }
+
 	public function users() {
 		return $this->belongsToMany('\App\User', 'trip_user');
 	}
@@ -34,5 +38,4 @@ class Trip extends Model {
 
 		return $start->format('F d, Y') . ' - ' . $end->format('F d, Y');
 	}
-
 }

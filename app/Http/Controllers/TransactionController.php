@@ -128,14 +128,6 @@ class TransactionController extends Controller {
    	}
 
    	public function destroy(Request $request, Trip $trip, Transaction $transaction) {
-
-        // Check that transaction & trip are related
-        if ($transaction->trip_id !== $trip->id) {
-            return Response::json([
-                'password' => ['An error has occurred.']
-            ], 422);
-        }
-
         // Verify user's password
         if (!Hash::check($request->password, Auth::user()->password)) {
             return Response::json([
