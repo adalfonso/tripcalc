@@ -187,7 +187,7 @@ methods: {
 
     setPasswordNull() {
         this.form.password = null;
-        this.form.delete_trip_confirmation = false;
+        this.form.delete_confirmation = false;
     },
 
     create() {

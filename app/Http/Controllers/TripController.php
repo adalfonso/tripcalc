@@ -67,7 +67,6 @@ class TripController extends Controller {
     }
 
     public function destroy(Trip $trip, Request $request) {
-
         if (Hash::check($request->password, Auth::user()->password)) {
             Trip::destroy($trip->id);
             return ['success' => true];
@@ -79,7 +78,6 @@ class TripController extends Controller {
     }
 
     public function show(Trip $trip) {
-
     	$transactions = (new Transaction)
     		->where("trip_id", $trip->id)
     		->get();

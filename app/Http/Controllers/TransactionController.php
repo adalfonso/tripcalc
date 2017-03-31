@@ -14,11 +14,6 @@ use Response;
 class TransactionController extends Controller {
 
    	public function byTrip(Trip $trip, Transaction $transaction) {
-   		$transaction = Transaction::where([
-   			'id' => $transaction->id,
-   			'trip_id' => $trip->id
-   		])->firstOrFail();
-
    		$travelers = DB::select('
 	   		SELECT * FROM (
 	   			SELECT u.id AS join_on, u.id AS id,
@@ -116,11 +111,15 @@ class TransactionController extends Controller {
 
             // Update or create spenders
             foreach ($updatedSpenders as $spender) {
-            	TransactionUser::updateOrCreate([
-            		'transaction_id' => $transaction->id,
-            		'user_id' => $spender['id'],
-            		'split_ratio' => $spender['split_ratio']
-            	]);
+            	TransactionUser::updateOrCreate(
+                    [
+                        'transaction_id' => $transaction->id,
+                        'user_id' => $spender['id']
+                    ],
+            		[
+                        'split_ratio' => $spender['split_ratio']
+                    ]
+            	);
             }
 
            	return $transaction;
