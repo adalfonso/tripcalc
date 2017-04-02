@@ -3,22 +3,26 @@
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use \App\User;
+use \App\TripUser;
 
-class CanAccessTrip
-{
+class CanAccessTrip {
+
     /**
      * User has access to trip
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure $next
      * @param  string|null  $guard
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {
-    	$trip = Auth::User()->trips->where('id', $request->trip->id);
+    public function handle($request, Closure $next) {
+        $access = TripUser::where([
+            ['trip_id', '=', $request->trip->id],
+            ['user_id', '=', Auth::user()->id],
+            ['active', '=', 1]
+        ])->first();
 
-        if ($trip->count() === 0) {
+        if (!$access) {
             return redirect('/trips/dashboard');
         }
 

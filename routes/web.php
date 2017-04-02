@@ -45,11 +45,19 @@ Route::group(['middleware' => 'activeAccount'], function() {
 		Route::post('/trips/{trip}/inviteFriends', 'FriendController@inviteToTrip');
 		Route::post('/trips/{trip}/searchEligibleFriends', 'FriendController@searchEligibleFriends');
 		Route::post('/trips/{trip}/transactions/', 'TransactionController@store');
+		Route::get('/trips/{trip}/travelers', 'TripController@travelers');
+	});
+
+	Route::group(['middleware' => ['canAccessTrip', 'tripHasTransaction']], function() {
 		Route::get('/trips/{trip}/transactions/{transaction}', 'TransactionController@byTrip');
 		Route::post('/trips/{trip}/transactions/{transaction}', 'TransactionController@update');
 		Route::post('/trips/{trip}/transactions/{transaction}/delete', 'TransactionController@destroy');
-		Route::get('/trips/{trip}/travelers', 'TripController@travelers');
 	});
 });
 
 Route::get('user/activation/{token}', 'ActivationController@activateUser')->name('user.activate');
+
+Route::group(['middleware' => 'isAdmin'], function() {
+	Route::get('/maintenance/loadHashtags', 'MaintenanceController@loadHashtags');
+});
+

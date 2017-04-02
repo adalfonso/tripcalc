@@ -2,25 +2,19 @@
 
 use Illuminate\Http\Request;
 
-use \App\Trip;
+use \App\Hashtag;
 use \App\Transaction;
 use \App\TransactionUser;
+use \App\Trip;
 
 use DB;
 use Auth;
 use Hash;
 use Response;
 
+class TransactionController extends Controller {
 
-class TransactionController extends Controller
-{
    	public function byTrip(Trip $trip, Transaction $transaction) {
-
-   		$transaction = Transaction::where([
-   			'id' => $transaction->id,
-   			'trip_id' => $trip->id
-   		])->firstOrFail();
-
    		$travelers = DB::select('
 	   		SELECT * FROM (
 	   			SELECT u.id AS join_on, u.id AS id,
@@ -44,6 +38,7 @@ class TransactionController extends Controller
 
    		return [
    			'transaction' => $transaction,
+            'hashtags'    => $transaction->hashtags->pluck('tag'),
    			'travelers'   => $travelers
    		];
    	}
@@ -53,32 +48,21 @@ class TransactionController extends Controller
 
    		return $transaction = DB::transaction(function() use ($request, $trip) {
 
-   			$hashtags = (empty($request->hashtags['items']))
-            	? null
-            	: implode(',', request('hashtags')['items']);
-
-           	// Update transaction data
             $transaction = Transaction::create([
             	'trip_id' => $trip->id,
-            	'user_id' => Auth::user()->id,
                 'amount' => request('amount'),
                 'date' => request('date'),
                 'description' => request('description'),
-                'hashtags' => $hashtags
+                'created_by' => Auth::user()->id,
+                'updated_by' => Auth::user()->id
             ]);
 
-            // Filter updated travelers to get spenders
-            $spenders = collect($request->travelers)->filter(function($spender){
-	   			return $spender['is_spender'] && !empty($spender['split_ratio']);
-	   		});
+            $spenders = $this->parseSpenders($request->travelers);
+            $transaction->users()->sync($spenders);
 
-            // Update or create spenders
-            foreach ($spenders as $spender) {
-            	TransactionUser::create([
-            		'transaction_id' => $transaction->id,
-            		'user_id' => $spender['id'],
-            		'split_ratio' => $spender['split_ratio']
-            	]);
+            foreach ($request->hashtags['items'] as $hashtag) {
+                $hashtag = Hashtag::firstOrCreate([ 'tag' => $hashtag ]);
+                $hashtag->transactions()->attach($transaction->id);
             }
 
            	return $transaction;
@@ -88,72 +72,66 @@ class TransactionController extends Controller
    	public function update(Request $request, Trip $trip, Transaction $transaction) {
    		$this->validateTransaction();
 
-        // TODO make hashtags table
-
    		return $transaction = DB::transaction(function() use ($request, $transaction) {
 
-   			$hashtags = (empty($request->hashtags['items']))
-            	? null
-            	: implode(',', request('hashtags')['items']);
-
-           	// Update transaction data
             $transaction->update([
                 'date' => request('date'),
                 'amount' => request('amount'),
                 'description' => request('description'),
-                'hashtags' => $hashtags
+                'updated_by' => Auth::user()->id
             ]);
 
-            // Filter updated travelers to get spenders
-            $updatedSpenders = collect($request->travelers)->filter(function($spender){
-	   			return $spender['is_spender'] && !empty($spender['split_ratio']);
-	   		});
+            $transaction->users()->sync(
+                $this->parseSpenders($request->travelers)
+            );
 
-            // Delete orphaned spenders
-	   		TransactionUser::where('transaction_id', $transaction->id)
-	   			->whereNotIn('user_id', $updatedSpenders->pluck('id'))
-	   			->delete();
+            $hashtags = collect($request->hashtags['items'])->map(function($hashtag) {
+                return Hashtag::firstOrCreate([ 'tag' => $hashtag ])->id;
+            });
 
-            // Update or create spenders
-            foreach ($updatedSpenders as $spender) {
-            	TransactionUser::updateOrCreate([
-            		'transaction_id' => $transaction->id,
-            		'user_id' => $spender['id'],
-            		'split_ratio' => $spender['split_ratio']
-            	]);
-            }
+            $transaction->hashtags()->sync($hashtags);
 
            	return $transaction;
         });
    	}
 
    	public function destroy(Request $request, Trip $trip, Transaction $transaction) {
-
-   		// TODO use created_by and updated_by instead
-   		// If any user can delete a trip, any user should be able to
-   		// modify and update a transaction
-
-        if (Hash::check($request->password, Auth::user()->password)) {
-        	if ($transaction->user_id === Auth::user()->id) {
-            	Transaction::destroy($transaction->id);
-           		return ['success' => true];
-           	}
-           	return Response::json([
-                'password' => ['You are not authorized to delete this transaction.']
+        // Verify user's password
+        if (!Hash::check($request->password, Auth::user()->password)) {
+            return Response::json([
+                'password' => ['The password you entered is incorrect.']
             ], 422);
         }
 
-        return Response::json([
-            'password' => ['The password you entered is incorrect.']
-        ], 422);
+    	$transaction->delete();
+
+   		return ['success' => true];
    	}
 
     public function validateTransaction() {
         return $this->validate(request(), [
             'date' => 'required|date_format:Y-n-j',
             'amount' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'hashtags.items.*' => 'regex:/^[^,\s]+$/',
+            'hashtags.items.*' => 'regex:/^[^,\s]{1,32}$/',
             'travelers.*.split_ratio' => ['nullable', 'regex:/(^\d*\.?\d+$)|(^\d+\.?\d*$)/']
         ]);
+    }
+
+    protected function parseSpenders($travelers) {
+        return collect($travelers)
+
+        ->filter(function($spender) {
+            return $this->isSpender($spender);
+        })
+
+        ->keyBy('id')
+
+        ->map(function($spender){
+            return ['split_ratio' => $spender['split_ratio']];
+        });
+    }
+
+    protected function isSpender($spender) {
+        return $spender['is_spender'] && !empty($spender['split_ratio']);
     }
 }

@@ -14,6 +14,10 @@ class Trip extends Model {
 	    'description'
 	];
 
+	public function transactions() {
+        return $this->hasMany('\App\Transaction');
+    }
+
 	public function users() {
 		return $this->belongsToMany('\App\User', 'trip_user');
 	}
@@ -21,7 +25,6 @@ class Trip extends Model {
 	public function getDateRangeAttribute() {
 		$start = Carbon::parse($this->start_date);
 		$end = Carbon::parse($this->end_date);
-
 
 		if ($start->diffInDays($end) == 0) {
 			return $start->format('F d, Y');
@@ -35,5 +38,4 @@ class Trip extends Model {
 
 		return $start->format('F d, Y') . ' - ' . $end->format('F d, Y');
 	}
-
 }

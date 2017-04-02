@@ -16,7 +16,6 @@ class FriendController extends Controller {
 
     public function searchEligibleFriends(Request $request, Trip $trip) {
     	$string = $request->input;
-    	$trip_id = $request->trip_id;
     	$user_id = Auth::User()->id;
 
     	$results = DB::select('
@@ -41,7 +40,7 @@ class FriendController extends Controller {
 				'search_input1' => "%$string%",
                 'search_input2' => "%$string%",
 				'search_input3' => "%$string%",
-				'trip_id' => $trip_id
+				'trip_id' => $trip->id
 			]
 		);
 
@@ -49,7 +48,6 @@ class FriendController extends Controller {
     }
 
     public function inviteToTrip(Request $request, Trip $trip) {
-
     	$invites    = collect($request->friends);
         $addById    = $this->filterById($invites);
         $addByEmail = $this->filterByEmail($invites);
