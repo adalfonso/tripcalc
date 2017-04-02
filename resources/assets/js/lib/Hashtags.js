@@ -3,11 +3,12 @@ import Queue from '../lib/Queue.js';
 class Hashtags extends Queue {
 
     constructor(data) {
-
         super();
 
-        if (typeof data === 'string') {
-           this.parseHashtags(data);
+        if (Array.isArray(data)) {
+            data.forEach(function(hashtag) {
+                this.add(hashtag);
+            }.bind(this));
         }
     }
 
@@ -18,11 +19,6 @@ class Hashtags extends Queue {
             return super.add(cleanData);
         }
     }
-
-    parseHashtags(data) {
-        this.items = data.split(',');
-    }
-
 }
 
 export default Hashtags;

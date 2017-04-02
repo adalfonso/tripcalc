@@ -6,8 +6,6 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Transaction;
-use App\TransactionUser;
-
 use Session;
 
 class TransactionTest extends DuskTestCase {
@@ -36,6 +34,10 @@ class TransactionTest extends DuskTestCase {
 
         $this->assertEquals($this->trip->id, $response['transaction']['trip_id']);
         $this->assertEquals($this->transaction->id, $response['transaction']['id']);
+        $this->assertEquals(
+            $this->transaction->hashtags->first()->tag,
+            $response['hashtags'][0]
+        );
         $this->assertEquals(1, sizeof($response['travelers']));
     }
 
@@ -116,7 +118,7 @@ class TransactionTest extends DuskTestCase {
     }
 
     /** @test */
-    public function it_adds_spenders_on_a_transaction() {
+    public function it_adds_spenders_to_a_transaction() {
         Session::start();
         $this->maker->login($this->user1);
 
@@ -135,7 +137,7 @@ class TransactionTest extends DuskTestCase {
             ]
         ]);
 
-        $spenders = TransactionUser::where('transaction_id', $this->transaction->id)->get();
+        $spenders = $this->transaction->fresh()->spenders;
         $this->assertEquals(1, $spenders->count());
         $this->assertEquals(2, $spenders->first()->split_ratio);
     }
@@ -147,7 +149,7 @@ class TransactionTest extends DuskTestCase {
 
         $this->transaction->users()->attach($this->user1, ['split_ratio' => 5]);
 
-        $spenders = $this->transaction->spenders;
+        $spenders = $this->transaction->fresh()->spenders;
         $this->assertEquals(1, $spenders->count());
 
         $transaction = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id, [
@@ -165,19 +167,19 @@ class TransactionTest extends DuskTestCase {
             ]
         ]);
 
-        $spenders = TransactionUser::where('transaction_id', $this->transaction->id)->get();
+        $spenders = $this->transaction->fresh()->spenders;
         $this->assertEquals(1, $spenders->count());
         $this->assertEquals(2, $spenders->first()->split_ratio);
     }
 
     /** @test */
-    public function it_removes_spenders_on_a_transaction() {
+    public function it_removes_spenders_from_a_transaction() {
         Session::start();
         $this->maker->login($this->user1);
 
         $this->transaction->users()->attach($this->user1, ['split_ratio' => 5]);
 
-        $spenders = $this->transaction->spenders;
+        $spenders = $this->transaction->fresh()->spenders;
         $this->assertEquals(1, $spenders->count());
 
         $transaction = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id, [
@@ -189,8 +191,50 @@ class TransactionTest extends DuskTestCase {
             'travelers' => []
         ]);
 
-        $spenders = TransactionUser::where('transaction_id', $this->transaction->id)->get();
+        $spenders = $this->transaction->fresh()->spenders;
         $this->assertEquals(0, $spenders->count());
+    }
+
+    /** @test */
+    public function it_adds_hashtags_to_a_transaction() {
+        Session::start();
+        $this->maker->login($this->user1);
+
+        $transaction = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id, [
+            '_token' => csrf_token(),
+            'amount'   => 666,
+            'date'     => '2010-12-12',
+            'description' => 'hello',
+            'hashtags' => [ 'items' => ['hello'] ],
+            'travelers' => []
+        ]);
+
+        $hashtags = $this->transaction->fresh()->hashtags;
+
+        $this->assertEquals(1, $hashtags->count());
+        $this->assertEquals(2, $hashtags->first()->tag === 'hello');
+    }
+
+    /** @test */
+    public function it_removes_hashtags_from_a_transaction() {
+        Session::start();
+        $this->maker->login($this->user1);
+
+        $hashtags = $this->transaction->fresh()->hashtags;
+        $this->assertEquals(2, $hashtags->count());
+
+        $transaction = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id, [
+            '_token' => csrf_token(),
+            'amount'   => 666,
+            'date'     => '2010-12-12',
+            'description' => 'hello',
+            'hashtags' => [ 'items' => [] ],
+            'travelers' => []
+        ]);
+
+        $hashtags = $this->transaction->fresh()->hashtags;
+
+        $this->assertEquals(0, $hashtags->count());
     }
 
     /** @test */

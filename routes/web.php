@@ -56,3 +56,8 @@ Route::group(['middleware' => 'activeAccount'], function() {
 });
 
 Route::get('user/activation/{token}', 'ActivationController@activateUser')->name('user.activate');
+
+Route::group(['middleware' => 'isAdmin'], function() {
+	Route::get('/maintenance/loadHashtags', 'MaintenanceController@loadHashtags');
+});
+

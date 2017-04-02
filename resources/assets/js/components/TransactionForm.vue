@@ -160,6 +160,8 @@ methods: {
             /trips/${ this.trip_id }/transactions/${ this.transaction_id }
         `)
         .then(response => {
+            console.log(response);
+            let hashtags = response.data.hashtags;
             let transaction = response.data.transaction;
             let travelers = response.data.travelers;
 
@@ -170,7 +172,7 @@ methods: {
                 travelers: travelers,
                 delete: false, delete_confirmation: false,
                 password: null,
-                hashtags: new Hashtags(transaction.hashtags)
+                hashtags: new Hashtags(hashtags)
             });
 
             this.setDate(transaction.date, this.date);

@@ -2,12 +2,11 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-use \App\User;
+use App\User;
 
-class Transaction extends Model
-{
+class Transaction extends Model {
     protected $fillable = [
-    	'trip_id', 'user_id', 'amount', 'date', 'description', 'hashtags', 'created_by', 'updated_by'
+    	'trip_id', 'user_id', 'amount', 'date', 'description', 'created_by', 'updated_by'
     ];
 
     protected $casts = [
@@ -23,5 +22,9 @@ class Transaction extends Model
 
     public function users() {
         return $this->belongsToMany('\App\User', 'transaction_user');
+    }
+
+    public function hashtags() {
+        return $this->belongsToMany('App\Hashtag');
     }
 }

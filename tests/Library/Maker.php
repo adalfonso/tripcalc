@@ -3,6 +3,7 @@
 use Auth;
 
 use App\Friend;
+use App\Hashtag;
 use App\Transaction;
 use App\Trip;
 use App\User;
@@ -11,6 +12,10 @@ class Maker {
 
     public function __construct() {
         $this->faker = \Faker\Factory::create();
+    }
+
+    public function hashtag() {
+        return Hashtag::create(['tag' => $this->faker->word]);
     }
 
     public function user() {
@@ -29,15 +34,20 @@ class Maker {
     }
 
     public function transaction($trip, $user) {
-        return Transaction::create([
+        $transaction = Transaction::create([
             'trip_id' => $trip->id,
             'amount' => $this->faker->numberBetween(0, 1000),
             'date' => $this->faker->dateTime(),
             'description' => $this->faker->sentence(),
-            'hashtags' => null,
             'created_by' => $user->id,
             'updated_by' => $user->id
         ]);
+
+        $transaction->hashtags()->attach(
+            [$this->hashtag()->id, $this->hashtag()->id]
+        );
+
+        return $transaction;
     }
 
     public function trip() {
