@@ -47,6 +47,10 @@ class User extends Authenticatable {
         return $this->belongsToMany('\App\Trip');
     }
 
+    public function activeTrips() {
+        return $this->belongsToMany('\App\Trip')->wherePivot('active', true);
+    }
+
 
     // Accessors
     public function getFriendsAttribute() {

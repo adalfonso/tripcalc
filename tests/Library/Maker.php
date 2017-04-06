@@ -15,7 +15,7 @@ class Maker {
     }
 
     public function hashtag() {
-        return Hashtag::create(['tag' => $this->faker->word]);
+        return Hashtag::firstOrCreate(['tag' => $this->faker->word]);
     }
 
     public function user() {
@@ -43,7 +43,7 @@ class Maker {
             'updated_by' => $user->id
         ]);
 
-        $transaction->hashtags()->attach(
+        $transaction->hashtags()->sync(
             [$this->hashtag()->id, $this->hashtag()->id]
         );
 
@@ -62,6 +62,10 @@ class Maker {
    	public function attachTripUser(Trip $trip, User $user) {
    		$trip->users()->attach($user->id, ['active' => 1]);
    	}
+
+    public function attachInactiveTripUser(Trip $trip, User $user) {
+        $trip->users()->attach($user->id, ['active' => 0]);
+    }
 
     public function activeFriendship(User $requester, User $recipient) {
         return Friend::create([

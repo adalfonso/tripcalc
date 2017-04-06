@@ -5,12 +5,12 @@ use Illuminate\Http\Request;
 use \App\Friend;
 use \App\PendingEmailTrip;
 use \App\Trip;
-use \App\TripUser;
 use \App\User;
 use Auth;
 use DB;
-use Validator;
 use Mail;
+use Response;
+use Validator;
 
 class FriendController extends Controller {
 
@@ -48,62 +48,100 @@ class FriendController extends Controller {
     }
 
     public function inviteToTrip(Request $request, Trip $trip) {
-    	$invites    = collect($request->friends);
-        $addById    = $this->filterById($invites);
-        $addByEmail = $this->filterByEmail($invites);
+        $this->trip = $trip;
 
-        // Checks if emails belongs to account already and moves to other collection
-       	$addByEmail->each(function($email, $key) use($addById, $addByEmail) {
-       		if ($user = User::where('email', $email)->first()) {
+        $invites = collect($request->friends)->unique();
 
-       			$addByEmail->forget($key);
+        $emails = $this->filterByEmail($invites);
+        $ids = $this->filterById($invites);
 
-       			if (! $addById->contains($user->id)) {
-	       			$addById->push($user->id);
-	       		}
-       		}
-       	});
+        if (! $this->validEmails($emails)) {
+            return Response::json([
+                'error' => ['An email you entered was of incorrect format.']
+            ], 422);
+        }
 
-       	DB::Transaction( function() use ($addByEmail, $addById, $request) {
-	       	// Invite unregistered users
-	        $addByEmail->each(function($email) use ($request) {
-	            $invite = PendingEmailTrip::firstOrCreate([
-	                'email' => $email,
-	                'trip_id' => $request->trip_id
-	            ]);
-	        });
+        if (! $this->validIds($ids)) {
+            return Response::json([
+                'error' => ['An error occurred while inviting your friend.']
+            ], 422);
+        }
 
-	        // Invite by active user
-	        $addById->each(function($id) use ($request) {
-	            $invite = TripUser::firstOrCreate([
-	                'user_id' => $id,
-	                'trip_id' => $request->trip_id
-	            ]);
+        // Handle any emails that may already be tied to accounts
+        if ($emails) {
+            $users = User::whereIn('email', $emails)->get();
 
-	            if ($invite->wasRecentlyCreated) {
-	            	$invite->update(['active'  => 0]);
-	    		}
-	        });
+            $email = $emails->reject(function($item) use ($users){
+                return $users->contains('email', $item);
+            });
+
+            $ids = $ids->merge($users->pluck('id'));
+        }
+
+        // Handle any ids that may already be on the trip
+        if ($ids) {
+            $users = User::whereIn('id', $ids)->whereHas('trips', function($query) {
+                $query->where('id', $this->trip->id);
+            })->get();
+
+            $ids = $ids->reject(function($item) use ($users){
+                return $users->contains('id', $item);
+            });
+        }
+
+       	DB::Transaction(function() use ($emails, $ids){
+            $this->inviteById($ids);
+            $this->inviteByEmail($emails);
         });
-
-        // Send email invite to unregistered users
-		$addByEmail->each(function($email) {
-			$this->sendInvitationEmail($email);
-		});
     }
 
-    public function filterByEmail($invites) {
-    	return $invites->filter(function($item){
+    // filter methods, check emails and filter again if needed, testing with friendtest
+
+    protected function filterById($collection) {
+        return $collection->filter(function($item){
+            return $item['type'] === 'id';
+        })->pluck('data');
+    }
+
+    protected function filterByEmail($collection) {
+         return $collection->filter(function($item){
             return $item['type'] === 'email';
         })->pluck('data');
     }
 
-    public function filterById($invites) {
-    	return $invites->filter(function($item){
-            return $item['type'] === 'id';
-        })->map(function($item) {
-        	return (int) $item['data'];
+    protected function inviteByEmail($email) {
+        if (! $email){
+            return;
+        }
+
+        $email->each(function($email) {
+            PendingEmailTrip::firstOrCreate([
+                'email' => $email,
+                'trip_id' => $this->trip->id
+            ]);
+
+            $this->sendInvitationEmail($email);
         });
+    }
+
+    protected function inviteById($id) {
+        if (! $id) {
+            return;
+        }
+
+        $this->trip->users()->attach($id);
+    }
+
+    protected function validEmails($emails) {
+        return Validator::make(['email' => $emails->toArray()], [
+            'email.*' => 'required|email'
+        ])->passes();
+    }
+
+    protected function validIds($ids) {
+        return Validator::make(['id' => $ids->toArray()], [
+            'id.*' => 'required|numeric'
+        ])->passes();
     }
 
     public function sendRequest(User $friend) {

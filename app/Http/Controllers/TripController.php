@@ -3,7 +3,6 @@
 use \App\PendingEmailTrip;
 use \App\Transaction;
 use \App\Trip;
-use \App\TripUser;
 use \App\User;
 use \Auth;
 use \DB;
@@ -97,16 +96,15 @@ class TripController extends Controller {
             ->pluck('name', 'id');
     }
 
-    public function resolveTripRequest(Request $request, $trip) {
+    public function resolveTripRequest(Request $request, Trip $trip) {
         $this->validate($request, [
             'resolution' => 'required|regex:/^-?1$/'
         ]);
 
-        TripUser::where([
-            'user_id' => Auth::user()->id,
-            'trip_id' => $trip,
-            'active'  => 0
-        ])->update(['active' => $request->resolution]);
+        Auth::user()->trips()
+            ->syncWithoutDetaching(
+                [$trip->id => ['active' => $request->resolution]]
+            );
 
         return $this->getPendingRequests();
     }

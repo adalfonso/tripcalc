@@ -4,8 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 use \App\User;
 
-class TransactionUser extends Model
-{
+class TransactionUser extends Model {
+
     protected $table = 'transaction_user';
 
     protected $fillable = ['transaction_id', 'user_id', 'split_ratio'];

@@ -1,14 +1,13 @@
 <?php namespace Tests\Browser;
 
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Session;
 use Tests\DuskTestCase;
 use Tests\Library\Maker;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class FriendTest extends DuskTestCase {
 
     use DatabaseTransactions;
-    use WithoutMiddleware;
 
     public function setUp(){
         parent::setUp();
@@ -17,6 +16,7 @@ class FriendTest extends DuskTestCase {
 
     /** @test */
     public function people_search_returns_max_of_5_results() {
+        $this->withoutMiddleware();
         $response = $this->post('/users/search', ['input' => 'h']);
 
         $count = sizeof($response->json());
@@ -26,13 +26,15 @@ class FriendTest extends DuskTestCase {
 
     /** @test */
     public function people_search_finds_a_specific_user() {
+        $this->withoutMiddleware();
         $response = $this->post('/users/search', ['input' => 'hershey']);
 
         $this->assertEquals('somethingcool1', $response->json()[0]['username']);
     }
 
     /** @test */
-    public function a_user_can_invite_a_friend_to_their_trip() {
+    public function a_user_can_search_an_eligible_friend_for_their_trip() {
+        $this->withoutMiddleware();
         $user1 = $this->maker->user();
         $user2 = $this->maker->user();
         $this->maker->activeFriendship($user1, $user2);
@@ -49,7 +51,8 @@ class FriendTest extends DuskTestCase {
     }
 
     /** @test */
-    public function a_user_cant_invite_a_non_friend_to_their_trip() {
+    public function a_user_cant_search_a_non_friend_for_their_trip() {
+        $this->withoutMiddleware();
         $user1 = $this->maker->user();
         $user2 = $this->maker->user();
         $trip = $this->maker->trip();
@@ -62,5 +65,207 @@ class FriendTest extends DuskTestCase {
         );
 
         $this->assertEquals(0, sizeof($response->json()));
+    }
+
+    /** @test */
+    public function a_user_cant_search_a_friend_already_on_or_invited_to_their_trip() {
+        $this->withoutMiddleware();
+        $user1 = $this->maker->user();
+        $user2 = $this->maker->user();
+        $user3 = $this->maker->user();
+        $trip = $this->maker->trip();
+        $this->maker->attachTripUser($trip, $user1);
+        $this->maker->attachInactiveTripUser($trip, $user2);
+        $this->maker->attachTripUser($trip, $user3);
+        $this->maker->login($user1);
+
+        $response = $this->post(
+            "/trips/$trip->id/searchEligibleFriends",
+            ['input' => $user2->first_name, 'trip_id' => $trip->id]
+        );
+
+        $this->assertEquals(0, sizeof($response->json()));
+
+    }
+
+    /** @test */
+    public function a_user_can_invite_a_friend_to_their_trip_by_id() {
+        Session::start();
+        $user1 = $this->maker->user();
+        $user2 = $this->maker->user();
+        $user3 = $this->maker->user();
+        $trip = $this->maker->trip();
+        $this->maker->attachTripUser($trip, $user1);
+        $this->maker->login($user1);
+
+        $response = $this->post(
+            "/trips/$trip->id/inviteFriends", [
+                '_token' => csrf_token(),
+                'friends' => [
+                    [
+                        'data' => $user2->id,
+                        'display' => $user2->first_name,
+                        'type' => 'id'
+                    ],
+                    [
+                        'data' => $user3->id,
+                        'display' => $user2->first_name,
+                        'type' => 'id'
+                    ]
+                ]
+            ]
+        );
+
+        $this->assertDatabaseHas('trip_user', [
+            'user_id' => $user2->id,
+            'trip_id' => $trip->id,
+            'active'  => 0
+        ]);
+
+        $this->assertDatabaseHas('trip_user', [
+            'user_id' => $user3->id,
+            'trip_id' => $trip->id,
+            'active'  => 0
+        ]);
+    }
+
+    /** @test */
+    public function a_user_can_invite_a_friend_to_their_trip_by_email() {
+        Session::start();
+        $user1 = $this->maker->user();
+        $trip = $this->maker->trip();
+        $this->maker->attachTripUser($trip, $user1);
+        $this->maker->login($user1);
+
+        $response = $this->post(
+            "/trips/$trip->id/inviteFriends", [
+                '_token' => csrf_token(),
+                'friends' => [
+                    [
+                        'data' => 'fakeemail@walkichaw.us',
+                        'display' => 'somename',
+                        'type' => 'email'
+                    ],
+                    [
+                        'data' => 'fakeemail2@walkichaw.us',
+                        'display' => 'somename',
+                        'type' => 'email'
+                    ]
+                ]
+            ]
+        );
+
+        $this->assertDatabaseHas('pending_email_trip', [
+            'email' => 'fakeemail@walkichaw.us',
+            'trip_id' => $trip->id
+        ]);
+
+        $this->assertDatabaseHas('pending_email_trip', [
+            'email' => 'fakeemail2@walkichaw.us',
+            'trip_id' => $trip->id
+        ]);
+    }
+
+    /** @test */
+    public function it_detects_when_an_email_belongs_to_a_registered_user_and_converts_to_id() {
+        Session::start();
+        $user1 = $this->maker->user();
+        $user2 = $this->maker->user();
+        $trip = $this->maker->trip();
+        $this->maker->attachTripUser($trip, $user1);
+        $this->maker->login($user1);
+
+        $response = $this->post(
+            "/trips/$trip->id/inviteFriends", [
+                '_token' => csrf_token(),
+                'friends' => [
+                    [
+                        'data' => $user2->email,
+                        'display' => 'somename',
+                        'type' => 'email'
+                    ]
+                ]
+            ]
+        );
+
+        $this->assertDatabaseHas('trip_user', [
+            'user_id' => $user2->id,
+            'trip_id' => $trip->id,
+            'active'  => 0
+        ]);
+    }
+
+    /** @test */
+    public function it_fails_validation_on_invalid_email() {
+        Session::start();
+        $user1 = $this->maker->user();
+        $trip = $this->maker->trip();
+        $this->maker->attachTripUser($trip, $user1);
+        $this->maker->login($user1);
+
+        $response = $this->post(
+            "/trips/$trip->id/inviteFriends", [
+                '_token' => csrf_token(),
+                'friends' => [
+                    [
+                        'data' => 'hey123@',
+                        'display' => 'somename',
+                        'type' => 'email'
+                    ]
+                ]
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /**@test */
+    public function it_fails_validation_on_invalid_id() {
+        Session::start();
+        $user1 = $this->maker->user();
+        $trip = $this->maker->trip();
+        $this->maker->attachTripUser($trip, $user1);
+        $this->maker->login($user1);
+
+        $response = $this->post(
+            "/trips/$trip->id/inviteFriends", [
+                '_token' => csrf_token(),
+                'friends' => [
+                    [
+                        'data' => 'badvalue7',
+                        'display' => 'somename',
+                        'type' => 'id'
+                    ]
+                ]
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /**@test  */
+    public function it_does_not_invite_a_registered_user_that_was_converted_from_an_email_invite_to_an_id_invite_when_they_are_already_invited() {
+        Session::start();
+        $user1 = $this->maker->user();
+        $user2 = $this->maker->user();
+        $trip = $this->maker->trip();
+        $this->maker->attachTripUser($trip, $user1);
+        $this->maker->attachTripUser($trip, $user2);
+        $this->maker->login($user1);
+
+        $response = $this->post(
+            "/trips/$trip->id/inviteFriends", [
+                '_token' => csrf_token(),
+                'friends' => [
+                    [
+                        'data' => $user2->id,
+                        'display' => 'somename',
+                        'type' => 'id'
+                    ]
+                ]
+            ]
+        );
+
+        $response->assertStatus(200);
     }
 }
