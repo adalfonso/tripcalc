@@ -1,10 +1,10 @@
 <?php namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Mail;
+use Session;
 use Tests\DuskTestCase;
 use Tests\Library\Maker;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-
-use Session;
 
 class SignupTest extends DuskTestCase {
 
@@ -12,6 +12,7 @@ class SignupTest extends DuskTestCase {
 
     public function setUp() {
         parent::setUp();
+        Mail::fake();
         $this->maker = new Maker;
     }
 
@@ -78,7 +79,7 @@ class SignupTest extends DuskTestCase {
             'first_name' => 'firstname',
             'last_name' => 'lastname',
             'username' => 'username',
-            'email' => 'person@gmail.com',
+            'email' => 'sfsdf@walkichaw.us',
             'password' => 'password'
         ]);
 
@@ -95,8 +96,8 @@ class SignupTest extends DuskTestCase {
             'first_name' => 'firstname',
             'last_name' => 'lastname',
             'username' => 'username',
-            'email' => 'person@gmail.com',
-            'email_confirmation' => 'person@gmail.co',
+            'email' => 'sfsdf@walkichaw.us',
+            'email_confirmation' => 'sfsdf@walkichaw.ug',
             'password' => 'password',
             'password_confirmation' => 'passwor'
         ]);

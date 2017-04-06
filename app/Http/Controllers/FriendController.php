@@ -1,13 +1,13 @@
 <?php namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use \App\Friend;
-use \App\PendingEmailTrip;
-use \App\Trip;
-use \App\User;
+use App\Friend;
+use App\Mail\AccountInvitation;
+use App\PendingEmailTrip;
+use App\Trip;
+use App\User;
 use Auth;
 use DB;
+use Illuminate\Http\Request;
 use Mail;
 use Response;
 use Validator;
@@ -71,7 +71,7 @@ class FriendController extends Controller {
         if ($emails) {
             $users = User::whereIn('email', $emails)->get();
 
-            $email = $emails->reject(function($item) use ($users){
+            $emails = $emails->reject(function($item) use ($users){
                 return $users->contains('email', $item);
             });
 
@@ -173,11 +173,7 @@ class FriendController extends Controller {
         return $this->getPendingRequests();
     }
 
-    public function sendInvitationEmail($email) {
-    	Mail::send('emails.account.invitation', [], function ($message) use ($email) {
-		    $message->to($email);
-		    $message->from('tripcalcapp@gmail.com', 'TripCalc Bot');
-		    $message->subject('Greetings from TripCalc!');
-		});
+    public function sendInvitationEmail($user) {
+        Mail::to($user)->send(new AccountInvitation);
     }
 }

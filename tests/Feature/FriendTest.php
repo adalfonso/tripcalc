@@ -1,6 +1,8 @@
 <?php namespace Tests\Browser;
 
+use App\Mail\AccountInvitation;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Mail;
 use Session;
 use Tests\DuskTestCase;
 use Tests\Library\Maker;
@@ -11,6 +13,7 @@ class FriendTest extends DuskTestCase {
 
     public function setUp(){
         parent::setUp();
+        Mail::fake();
         $this->maker = new Maker;
     }
 
@@ -129,7 +132,10 @@ class FriendTest extends DuskTestCase {
         ]);
     }
 
-    /** @test */
+    /**
+    * @group fail
+    * @test
+    */
     public function a_user_can_invite_a_friend_to_their_trip_by_email() {
         Session::start();
         $user1 = $this->maker->user();
@@ -164,6 +170,8 @@ class FriendTest extends DuskTestCase {
             'email' => 'fakeemail2@walkichaw.us',
             'trip_id' => $trip->id
         ]);
+
+        Mail::assertSent(AccountInvitation::class);
     }
 
     /** @test */
@@ -193,6 +201,8 @@ class FriendTest extends DuskTestCase {
             'trip_id' => $trip->id,
             'active'  => 0
         ]);
+
+        Mail::assertNotSent(AccountInvitation::class);
     }
 
     /** @test */
@@ -267,5 +277,6 @@ class FriendTest extends DuskTestCase {
         );
 
         $response->assertStatus(200);
+        Mail::assertNotSent(AccountInvitation::class);
     }
 }
