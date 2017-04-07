@@ -2,10 +2,9 @@
 
 use Illuminate\Http\Request;
 
-use \App\Hashtag;
-use \App\Transaction;
-use \App\TransactionUser;
-use \App\Trip;
+use App\Hashtag;
+use App\Transaction;
+use App\Trip;
 
 use DB;
 use Auth;
