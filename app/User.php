@@ -39,8 +39,8 @@ class User extends Authenticatable {
         ->select('users.id', 'users.first_name', 'users.last_name');
     }
 
-    public function pendingTripRequests() {
-        return $this->trips()->where('trip_user.active', 0);
+    public function activation() {
+        return $this->hasOne('App\UserActivation');
     }
 
     public function trips() {
@@ -48,7 +48,11 @@ class User extends Authenticatable {
     }
 
     public function activeTrips() {
-        return $this->belongsToMany('\App\Trip')->wherePivot('active', true);
+        return $this->trips()->wherePivot('active', true);
+    }
+
+    public function pendingTripRequests() {
+        return $this->trips()->wherePivot('active', false);
     }
 
 

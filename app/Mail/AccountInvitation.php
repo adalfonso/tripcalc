@@ -24,6 +24,6 @@ class AccountInvitation extends Mailable {
      */
     public function build(){
         return $this->subject('Greetings from TripCalc!')
-            ->view('emails.account.invitation');
+                    ->view('emails.account.invitation');
     }
 }

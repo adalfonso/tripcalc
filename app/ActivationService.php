@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use App\Mail\AccountActivation;
 use Carbon\Carbon;
 use Mail;
 
@@ -32,15 +33,7 @@ class ActivationService {
         $token = $this->activationRepo->createActivation($user);
         $link = route('user.activate', $token);
 
-        Mail::send('emails.account.activation',
-            ['link' =>$link],
-
-            function ($message) use ($user) {
-                $message->to($user->email);
-                $message->from('tripcalcapp@gmail.com', 'TripCalc Bot');
-                $message->subject('Activate your TripCalc account');
-            }
-        );
+        Mail::to($user)->send(new AccountActivation($link));
 
         return [
             'success' => true,

@@ -1,10 +1,12 @@
 <?php namespace Tests\Feature;
 
+use App\Mail\AccountActivation;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Mail;
 use Session;
 use Tests\DuskTestCase;
 use Tests\Library\Maker;
+use App\User;
 
 class SignupTest extends DuskTestCase {
 
@@ -134,13 +136,24 @@ class SignupTest extends DuskTestCase {
             'first_name' => 'firstname',
             'last_name' => 'lastname',
             'username' => 'username',
-            'email' => 'iosdufijefiesnfiuse@walkichaw.us',
-            'email_confirmation' => 'iosdufijefiesnfiuse@walkichaw.us',
+            'email' => 'test123@walkichaw.us',
+            'email_confirmation' => 'test123@walkichaw.us',
             'password' => 'password',
             'password_confirmation' => 'password'
         ]);
 
+        $user = User::where('email', 'test123@walkichaw.us')->first();
+
+        $this->assertDatabaseHas('user_activations', [
+            'user_id' => $user->id
+        ]);
+
         $response->assertRedirect('/login');
+
+        Mail::assertSent(AccountActivation::class, function($mail) use($user) {
+            return $mail->hasTo($user->email) &&
+                $mail->link() === route('user.activate', $user->activation->token);
+        });
     }
 
     /** @test */
@@ -168,5 +181,53 @@ class SignupTest extends DuskTestCase {
 
         $this->assertEquals(1, $user->trips->count());
         $this->assertEquals(0, $user->trips->first()->pivot->active);
+    }
+
+    /** @test */
+    public function it_resends_an_activation_email_if_two_hours_has_passed() {
+
+        Session::start();
+        $user = $this->maker->user();
+        $user->activated = false;
+        $user->save();
+
+        $yesterday = \Carbon\Carbon::yesterday()->format('Y-m-d');
+
+        $activation = new \App\UserActivation;
+        $activation->user_id = $user->id;
+        $activation->token = '1234';
+        $activation->created_at = $yesterday;
+        $activation->updated_at = $yesterday;
+        $activation->save();
+
+        $this->maker->login($user);
+
+        $response = $this->get('/user/activation/resend');
+
+        Mail::assertSent(AccountActivation::class);
+    }
+
+    /** @test */
+    public function it_doesnt_resend_an_activation_email_in_less_than_two_hours() {
+
+        Session::start();
+        $user = $this->maker->user();
+        $user->activated = false;
+        $user->save();
+
+        $now = \Carbon\Carbon::now()->format('Y-m-d');
+
+        $activation = new \App\UserActivation;
+        $activation->user_id = $user->id;
+        $activation->token = '1234';
+        $activation->created_at = $now;
+        $activation->updated_at = $now;
+        $activation->save();
+
+        $this->maker->login($user);
+
+        $response = $this->get('/user/activation/resend');
+
+        Mail::assertNotSent(AccountActivation::class);
     }
 }

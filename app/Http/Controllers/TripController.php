@@ -1,11 +1,10 @@
 <?php namespace App\Http\Controllers;
 
-use \App\PendingEmailTrip;
-use \App\Transaction;
-use \App\Trip;
-use \App\User;
-use \Auth;
-use \DB;
+use App\Transaction;
+use App\Trip;
+use App\User;
+use Auth;
+use DB;
 use Hash;
 use Illuminate\Http\Request;
 

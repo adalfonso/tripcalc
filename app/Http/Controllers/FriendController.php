@@ -95,8 +95,6 @@ class FriendController extends Controller {
         });
     }
 
-    // filter methods, check emails and filter again if needed, testing with friendtest
-
     protected function filterById($collection) {
         return $collection->filter(function($item){
             return $item['type'] === 'id';
