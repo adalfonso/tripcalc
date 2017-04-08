@@ -16,7 +16,6 @@ Auth::routes();
 
 Route::get('/', 'Auth\LoginController@loginForm');
 Route::get('/login', 'Auth\LoginController@loginForm')->name('login');
-Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/signup', 'Auth\RegisterController@registerform');
 
 Route::group(['middleware' => 'auth'], function() {

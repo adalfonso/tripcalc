@@ -12,7 +12,7 @@
 			<a @click="inviteFriend.visible = true">Invite Friends</a>
 		@endif
 
-		<a class="logout" href="/logout">Log Out</a>
+		<logout></logout>
 
 		<search-people></search-people>
 	</nav>

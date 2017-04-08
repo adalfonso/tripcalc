@@ -11,12 +11,12 @@
             <img src="/img/icon/calendar-white-256x256.png" @click="date.show()">
         </div>
         <input class="hasBtn "type="text" placeholder="*Transaction Date"
-            maxlength="50"  v-model="datePretty">
+            maxlength="50"  v-model="datePretty" required>
 
         <p class="ui-error" v-text="form.errors.get('amount')"></p>
         <div class="ui-input-btn">$</div>
         <input type="text" class="hasBtn" placeholder="*Transaction Amount" maxlength="50"
-            v-model="form.amount">
+            v-model="form.amount" required>
 
         <div class="travelers">
             <div v-for="(traveler, index) in form.travelers">

@@ -191,7 +191,7 @@ class SignupTest extends DuskTestCase {
         $user->activated = false;
         $user->save();
 
-        $yesterday = \Carbon\Carbon::yesterday()->format('Y-m-d');
+        $yesterday = \Carbon\Carbon::yesterday();
 
         $activation = new \App\UserActivation;
         $activation->user_id = $user->id;
@@ -215,7 +215,7 @@ class SignupTest extends DuskTestCase {
         $user->activated = false;
         $user->save();
 
-        $now = \Carbon\Carbon::now()->format('Y-m-d');
+        $now = \Carbon\Carbon::now();
 
         $activation = new \App\UserActivation;
         $activation->user_id = $user->id;
