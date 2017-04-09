@@ -4,8 +4,8 @@ use Illuminate\Http\Request;
 
 use DB;
 
-class UserController extends Controller
-{
+class UserController extends Controller {
+
     public function search(Request $request) {
 
     	$this->validate($request, [

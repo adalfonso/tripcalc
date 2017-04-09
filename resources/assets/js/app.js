@@ -9,6 +9,7 @@ window.Form = Form;
 window.Vue = Vue;
 
 Vue.component('alert', require('./components/Alert.vue'));
+Vue.component('carousel', require('./components/Carousel.vue'));
 Vue.component('date-picker', require('./components/DatePicker.vue'));
 Vue.component('hamburger', require('./components/Hamburger.vue'));
 Vue.component('invite-friend', require('./components/InviteFriend.vue'));

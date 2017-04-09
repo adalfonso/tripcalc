@@ -46,4 +46,4 @@
         	}
          });
     </script>
-@stop
+@overwrite

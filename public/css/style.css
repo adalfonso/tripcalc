@@ -18,6 +18,7 @@ rgba(228,242,253,.95) - Search results background
 
 /* Default Element Styles
  */
+
 html { height: 100%; }
 
 body {
@@ -681,10 +682,34 @@ a.subtext:hover {
 
 
 #splashWrapper {
+	background: #000;
 	position: fixed;
 	height: 100%; width: 100%;
 	top: 0; left: 0;
 	z-index: -1;
+}
+
+.carousel-splash-enter-active,
+.carousel-splash-leave-active {
+	transition: 4s;
+	transition-timing-function: ease-in-out;
+}
+
+.carousel-splash-enter,
+.carousel-splash-leave-to,
+.carousel-icon-enter,
+.carousel-icon-leave-to {
+	opacity: 0;
+}
+
+.carousel-icon-enter-active,
+.carousel-icon-leave-active {
+	transition: all 2s;
+	transition-timing-function: ease-in-out;
+}
+
+.carousel-icon-enter-active {
+	transition-delay: 2s;
 }
 
 #splashWrapper > .splash1 {
@@ -711,17 +736,15 @@ a.subtext:hover {
 
 #splash-iconWrapper {
 	margin: 2rem auto 1.8rem auto;
+	position: relative;
 	height: 48px; width: 48px;
 }
 
 #splash-iconWrapper > img {
-	display: none;
-	height: 100%; width: 100%;
-	position: abolute;
-}
-
-#splash-iconWrapper > img:last-of-type {
-	display: block;
+	/*display: none;*/
+	/*display: block;*/
+	height: 48px; width: 48px;
+	position: absolute;
 }
 
 .wordmark {
