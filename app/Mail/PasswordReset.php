@@ -5,15 +5,19 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class AccountInvitation extends Mailable {
+class PasswordReset extends Mailable {
+
     use Queueable, SerializesModels;
+
+    protected $token;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct($token) {
+        $this->token = $token;
     }
 
     /**
@@ -22,7 +26,12 @@ class AccountInvitation extends Mailable {
      * @return $this
      */
     public function build() {
-        return $this->subject('Greetings from TripCalc!')
-                    ->view('emails.account.invitation');
+        return $this->subject('TripCalc Password Reset')
+                    ->view('emails.account.passwordReset')
+                    ->with(['token' => $this->token]);;
+    }
+
+    public function token() {
+        return $this->token;
     }
 }

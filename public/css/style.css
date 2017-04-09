@@ -1,4 +1,4 @@
-/*
+\/*
 
 #495a69 - Borders, headings, submit buttons, paragraphs,
 	      placeholder color on light inputs
@@ -664,8 +664,6 @@ a.subtext:hover {
 	border-right: 1px solid #3f4f5d;
 }
 
-#login-signup-wrapper { margin: .5rem; }
-
 #signup .firstname,
 #signup .lastname,
 #signup .password1,
@@ -741,8 +739,6 @@ a.subtext:hover {
 }
 
 #splash-iconWrapper > img {
-	/*display: none;*/
-	/*display: block;*/
 	height: 48px; width: 48px;
 	position: absolute;
 }
@@ -997,7 +993,7 @@ a.subtext:hover {
 
 	#accountActivate { margin-top: 2.975rem; }
 
-	#login, #signup, #login-signup-wrapper {
+	.form-small {
 		margin: 0 auto;
 		width: 400px;
 	}

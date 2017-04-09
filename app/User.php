@@ -1,10 +1,15 @@
 <?php namespace App;
 
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+
+use App\Mail\PasswordReset;
+use Mail;
 
 class User extends Authenticatable {
 
+   // use CanResetPassword;
     use Notifiable;
 
     protected $fillable = [
@@ -73,4 +78,14 @@ class User extends Authenticatable {
             ->merge($this->friendshipAsRecipient);
     }
 
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token) {
+        Mail::to($this)->send(new PasswordReset($token));
+        //$this->notify(new ResetPasswordNotification($token));
+    }
 }

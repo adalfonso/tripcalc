@@ -1,7 +1,7 @@
 @extends('auth.layout')
 
 @section('form')
-<form id="signup" role="form" method="POST" action="{{ url('/register') }}">
+<form id="signup" class="form-small" role="form" method="POST" action="{{ url('/register') }}">
     <h2>Sign Up</h2>
     <p>Already have an account? <a a href="/login">Log in</a></p>
 

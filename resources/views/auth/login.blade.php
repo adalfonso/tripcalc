@@ -1,7 +1,7 @@
 @extends('auth.layout')
 
 @section('form')
-<form id="login" role="form" method="POST" action="{{ url('/login') }}">
+<form id="login" class="form-small" role="form" method="POST" action="{{ url('/login') }}">
 
     @if (session('status'))
         <p><strong>{{ session('status') }}</strong></p>
@@ -13,9 +13,9 @@
     <h2>Log In</h2>
     <p>Don't have an account? <a href="/signup">Sign up</a></p>
     <p>
-        {{-- <a class="subtext" href="{{ url('/password/reset') }}">
-            Forgot Your Password?
-        </a> --}}
+        <a class="subtext" href="{{ url('/password/reset') }}">
+            Forgot your Password?
+        </a>
     </p>
 
     {{ csrf_field() }}
