@@ -16,12 +16,16 @@ class Transaction extends Model {
 
     public function spenders() {
     	return $this->belongsToMany(
-    		'\App\User', 'transaction_user', 'transaction_id', 'user_id'
+    		'App\User', 'transaction_user', 'transaction_id', 'user_id'
     	)->select('transaction_user.id as pivot_id','users.id', 'transaction_user.split_ratio');
     }
 
     public function users() {
-        return $this->belongsToMany('\App\User', 'transaction_user');
+        return $this->belongsToMany('App\User', 'transaction_user');
+    }
+
+    public function creator() {
+        return $this->belongsTo('App\User', 'created_by');
     }
 
     public function hashtags() {

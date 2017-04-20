@@ -29,25 +29,7 @@
 
 	</div>
 
-	<div id="stats" class="left-col">
-		<h4>Trip Stats</h4>
-
-		@if ($trip->budget)
-			<p><strong>Budget:</strong> ${{ $trip->budget }}</p>
-		@endif
-
-		@if ($transactions->sum('amount') > 0)
-			<p><strong>Running Total:</strong> ${{ $transactions->sum('amount') }}</p>
-		@endif
-
-		@if ($trip->description)
-			<p><strong>Description:</strong> {{ $trip->description }}</p>
-		@endif
-
-		{{-- @if ($transactions)
-			<p class="fake-link">Draw Expense Graph</p>
-		@endif --}}
-	</div>
+	@include('trips.stats')
 
 	<div id="activity" transaction class="clearfix right-col">
 		<button class="btn-full" @click="transactionForm.visible = true">+ New Transaction</button>
@@ -57,7 +39,7 @@
 				<div class="transaction">
 					<p>
 						<strong>{{ \Carbon\Carbon::parse($transaction->date)->format('M d, Y') }}</strong>
-						 - ${{ $transaction->amount}}
+						 - ${{ $transaction->amount }}
 						<img class="editButton" src="/img/icon/edit.png"
 							@click="openTransactionForm({{ $transaction->id }})">
 					</p>
