@@ -1,8 +1,8 @@
 <?php namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
 use App\User;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model {
     protected $fillable = [
@@ -30,5 +30,9 @@ class Transaction extends Model {
 
     public function hashtags() {
         return $this->belongsToMany('App\Hashtag');
+    }
+
+    public function getDateFormatAttribute() {
+        return Carbon::parse($this->date)->format('M d, Y');
     }
 }

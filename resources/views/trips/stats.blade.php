@@ -49,7 +49,7 @@
 						'sum' => number_format($item->sum('amount'), 2),
 						'percent' => round($item->sum('amount') / $sum * 100)
 					];
-				})->sortByDesc('sum');
+				})->sortByDesc('sum')->take(5);
 		@endphp
 
 		@if ($sectionExists)

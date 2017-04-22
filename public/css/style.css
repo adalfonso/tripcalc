@@ -397,6 +397,8 @@ a.subtext:hover {
 
 .margin-top { margin-top: .5rem; }
 
+.marginless { margin: 0; }
+
 .popup {
 	background: rgba(202, 202, 222, .9);
 	border-radius: .2rem;

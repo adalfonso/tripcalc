@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Hashtag;
 use App\Transaction;
 use App\Trip;
+use App\User;
 
 use DB;
 use Auth;
@@ -38,7 +39,8 @@ class TransactionController extends Controller {
 		return [
 			'transaction' => $transaction,
 			'hashtags'    => $transaction->hashtags->pluck('tag'),
-			'travelers'   => $travelers
+			'travelers'   => $travelers,
+			'creator'     => $transaction->creator->fullname
 		];
 	}
 
