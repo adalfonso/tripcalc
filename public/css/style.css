@@ -74,6 +74,11 @@ h4 { font-size: 24px; }
 h5 { font-size: 20px; }
 h6 { font-size: 16px; }
 
+hr {
+	border: none;
+	border-bottom: 1px dashed #798a99;
+}
+
 p { line-height: 1.5rem; }
 
 ul {
@@ -392,6 +397,8 @@ a.subtext:hover {
 
 .margin-top { margin-top: .5rem; }
 
+.marginless { margin: 0; }
+
 .popup {
 	background: rgba(202, 202, 222, .9);
 	border-radius: .2rem;
@@ -422,6 +429,13 @@ a.subtext:hover {
 .closePopup-small { height: 1rem; width: 1rem; }
 
 .pos-r { position: relative; }
+
+.progressbar {
+	background: #495a69;
+	color: #fff;
+	height: 1.5rem;
+	padding: .25rem;
+}
 
 .visible { display: block !important; }
 

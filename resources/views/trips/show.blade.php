@@ -18,7 +18,8 @@
 	<div class="trip-header clearfix">
 		<h3 id="name">
 			{{ $trip->name }}
-			<img trip class="editButton" src="/img/icon/edit.png" @click="tripForm.visible = true">
+			<img trip class="editButton" src="/img/icon/edit.png"
+				@click="transactionForm.visible = true">
 		</h3>
 
 		@if ($trip->start_date != "00/00/0000")
@@ -26,46 +27,32 @@
 				<strong>{{ $trip->dateRange }}</strong>
 			</h6>
 		@endif
-
 	</div>
 
-	<div id="stats" class="left-col">
-		<h4>Trip Stats</h4>
-
-		@if ($trip->budget)
-			<p><strong>Budget:</strong> ${{ $trip->budget }}</p>
-		@endif
-
-		@if ($transactions->sum('amount') > 0)
-			<p><strong>Running Total:</strong> ${{ $transactions->sum('amount') }}</p>
-		@endif
-
-		@if ($trip->description)
-			<p><strong>Description:</strong> {{ $trip->description }}</p>
-		@endif
-
-		{{-- @if ($transactions)
-			<p class="fake-link">Draw Expense Graph</p>
-		@endif --}}
-	</div>
+	@include('trips.stats')
 
 	<div id="activity" transaction class="clearfix right-col">
-		<button class="btn-full" @click="transactionForm.visible = true">+ New Transaction</button>
-		<h4 class="margin-top">Recent Activity</h4>
-		@if ($transactions)
+
+		<button class="btn-full" @click="transactionForm.visible = true">
+			+ New Transaction
+		</button>
+
+		@if ($transactions->count() > 0)
+			<h4 class="margin-top">Recent Activity</h4>
+
 			@foreach($transactions as $transaction)
-				<div class="transaction">
-					<p>
-						<strong>{{ \Carbon\Carbon::parse($transaction->date)->format('M d, Y') }}</strong>
-						 - ${{ $transaction->amount}}
-						<img class="editButton" src="/img/icon/edit.png"
-							@click="openTransactionForm({{ $transaction->id }})">
-					</p>
-					<p>{{ $transaction->description }}</p>
-				</div>
+
+			<div class="transaction">
+				<p>
+					<strong>{{ $transaction->dateFormat }}</strong>
+					 - ${{ $transaction->amount }}
+					<img class="editButton" src="/img/icon/edit.png"
+						@click="openTransactionForm({{ $transaction->id }})">
+				</p>
+				<p>{{ $transaction->description }}</p>
+			</div>
+
 			@endforeach
-		@else
-			<p>No transactions yet. Better get spending!</p>
 		@endif
 	</div>
 
@@ -93,6 +80,18 @@
 		    	},
 
 		    	openTransactionForm(id = null) {
+
+		    		// When going from a blank transaction to an actual one
+		    		if (this.transactionForm.visible) {
+		    			return new Promise((resolve) => {
+		    				this.closeTransactionForm();
+		    				resolve();
+
+		    			}).then(() => {
+		    				this.openTransactionForm(id);
+		    			});
+		    		}
+
 		    		this.transactionForm.visible = true;
 		    		this.transactionForm.id = id;
 		    	}

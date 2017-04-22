@@ -17,12 +17,12 @@ class TripController extends Controller {
     }
 
     public function index () {
-    	$trips = (new Trip)
-    		->select("trips.*")
-    		->join("trip_user", "trips.id", "=", "trip_user.trip_id")
-    		->where("trip_user.active", 1)
-            ->where("trip_user.user_id", Auth::user()->id)
-			->get();
+    	$trips = Trip::whereHas('users', function($query) {
+            $query->where([
+                'user_id' => Auth::user()->id,
+                'active' => true
+            ]);
+        })->get()->sortByDesc('start_date');
 
     	return view('trips.dashboard', compact('trips'));
     }
@@ -76,8 +76,8 @@ class TripController extends Controller {
     }
 
     public function show(Trip $trip) {
-    	$transactions = (new Transaction)
-    		->where("trip_id", $trip->id)
+    	$transactions = Transaction::where("trip_id", $trip->id)
+            ->with('creator')
     		->get();
 
     	$inTrip = true;

@@ -5,6 +5,13 @@
         <img src="/img/icon/closePopup.png" class="closePopup"
             @click="$emit('close')">
 
+        <div v-if="isUpdatable()">
+            <p><strong>Paid by:</strong> {{ creator }}</p>
+            <hr>
+        </div>
+
+        <p><strong>Basic Info:</strong></p>
+
         <date-picker v-if="date.visible" :date="date"></date-picker>
         <p class="ui-error" v-text="form.errors.get('date')"></p>
         <div class="ui-input-btn">
@@ -17,6 +24,27 @@
         <div class="ui-input-btn">$</div>
         <input type="text" class="hasBtn" placeholder="*Transaction Amount" maxlength="50"
             v-model="form.amount" required>
+
+        <textarea type="text" placeholder="Description" maxlength="500"
+            v-model="form.description">
+        </textarea>
+
+        <div class="ui-input-btn" @click="addHashtag">
+            <span class="font-large">+</span>
+        </div>
+        <input class="hasBtn" type="text" placeholder="#hashtags" maxlength="25"
+            v-model="form.hashtagInput" @keyup.enter.prevent="addHashtag">
+
+        <div class="item-wrapper clearfix" v-if="form.hashtags.items.length > 0">
+            <div class="item" v-for="hashtag in form.hashtags.items"
+                @click="form.hashtags.remove(hashtag)">
+                #{{ hashtag }}
+            </div>
+        </div>
+
+        <hr class="marginless">
+
+        <p><strong>How to Split:</strong></p>
 
         <div class="travelers">
             <div v-for="(traveler, index) in form.travelers">
@@ -36,10 +64,6 @@
                 </div>
             </div>
         </div>
-
-        <textarea type="text" placeholder="Description" maxlength="500"
-            v-model="form.description">
-        </textarea>
 
         <div class="ui-checkbox" v-if="transaction_id">
             <label id="delete">
@@ -63,19 +87,6 @@
         <input type="password" name="deletePassword" v-if="form.delete &&
             form.delete_confirmation" v-model="form.password"
             placeholder="Enter password to continue">
-
-        <div class="ui-input-btn" @click="addHashtag">
-            <span class="font-large">+</span>
-        </div>
-        <input class="hasBtn" type="text" placeholder="#hashtags" maxlength="25"
-            v-model="form.hashtagInput" @keyup.enter.prevent="addHashtag">
-
-        <div class="item-wrapper clearfix" v-if="form.hashtags.items.length > 0">
-            <div class="item" v-for="hashtag in form.hashtags.items"
-                @click="form.hashtags.remove(hashtag)">
-                #{{ hashtag }}
-            </div>
-        </div>
 
         <button class="btn-full form-button" type="button" @click="onSubmit">
             Submit Transaction
@@ -101,6 +112,7 @@ props: {
 
 data() {
     return {
+        creator: null,
         date: new DatePicker(),
         form: new Form({
             date: '',
@@ -173,6 +185,8 @@ methods: {
                 password: null,
                 hashtags: new Hashtags(hashtags)
             });
+
+            this.creator = response.data.creator;
 
             this.setDate(transaction.date, this.date);
         });
