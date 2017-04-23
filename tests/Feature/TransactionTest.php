@@ -137,9 +137,9 @@ class TransactionTest extends DuskTestCase {
             ]
         ]);
 
-        $spenders = $this->transaction->fresh()->spenders;
+        $spenders = $this->transaction->fresh()->users;
         $this->assertEquals(1, $spenders->count());
-        $this->assertEquals(2, $spenders->first()->split_ratio);
+        $this->assertEquals(2, $spenders->first()->pivot->split_ratio);
     }
 
     /** @test */
@@ -149,7 +149,7 @@ class TransactionTest extends DuskTestCase {
 
         $this->transaction->users()->attach($this->user1, ['split_ratio' => 5]);
 
-        $spenders = $this->transaction->fresh()->spenders;
+        $spenders = $this->transaction->fresh()->users;
         $this->assertEquals(1, $spenders->count());
 
         $transaction = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id, [
@@ -167,9 +167,9 @@ class TransactionTest extends DuskTestCase {
             ]
         ]);
 
-        $spenders = $this->transaction->fresh()->spenders;
+        $spenders = $this->transaction->fresh()->users;
         $this->assertEquals(1, $spenders->count());
-        $this->assertEquals(2, $spenders->first()->split_ratio);
+        $this->assertEquals(2, $spenders->first()->pivot->split_ratio);
     }
 
     /** @test */
@@ -179,7 +179,7 @@ class TransactionTest extends DuskTestCase {
 
         $this->transaction->users()->attach($this->user1, ['split_ratio' => 5]);
 
-        $spenders = $this->transaction->fresh()->spenders;
+        $spenders = $this->transaction->fresh()->users;
         $this->assertEquals(1, $spenders->count());
 
         $transaction = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id, [
@@ -191,7 +191,7 @@ class TransactionTest extends DuskTestCase {
             'travelers' => []
         ]);
 
-        $spenders = $this->transaction->fresh()->spenders;
+        $spenders = $this->transaction->fresh()->users;
         $this->assertEquals(0, $spenders->count());
     }
 

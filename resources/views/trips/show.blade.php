@@ -15,6 +15,10 @@
     	:transaction_id="transactionForm.id" @close="closeTransactionForm">
     </transaction-form>
 
+	<report-progress v-if="report.visible && report.type === 'progress'"
+		:trip_id="{{$trip->id}}" @close="report.visible = false">
+	</report-progress>
+
 	<div class="trip-header clearfix">
 		<h3 id="name">
 			{{ $trip->name }}
@@ -67,6 +71,10 @@
 		    data: {
 		        tripForm: { visible: false },
 		        inviteFriend: { visible: false },
+				report: {
+					visible: false,
+					type: 'progress'
+				},
 		        transactionForm: {
 		        	visible: false,
 		        	id: null
@@ -94,7 +102,14 @@
 
 		    		this.transactionForm.visible = true;
 		    		this.transactionForm.id = id;
-		    	}
+		    	},
+
+				showReport(type) {
+					this.report.visible = true;
+					if (type) {
+						this.report.type= type;
+					}
+				}
 		    }
 		});
 	</script>

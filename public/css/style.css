@@ -40,13 +40,13 @@ body {
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 
 *::-webkit-input-placeholder {
-	color: #edf4f9 !important;
+	color: rgba(237, 244, 248, .5) !important;
 } *:-moz-placeholder {
-	color: #edf4f9 !important;
+	color: #rgba(237, 244, 248, .5)  !important;
 } *::-moz-placeholder {
-	color: #edf4f9 !important;
+	color: #rgba(237, 244, 248, .5)  !important;
 } *:-ms-input-placeholder {
-	color: #edf4f9 !important;
+	color: #rgba(237, 244, 248, .5)  !important;
 }
 
 a, .fake-link {
@@ -964,6 +964,74 @@ a.subtext:hover {
 }
 
 #tripStartDate { margin-right: .6rem; }
+
+
+/* Report
+ */
+
+.report .axis td { padding: 0; }
+
+.report .axis td div {
+	padding: 0 .25rem;
+	float: left;
+	width: 50%;
+}
+
+.report .axis td:first-child div{
+	border-left: 1px dotted #495a69;
+}
+
+.report .axis td:first-child .center {
+	border: none;
+	border-right: 1px dotted #495a69;
+	text-align: right;
+}
+
+.report .axis td:last-child div {
+	border-right: 1px dotted #495a69;
+}
+
+.report .axis td:last-child .center {
+	border: none;
+	border-left: 1px dotted #495a69;
+	text-align: left;
+}
+
+.report .axis td:last-child .pays {
+	float: right;
+}
+
+.report .header p { margin: 0; }
+
+.report .header p:first-of-type {
+	 float: left;
+}
+
+.report .header p:last-of-type {
+	float: right;
+}
+
+.report .graph > table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.report .graph .tile {
+	width: 100%;
+	float: left;
+}
+
+.report .graph .tile p {
+	margin: 0;
+}
+
+.report .graph .tile.left{
+	text-align: right;
+}
+
+.report .graph .tile.left > .progressbar {
+	float: right;
+}
 
 
 /* Media Queries

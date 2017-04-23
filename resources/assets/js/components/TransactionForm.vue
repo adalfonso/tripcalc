@@ -164,7 +164,7 @@ methods: {
         axios.get(`/trips/${ this.trip_id }/travelers`)
         .then(travelers => {
            this.form.travelers = travelers.data;
-        })
+        });
     },
 
     getTransactionData() {

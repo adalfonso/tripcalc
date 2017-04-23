@@ -19,7 +19,8 @@ class Trip extends Model {
     }
 
 	public function users() {
-		return $this->belongsToMany('\App\User', 'trip_user');
+		return $this->belongsToMany('\App\User', 'trip_user')
+					->where('active', true);
 	}
 
 	public function getDateRangeAttribute() {

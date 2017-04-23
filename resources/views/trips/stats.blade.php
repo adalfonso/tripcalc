@@ -71,6 +71,14 @@
 		@endforeach
 
 		@php $sectionExists = true; @endphp
+
+		<hr>
+
+		<h5><strong>Reports:</strong></h5>
+
+		@if ($trip->users->count() > 1)
+			<p class="fake-link" @click="showReport('progress')">Progress Report</p>
+		@endif
 	@endif
 
 	{{-- @if ($transactions)
