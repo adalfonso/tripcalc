@@ -33,10 +33,10 @@ class Maker {
         return $user;
     }
 
-    public function transaction($trip, $user) {
+    public function transaction($trip, $user, $amount = null) {
         $transaction = Transaction::create([
             'trip_id' => $trip->id,
-            'amount' => $this->faker->numberBetween(0, 1000),
+            'amount' => $amount != null ? $amount : $this->faker->numberBetween(0, 1000),
             'date' => $this->faker->dateTime(),
             'description' => $this->faker->sentence(),
             'created_by' => $user->id,

@@ -15,10 +15,6 @@ export default {
         range: 0
     },
 
-    data() {
-        return {};
-    },
-
     computed: {
         width() {
             return Math.abs(this.spender.total / this.range) * 100 + '%';

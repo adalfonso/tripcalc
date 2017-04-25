@@ -8,8 +8,6 @@ use DB;
 use Hash;
 use Illuminate\Http\Request;
 
-use App\Library\Report\Report;
-
 use Validator;
 
 class TripController extends Controller {
@@ -84,7 +82,11 @@ class TripController extends Controller {
 
 		$friendsInvitable = true;
 
-    	return view('trips.show', compact('transactions', 'trip', 'friendsInvitable'));
+		$sum = $transactions->sum('amount');
+
+    	return view('trips.show', compact(
+			'transactions', 'trip', 'sum', 'friendsInvitable'
+		));
     }
 
     public function data(Trip $trip) {
@@ -121,13 +123,6 @@ class TripController extends Controller {
             'end_date' => 'required|date_format:Y-n-j|after_or_equal:start_date',
             'budget' => 'nullable|regex:/^\d*(\.\d{1,2})?$/'
         ], $messages);
-    }
-
-    public function report(Trip $trip) {
-        $report = new Report($trip);
-
-        return $report->generate()
-			->sortBy('total')->values()->all();
     }
 
     public function Travelers(Trip $trip) {

@@ -37,7 +37,8 @@ Route::group(['middleware' => 'activeAccount'], function() {
 	Route::post('/users/{friend}/request', 'FriendController@sendRequest');
 
 	Route::group(['middleware' => 'canAccessTrip'], function() {
-		Route::get('/trips/{trip}/report', 'TripController@report');
+		Route::get('/trips/{trip}/report/progress', 'ReportController@progress');
+		Route::get('/trips/{trip}/report/topSpenders', 'ReportController@topSpenders');
 
 		Route::get('/trips/{trip}', 'TripController@show');
 		Route::post('/trips/{trip}', 'TripController@update');
@@ -61,4 +62,3 @@ Route::get('user/activation/{token}', 'ActivationController@activateUser')->name
 Route::group(['middleware' => 'isAdmin'], function() {
 	Route::get('/maintenance/loadHashtags', 'MaintenanceController@loadHashtags');
 });
-

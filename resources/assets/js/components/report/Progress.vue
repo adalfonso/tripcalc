@@ -61,7 +61,7 @@ export default {
     },
 
 	created() {
-		axios.get(`/trips/${ this.trip_id }/report`)
+		axios.get(`/trips/${ this.trip_id }/report/progress`)
         .then(response => {
            this.spenders = response.data;
         });
@@ -94,7 +94,7 @@ export default {
 
         max() {
             let max = Math.abs(
-                this.spenders.reduce(function(carry, spender){
+                this.spenders.reduce(function(carry, spender) {
                     return spender.total > carry ? spender.total : carry;
                 }, 0)
             );

@@ -24,3 +24,4 @@ Vue.component('trip-form', require('./components/TripForm.vue'));
 // Report Stuff
 Vue.component('report-progress', require('./components/report/Progress.vue'));
 Vue.component('spender-progress-bar', require('./components/report/SpenderProgressBar.vue'));
+Vue.component('report-top-spenders', require('./components/report/TopSpenders.vue'));

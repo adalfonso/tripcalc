@@ -42,11 +42,11 @@ body {
 *::-webkit-input-placeholder {
 	color: rgba(237, 244, 248, .5) !important;
 } *:-moz-placeholder {
-	color: #rgba(237, 244, 248, .5)  !important;
+	color: #rgba(237, 244, 248, .5) !important;
 } *::-moz-placeholder {
-	color: #rgba(237, 244, 248, .5)  !important;
+	color: #rgba(237, 244, 248, .5) !important;
 } *:-ms-input-placeholder {
-	color: #rgba(237, 244, 248, .5)  !important;
+	color: #rgba(237, 244, 248, .5) !important;
 }
 
 a, .fake-link {
@@ -956,6 +956,10 @@ a.subtext:hover {
 	background: #cce1f1;
 	margin-bottom: .5rem;
 	padding: .8rem;
+}
+
+#stats hr:last-of-type {
+	display: none
 }
 
 #tripStartDate, #tripEndDate {
