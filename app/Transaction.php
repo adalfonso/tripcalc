@@ -14,6 +14,8 @@ class Transaction extends Model {
 	    'user_id' => 'integer'
 	];
 
+    protected $with = ['users'];
+
     public function users() {
         return $this->belongsToMany('App\User', 'transaction_user')
             ->withPivot('split_ratio');

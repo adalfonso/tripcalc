@@ -1,70 +1,41 @@
 <?php namespace App\Library\Report;
 
 use App\Transaction;
+use App\Trip;
+use Auth;
 
-class Report {
+abstract class Report {
 
 	protected $report;
 	protected $transactions;
 	protected $trip;
 
-	public function __construct(\App\Trip $trip) {
+	public function __construct(Trip $trip) {
 		$this->trip = $trip;
+		$this->transactions = $this->trip->transactions;
+	}
 
-		$this->transactions = Transaction::where("trip_id", $trip->id)
-            ->with('users')->get();
+	abstract public function generate();
 
-    	// Users who have entered a transaction
+	/**
+	 * Get all possible users associated with trip, spending, and splits
+	 * @return Illuminate\Database\Eloquent\Collection
+	 */
+	public function allUsers() {
 		$usersFromSpend = $this->transactions->pluck('creator');
 
-		// Users who have a split ratio for a transaction
-		$usersFromSplit = $this->transactions
-			->pluck('users')->collapse();
+		$usersFromSplit = $this->transactions->pluck('users')->collapse();
 
-		// Users who are currently on the trip
-		$usersFromTrip = $trip->users;
-
-		$this->report = $usersFromSpend
-			->merge($usersFromSplit)->merge($usersFromTrip)
-			->unique('id')
-			->map(function($user) {
-				return (object) [
-					'id'         => $user->id,
-					'first_name' => $user->first_name,
-					'last_name'  => $user->last_name,
-					'total'      => 0
-				];
-			});
+		return $this->trip->users
+			->merge($usersFromSpend)
+			->merge($usersFromSplit)
+		    ->unique('id');
 	}
 
 	/**
 	 * Determine if a user_id is a spender on a transaction
 	 * @param  integer
-	 * @param  Transaction
-	 * @return boolean
-	 */
-	public function generate() {
-		$this->transactions->each(function($transaction) {
-
-			// When user enters a transaction it is subtracted from their total
-			$this->report
-				->where('id', $transaction->created_by)
-				->first()->total -= $transaction->amount;
-
-			if ($this->isEvenSplit($transaction)) {
-				return $this->evenSplit($transaction);
-			}
-
-			return $this->unevenSplit($transaction);
-		});
-
-    	return $this->report;
-	}
-
-	/**
-	 * Determine if a user_id is a spender on a transaction
-	 * @param  integer
-	 * @param  Transaction
+	 * @param  App\Transaction
 	 * @return boolean
 	 */
 	public function isSpender($id, $transaction) {
@@ -73,40 +44,26 @@ class Report {
 
 	/**
 	 * Determine if transaction is split evenly between everyone
-	 * @param  Transaction
+	 * @param  App\Transaction
 	 * @return boolean
 	 */
 	public function isEvenSplit($transaction) {
-		return $transaction->users->count() === 0;
+		return $transaction->users->isEmpty();
 	}
 
 	/**
-	 * Adjust totals for an evenly split transaction
-	 * @param  Transaction
-	 * @return Collection
+	 * Determine if transaction a personal transaction
+	 * @param  App\Transaction
+	 * @return boolean
 	 */
-	public function evenSplit($transaction) {
-		return $this->report->each(function($traveler) use($transaction) {
-			$traveler->total += $transaction->amount / $this->report->count();
-		});
-	}
-
-	/**
-	 * Adjust totals for an unevenly split transaction
-	 * @param  Transaction
-	 * @return Collection
-	 */
-	public function unevenSplit($transaction) {
-		return $this->report->each(function($traveler) use($transaction) {
-			$traveler->total += $transaction->amount
-				* $this->splitRatio($traveler->id, $transaction)
-				/ $this->splitTotal($transaction);
-		});
+	public function isPersonalTransaction($transaction) {
+		return $transaction->users->count() === 1
+			&& $transaction->users->first()->id === Auth::id();
 	}
 
 	/**
 	 * Sum the total split ratios for a transaction
-	 * @param  Transaction
+	 * @param  App\Transaction
 	 * @return number
 	 */
 	public function splitTotal($transaction) {
@@ -116,7 +73,7 @@ class Report {
 	/**
 	 * Get the split ratio for a user_id on a transaction
 	 * @param  integer
-	 * @param  Transaction
+	 * @param  App\Transaction
 	 * @return number
 	 */
 	public function splitRatio($id, $transaction) {
@@ -129,4 +86,11 @@ class Report {
 			->pivot->split_ratio;
 	}
 
+	/**
+	 * Get the sum of all transactions
+	 * @return number
+	 */
+	public function sum() {
+		return $this->transactions->collapse()->sum('amount');
+	}
 }
