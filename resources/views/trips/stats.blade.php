@@ -1,4 +1,4 @@
-<div id="stats" class="left-col">
+<div id="stats" class="left-col clearfix">
 
 	{{-- Description --}}
 	@if ($trip->description)
@@ -12,7 +12,7 @@
 		<h5><strong>Budget:</strong></h5>
 		<p>
 			@if ($sum > 0)
-				${{ $sum }}	/
+				${{ number_format($sum, 2) }} /
 			@endif
 
 			${{ $trip->budget }} -
@@ -36,8 +36,8 @@
 		</report-progress>
 
 		@if ($trip->users->count() > 1)
-			<p class="fake-link" @click="showReport('progress')">
-				Progress Report
+			<p class="item" @click="showReport('progress')">
+				Progress
 			</p>
 		@endif
 
@@ -46,8 +46,19 @@
 			:trip_id="{{$trip->id}}" @close="closeReport">
 		</report-top-spenders>
 
-		<p class="fake-link" @click="showReport('top-spenders')">
-			Top Spenders Report
+		@if ($trip->users->count() > 1)
+			<p class="item" @click="showReport('top-spenders')">
+				Top Spenders
+			</p>
+		@endif
+
+		{{-- Detailed Report --}}
+		<report-detailed v-if="report.visible && report.type === 'detailed'"
+			:trip_id="{{$trip->id}}" @close="closeReport">
+		</report-detailed>
+
+		<p class="item" @click="showReport('detailed')">
+			Detailed
 		</p>
 		<hr>
 	@endif

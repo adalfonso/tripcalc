@@ -27,6 +27,10 @@ class Transaction extends Model {
         return $this->belongsToMany('App\Hashtag');
     }
 
+    public function trip() {
+        return $this->belongsTo('App\Trip');
+    }
+
     public function getDateFormatAttribute() {
         return Carbon::parse($this->date)->format('M d, Y');
     }

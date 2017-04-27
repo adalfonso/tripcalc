@@ -37,6 +37,7 @@ Route::group(['middleware' => 'activeAccount'], function() {
 	Route::post('/users/{friend}/request', 'FriendController@sendRequest');
 
 	Route::group(['middleware' => 'canAccessTrip'], function() {
+		Route::get('/trips/{trip}/report/detailed', 'ReportController@detailed');
 		Route::get('/trips/{trip}/report/progress', 'ReportController@progress');
 		Route::get('/trips/{trip}/report/topSpenders', 'ReportController@topSpenders');
 

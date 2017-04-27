@@ -21,7 +21,8 @@ Vue.component('search-people', require('./components/SearchPeople.vue'));
 Vue.component('transaction-form', require('./components/TransactionForm.vue'));
 Vue.component('trip-form', require('./components/TripForm.vue'));
 
-// Report Stuff
-Vue.component('report-progress', require('./components/report/Progress.vue'));
+// Reports
 Vue.component('spender-progress-bar', require('./components/report/SpenderProgressBar.vue'));
+Vue.component('report-detailed', require('./components/report/Detailed.vue'));
+Vue.component('report-progress', require('./components/report/Progress.vue'));
 Vue.component('report-top-spenders', require('./components/report/TopSpenders.vue'));
