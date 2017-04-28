@@ -960,7 +960,7 @@ a.subtext:hover {
 	padding: .8rem;
 }
 
-#stats hr:last-of-type {
+#stats > hr:last-of-type {
 	display: none
 }
 

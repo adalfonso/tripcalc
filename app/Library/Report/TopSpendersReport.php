@@ -12,10 +12,9 @@ class TopSpendersReport extends Report {
 	 * @return array
 	 */
 	public function generate() {
-		$spend = $this->transactions
-			->map(function($item) {
-                $creator = $item->first()->creator;
-                $itemSum = $item->sum('amount');
+		$spend = $this->transactions->map(function($spendersTransactions) {
+                $creator = $spendersTransactions->first()->creator;
+                $itemSum = $spendersTransactions->sum('amount');
 
                 return (object) [
                     'name' => $creator->first_name . ' ' . $creator->last_name,
@@ -23,9 +22,12 @@ class TopSpendersReport extends Report {
                     'sum' => $itemSum,
                     'percent' => round($itemSum / $this->sum() * 100)
                 ];
-            })->filter(function($item) {
-                return $item->percent > 1;
-            })->sortByDesc('sum')->take(5);
+            })
+			->filter(function($spender) {
+                return $spender->percent > 1;
+            })
+			->sortByDesc('sum')
+			->take(5);
 
         return [
             'spend' => $spend->values(),

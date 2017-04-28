@@ -23,16 +23,16 @@ class DistributionReport extends Report {
 	public function generate() {
 		$this->transactions->each(function($transaction) {
 
-			// When user enters a transaction it is subtracted from their total
+			// If user entered the transaction it is subtracted from their total
 			$this->report
 				->where('id', $transaction->created_by)
 				->first()->total -= $transaction->amount;
 
 			if ($this->isEvenSplit($transaction)) {
-				return $this->evenSplit($transaction);
+				return $this->splitEvenly($transaction);
 			}
 
-			return $this->unevenSplit($transaction);
+			return $this->splitUnevenly($transaction);
 		});
 
     	return $this->report->sortBy('total')->values()->all();
@@ -43,7 +43,7 @@ class DistributionReport extends Report {
 	 * @param  App\Transaction
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function evenSplit($transaction) {
+	public function splitEvenly($transaction) {
 		return $this->report->each(function($traveler) use($transaction) {
 			$traveler->total += $transaction->amount / $this->report->count();
 		});
@@ -54,7 +54,7 @@ class DistributionReport extends Report {
 	 * @param  App\Transaction
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function unevenSplit($transaction) {
+	public function splitUnevenly($transaction) {
 		return $this->report->each(function($traveler) use($transaction) {
 			$traveler->total += $transaction->amount
 				* $this->splitRatio($traveler->id, $transaction)

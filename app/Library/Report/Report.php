@@ -62,6 +62,58 @@ abstract class Report {
 	}
 
 	/**
+	 * Get net transaction amount on transaction paid by the user
+	 * @param  App\Transaction
+	 * @return number
+	 */
+	public function netIfPaidByUser($transaction) {
+		if ($this->isEvenSplit($transaction)) {
+			$users = $transaction->trip->users->count();
+
+			return $transaction->amount * ($users - 1) / $users;
+
+		} elseif ($this->isPersonalTransaction($transaction)) {
+			return 0;
+		}
+
+		return $transaction->amount - $this->oweForUnevenSplit($transaction);
+	}
+
+	/**
+	 * Get net transaction amount on transaction paid by another user
+	 * @param  App\Transaction
+	 * @return number
+	 */
+	public function netIfPaidByOther($transaction) {
+		if ($this->isEvenSplit($transaction)) {
+			$users = $transaction->trip->users->count();
+			return - $transaction->amount * (1 / $users);
+
+		} elseif ($this->isPersonalTransaction($transaction)) {
+			return - $transaction->amount;
+		}
+
+		return - $this->oweForUnevenSplit($transaction);
+	}
+
+	/**
+	 * Get the amount a user is responsible for on a split transaction
+	 * @param  App\Transaction
+	 * @return number
+	 */
+	public function oweForUnevenSplit($transaction) {
+		$user = $transaction->users->where('id', Auth::id());
+
+		if ($user->isNotEmpty()) {
+			return $transaction->amount
+				* $user->first()->pivot->split_ratio
+				/ $transaction->users->sum('pivot.split_ratio');
+		}
+
+		return 0;
+	}
+
+	/**
 	 * Sum the total split ratios for a transaction
 	 * @param  App\Transaction
 	 * @return number
@@ -92,5 +144,33 @@ abstract class Report {
 	 */
 	public function sum() {
 		return $this->transactions->collapse()->sum('amount');
+	}
+
+	/**
+	 * Get net amount for a transaction
+	 * @param  App\Transaction
+	 * @return number
+	 */
+	public function transactionNet($transaction) {
+		return $transaction->created_by === Auth::id()
+			? $this->netIfPaidByUser($transaction)
+			: $this->netIfPaidByOther($transaction);
+	}
+
+	/**
+	 * Get only the transactions the user is related to
+	 * @return Illuminate\Database\Eloquent\Collection
+	 */
+	public function userOnlyTransactions() {
+		return Transaction::where("trip_id", $this->trip->id)
+            ->where(function($query) {
+              $query->where('created_by', Auth::id())
+                    ->orWhereHas('users', function($user) {
+                        $user->where('user_id', Auth::id());
+                    })->doesntHave('users', 'or');
+            })
+            ->with('creator', 'users')
+            ->orderBy('date')
+            ->get();
 	}
 }

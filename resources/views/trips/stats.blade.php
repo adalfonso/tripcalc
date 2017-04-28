@@ -30,6 +30,17 @@
 	@if ($sum > 0)
 		<h5><strong>Reports:</strong></h5>
 
+		{{-- Bottom Line Report --}}
+		<report-bottom-line v-if="report.visible && report.type === 'bottomLine'"
+			:trip_id="{{$trip->id}}" @close="closeReport">
+		</report-bottom-line>
+
+		@if ($trip->users->count() > 1)
+			<p class="item" @click="showReport('bottomLine')">
+				Bottom Line
+			</p>
+		@endif
+
 		{{-- Distribution Report --}}
 		<report-distribution v-if="report.visible && report.type === 'distribution'"
 			:trip_id="{{$trip->id}}" @close="closeReport">
@@ -60,6 +71,7 @@
 		<p class="item" @click="showReport('detailed')">
 			Detailed
 		</p>
+
 		<hr>
 	@endif
 </div>

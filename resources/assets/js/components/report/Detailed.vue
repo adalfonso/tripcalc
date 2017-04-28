@@ -71,7 +71,7 @@ export default {
 
         balance() {
             let total = this.transactions.reduce(function(carry, transaction){
-                return carry += Number(transaction.net);
+                return carry + Number(transaction.net);
             }, 0);
 
             return this.fixedLength(total);
