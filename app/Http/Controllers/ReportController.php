@@ -2,14 +2,14 @@
 
 use App\Trip;
 use App\Library\Report\DetailedReport;
-use App\Library\Report\ProgressReport;
+use App\Library\Report\DistributionReport;
 use App\Library\Report\TopSpendersReport;
 
 
 class ReportController extends Controller {
 
-    public function progress(Trip $trip) {
-        $report = new ProgressReport($trip);
+    public function distribution(Trip $trip) {
+        $report = new DistributionReport($trip);
 
         return $report->generate();
     }

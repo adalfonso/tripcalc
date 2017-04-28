@@ -30,14 +30,14 @@
 	@if ($sum > 0)
 		<h5><strong>Reports:</strong></h5>
 
-		{{-- Progress Report --}}
-		<report-progress v-if="report.visible && report.type === 'progress'"
+		{{-- Distribution Report --}}
+		<report-distribution v-if="report.visible && report.type === 'distribution'"
 			:trip_id="{{$trip->id}}" @close="closeReport">
-		</report-progress>
+		</report-distribution>
 
 		@if ($trip->users->count() > 1)
-			<p class="item" @click="showReport('progress')">
-				Progress
+			<p class="item" @click="showReport('distribution')">
+				Distribution
 			</p>
 		@endif
 

@@ -1,6 +1,6 @@
 <template>
     <div class="dialogue popup report">
-        <h4 class="centered form-header">Progress Report</h4>
+        <h4 class="centered form-header">Distribution Report</h4>
 
         <hr>
 
@@ -61,7 +61,7 @@ export default {
     },
 
 	created() {
-		axios.get(`/trips/${ this.trip_id }/report/progress`)
+		axios.get(`/trips/${ this.trip_id }/report/distribution`)
         .then(response => {
            this.spenders = response.data;
         });

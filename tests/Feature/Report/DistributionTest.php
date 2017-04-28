@@ -27,7 +27,7 @@ class ProgressTest extends DuskTestCase {
     /** @test */
     public function it_accounts_for_all_users_on_a_trip() {
         $this->maker->login($this->user1);
-        $response = $this->get('/trips/' . $this->trip->id . '/report/progress')->json();
+        $response = $this->get('/trips/' . $this->trip->id . '/report/distribution')->json();
 
         $this->assertEquals(2, sizeof($response));
     }
@@ -39,7 +39,7 @@ class ProgressTest extends DuskTestCase {
 
         $this->maker->login($this->user1);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/progress')->json();
+        $response = $this->get('/trips/' . $this->trip->id . '/report/distribution')->json();
 
         $this->assertEquals(3, sizeof($response));
     }
@@ -53,7 +53,7 @@ class ProgressTest extends DuskTestCase {
 
         $this->maker->login($this->user1);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/progress')->json();
+        $response = $this->get('/trips/' . $this->trip->id . '/report/distribution')->json();
 
         $this->assertEquals(3, sizeof($response));
     }
@@ -65,7 +65,7 @@ class ProgressTest extends DuskTestCase {
         $this->transaction->amount = 100;
         $this->transaction->save();
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/progress')->json();
+        $response = $this->get('/trips/' . $this->trip->id . '/report/distribution')->json();
 
         $this->assertEquals(-50, collect($response)->where('id', $this->user1->id)->first()['total']);
         $this->assertEquals(50, collect($response)->where('id', $this->user2->id)->first()['total']);
@@ -76,7 +76,7 @@ class ProgressTest extends DuskTestCase {
         $transaction->amount = 500;
         $transaction->save();
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/progress')->json();
+        $response = $this->get('/trips/' . $this->trip->id . '/report/distribution')->json();
 
         $this->assertEquals(200, collect($response)->where('id', $this->user1->id)->first()['total']);
         $this->assertEquals(-200, collect($response)->where('id', $this->user2->id)->first()['total']);
@@ -94,7 +94,7 @@ class ProgressTest extends DuskTestCase {
             $this->user2->id => ['split_ratio' => 90]
         ]);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/progress')->json();
+        $response = $this->get('/trips/' . $this->trip->id . '/report/distribution')->json();
 
         $this->assertEquals(-90, collect($response)->where('id', $this->user1->id)->first()['total']);
         $this->assertEquals(90, collect($response)->where('id', $this->user2->id)->first()['total']);
@@ -107,7 +107,7 @@ class ProgressTest extends DuskTestCase {
             $this->user2->id => ['split_ratio' => 80]
         ]);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/progress')->json();
+        $response = $this->get('/trips/' . $this->trip->id . '/report/distribution')->json();
 
         $this->assertEquals(-50, collect($response)->where('id', $this->user1->id)->first()['total']);
         $this->assertEquals(50, collect($response)->where('id', $this->user2->id)->first()['total']);
@@ -131,7 +131,7 @@ class ProgressTest extends DuskTestCase {
             $this->user2->id => ['split_ratio' => 80]
         ]);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/progress')->json();
+        $response = $this->get('/trips/' . $this->trip->id . '/report/distribution')->json();
 
         $this->assertEquals(0, round(collect($response)->sum('total')));
     }

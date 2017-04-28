@@ -1,6 +1,6 @@
 <?php namespace App\Library\Report;
 
-class ProgressReport extends Report {
+class DistributionReport extends Report {
 
 	public function __construct(\App\Trip $trip) {
 		parent::__construct($trip);
