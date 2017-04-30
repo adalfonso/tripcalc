@@ -350,7 +350,7 @@ a.subtext:hover {
 .btn-half {
 	display: block;
 	float: left;
-	margin: 0 .6em 0 0;
+	margin: 0 .6em 0 0;f
 	width: calc(50% - .3rem);
 }
 
@@ -987,7 +987,11 @@ a.subtext:hover {
 	width: 50%;
 }
 
-.report .axis td:first-child div{
+.report .axis td div:only-child {
+	width: 100%;
+}
+
+.report .axis td:first-child div {
 	border-left: 1px dotted #495a69;
 }
 
@@ -1046,6 +1050,8 @@ a.subtext:hover {
 .report .graph > table .total td {
 	border-top: 1px solid #495a69;
 }
+
+.report .pay { widows: 100%; }
 
 .closeoutReport .spenderGroup:last-of-type hr {
 	display: none;

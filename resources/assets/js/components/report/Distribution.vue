@@ -80,6 +80,20 @@ export default {
 
     methods: {
 
+        graphScale(amount) {
+            let breakpoints = [
+                100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000, 1000000
+            ];
+
+            for (let i = 0; i < breakpoints.length; i++) {
+                if (amount <= breakpoints[i]) {
+                    return breakpoints[i] / 10;
+                }
+            };
+
+            return 1000000;
+        },
+
         min() {
             let min = Math.abs(
                 this.spenders.reduce(function(carry, spender) {
@@ -87,9 +101,9 @@ export default {
                 }, 0)
             );
 
-            let remainder = min % 50;
+            let remainder = min % this.graphScale(min);
 
-            return 50 - remainder + min;
+            return this.graphScale(min) - remainder + min;
         },
 
         max() {
@@ -99,9 +113,9 @@ export default {
                 }, 0)
             );
 
-            let remainder = max % 50;
+            let remainder = max % this.graphScale(max);;
 
-            return 50 - remainder + max;
+            return this.graphScale(max) - remainder + max;
         },
 
         total() {
