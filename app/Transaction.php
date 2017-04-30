@@ -14,14 +14,11 @@ class Transaction extends Model {
 	    'user_id' => 'integer'
 	];
 
-    public function spenders() {
-    	return $this->belongsToMany(
-    		'App\User', 'transaction_user', 'transaction_id', 'user_id'
-    	)->select('transaction_user.id as pivot_id','users.id', 'transaction_user.split_ratio');
-    }
+    protected $with = ['users'];
 
     public function users() {
-        return $this->belongsToMany('App\User', 'transaction_user');
+        return $this->belongsToMany('App\User', 'transaction_user')
+            ->withPivot('split_ratio');
     }
 
     public function creator() {
@@ -30,6 +27,10 @@ class Transaction extends Model {
 
     public function hashtags() {
         return $this->belongsToMany('App\Hashtag');
+    }
+
+    public function trip() {
+        return $this->belongsTo('App\Trip');
     }
 
     public function getDateFormatAttribute() {

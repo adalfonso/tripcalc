@@ -2,7 +2,6 @@
 
 @section('content')
 <div id="trip">
-
 	<trip-form v-if="tripForm.visible" :trip_id="{{$trip->id}}"
 		@close="tripForm.visible = false">
     </trip-form>
@@ -19,7 +18,7 @@
 		<h3 id="name">
 			{{ $trip->name }}
 			<img trip class="editButton" src="/img/icon/edit.png"
-				@click="transactionForm.visible = true">
+				@click="tripForm.visible = true">
 		</h3>
 
 		@if ($trip->start_date != "00/00/0000")
@@ -32,7 +31,6 @@
 	@include('trips.stats')
 
 	<div id="activity" transaction class="clearfix right-col">
-
 		<button class="btn-full" @click="transactionForm.visible = true">
 			+ New Transaction
 		</button>
@@ -41,17 +39,15 @@
 			<h4 class="margin-top">Recent Activity</h4>
 
 			@foreach($transactions as $transaction)
-
-			<div class="transaction">
-				<p>
-					<strong>{{ $transaction->dateFormat }}</strong>
-					 - ${{ $transaction->amount }}
-					<img class="editButton" src="/img/icon/edit.png"
-						@click="openTransactionForm({{ $transaction->id }})">
-				</p>
-				<p>{{ $transaction->description }}</p>
-			</div>
-
+				<div class="transaction">
+					<p>
+						<strong>{{ $transaction->dateFormat }}</strong>
+						 - ${{ $transaction->amount }}
+						<img class="editButton" src="/img/icon/edit.png"
+							@click="openTransactionForm({{ $transaction->id }})">
+					</p>
+					<p>{{ $transaction->description }}</p>
+				</div>
 			@endforeach
 		@endif
 	</div>
@@ -67,6 +63,10 @@
 		    data: {
 		        tripForm: { visible: false },
 		        inviteFriend: { visible: false },
+				report: {
+					visible: false,
+					type: null
+				},
 		        transactionForm: {
 		        	visible: false,
 		        	id: null
@@ -74,13 +74,16 @@
 		    },
 
 		    methods: {
+				closeReport() {
+					this.report.visible = false;
+				},
+
 		    	closeTransactionForm() {
 		    		this.transactionForm.visible = false;
 		    		this.transactionForm.id = null;
 		    	},
 
-		    	openTransactionForm(id = null) {
-
+		    	openTransactionForm(id = null) {  console.log('open');
 		    		// When going from a blank transaction to an actual one
 		    		if (this.transactionForm.visible) {
 		    			return new Promise((resolve) => {
@@ -94,7 +97,25 @@
 
 		    		this.transactionForm.visible = true;
 		    		this.transactionForm.id = id;
-		    	}
+		    	},
+
+				showReport(type) {
+					// When switching reports
+		    		if (this.report.visible) {
+		    			return new Promise((resolve) => {
+		    				this.closeReport();
+		    				resolve();
+
+		    			}).then(() => {
+		    				this.showReport(type);
+		    			});
+		    		}
+
+					this.report.visible = true;
+					if (type) {
+						this.report.type= type;
+					}
+				}
 		    }
 		});
 	</script>

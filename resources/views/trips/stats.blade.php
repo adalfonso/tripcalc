@@ -1,28 +1,18 @@
-<div id="stats" class="left-col">
+<div id="stats" class="left-col clearfix">
 
-	@php
-		$sum = $transactions->sum('amount');
-		$sectionExists = false;
-	@endphp
-
+	{{-- Description --}}
 	@if ($trip->description)
 		<h5><strong>Description:</strong></h5>
 		<p>{{ $trip->description }}</p>
-
-		@php $sectionExists = true; @endphp
+		<hr>
 	@endif
 
+	{{-- Budget --}}
 	@if ($trip->budget)
-
-		@if ($sectionExists)
-			<hr>
-		@endif
-
 		<h5><strong>Budget:</strong></h5>
-
 		<p>
 			@if ($sum > 0)
-				${{ $sum }}	/
+				${{ number_format($sum, 2) }} /
 			@endif
 
 			${{ $trip->budget }} -
@@ -33,47 +23,66 @@
 				{{ round(($sum / $trip->budget) * 100) }}% met
 			@endif
 		</p>
-
-		@php $sectionExists = true; @endphp
+		<hr>
 	@endif
 
+	{{-- Reports --}}
 	@if ($sum > 0)
-		@php
-			$transactionsByUser = $transactions
-				->groupBy(function($item){
-					return $item->creator->first_name
-				   . ' ' . $item->creator->last_name;
-				})
-				->map(function($item) use ($sum){
-					return (object) [
-						'sum' => number_format($item->sum('amount'), 2),
-						'percent' => round($item->sum('amount') / $sum * 100)
-					];
-				})->sortByDesc('sum')->take(5);
-		@endphp
+		<h5><strong>Reports:</strong></h5>
 
-		@if ($sectionExists)
-			<hr>
+		{{-- Bottom Line Report --}}
+		<report-bottom-line v-if="report.visible && report.type === 'bottomLine'"
+			:trip_id="{{$trip->id}}" @close="closeReport">
+		</report-bottom-line>
+
+		@if ($trip->users->count() > 1)
+			<p class="item" @click="showReport('bottomLine')">
+				Bottom Line
+			</p>
 		@endif
 
-		<h5><strong>Top Spenders:</strong></h5>
+		{{-- Distribution Report --}}
+		<report-distribution v-if="report.visible && report.type === 'distribution'"
+			:trip_id="{{$trip->id}}" @close="closeReport">
+		</report-distribution>
 
-		@foreach($transactionsByUser as $user => $spend)
-
-			<p style="margin-bottom: 0">
-				{{ $user }} - ${{ $spend->sum }}
+		@if ($trip->users->count() > 1)
+			<p class="item" @click="showReport('distribution')">
+				Distribution
 			</p>
-			<div class="progressbar" style="width:{{ $spend->percent }}%">
-				@if($spend->percent > 7)
-					{{ $spend->percent }}%
-				@endif
-			</div>
-		@endforeach
+		@endif
 
-		@php $sectionExists = true; @endphp
+		{{-- Top Spenders Report --}}
+		<report-top-spenders v-if="report.visible && report.type === 'top-spenders'"
+			:trip_id="{{$trip->id}}" @close="closeReport">
+		</report-top-spenders>
+
+		@if ($trip->users->count() > 1)
+			<p class="item" @click="showReport('top-spenders')">
+				Top Spenders
+			</p>
+		@endif
+
+		{{-- Detailed Report --}}
+		<report-detailed v-if="report.visible && report.type === 'detailed'"
+			:trip_id="{{$trip->id}}" @close="closeReport">
+		</report-detailed>
+
+		<p class="item" @click="showReport('detailed')">
+			Detailed
+		</p>
+
+		{{-- Closeout Report --}}
+		<report-closeout v-if="report.visible && report.type === 'closeout'"
+			:trip_id="{{$trip->id}}" @close="closeReport">
+		</report-closeout>
+
+		@if ($trip->users->count() > 1)
+			<p class="item" @click="showReport('closeout')">
+				Closeout
+			</p>
+		@endif
+
+		<hr>
 	@endif
-
-	{{-- @if ($transactions)
-		<p class="fake-link">Draw Expense Graph</p>
-	@endif --}}
 </div>

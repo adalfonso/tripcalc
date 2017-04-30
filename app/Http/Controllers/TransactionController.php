@@ -73,7 +73,7 @@ class TransactionController extends Controller {
 	public function update(Request $request, Trip $trip, Transaction $transaction) {
 		$this->validateTransaction();
 
-		return $transaction = DB::transaction(function() use ($request, $transaction) {
+		return DB::transaction(function() use ($request, $transaction) {
 
 			$transaction->update([
 				'date' => request('date'),
@@ -114,7 +114,9 @@ class TransactionController extends Controller {
 			'date' => 'required|date_format:Y-n-j',
 			'amount' => 'required|regex:/^\d+(\.\d{1,2})?$/',
 			'hashtags.items.*' => 'regex:/^[^,\s]{1,32}$/',
-			'travelers.*.split_ratio' => ['nullable', 'regex:/(^\d*\.?\d+$)|(^\d+\.?\d*$)/']
+			'travelers.*.split_ratio' => [
+				'nullable', 'regex:/(^\d*\.?\d+$)|(^\d+\.?\d*$)/'
+			]
 		]);
 	}
 

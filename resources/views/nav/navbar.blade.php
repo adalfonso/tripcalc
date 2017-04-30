@@ -5,10 +5,10 @@
 		<a href="/profile">My Profile</a>
 
 		@unless (isset($trips))
-			<a a href="/trips/dashboard">My Trips</a>
+			<a href="/trips/dashboard">My Trips</a>
 		@endif
 
-		@if (isset($inTrip))
+		@if (isset($friendsInvitable))
 			<a @click="inviteFriend.visible = true">Invite Friends</a>
 		@endif
 

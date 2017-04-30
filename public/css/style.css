@@ -1,4 +1,4 @@
-\/*
+/*
 
 #495a69 - Borders, headings, submit buttons, paragraphs,
 	      placeholder color on light inputs
@@ -40,13 +40,13 @@ body {
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 
 *::-webkit-input-placeholder {
-	color: #edf4f9 !important;
+	color: rgba(237, 244, 248, .5) !important;
 } *:-moz-placeholder {
-	color: #edf4f9 !important;
+	color: #rgba(237, 244, 248, .5) !important;
 } *::-moz-placeholder {
-	color: #edf4f9 !important;
+	color: #rgba(237, 244, 248, .5) !important;
 } *:-ms-input-placeholder {
-	color: #edf4f9 !important;
+	color: #rgba(237, 244, 248, .5) !important;
 }
 
 a, .fake-link {
@@ -176,6 +176,8 @@ textarea {
 	line-height: 1rem;
 	resize: none;
 }
+
+th { text-align:left }
 
 
 /* Extended Form Styles
@@ -326,6 +328,10 @@ a.subtext:hover {
 
 /*	General Classes
  */
+
+.align-right, .align-right > * { text-align: right; }
+.align-left, .align-left > * { text-align: left; }
+
 .arw-up {
 	border: .8em solid transparent;
 	border-bottom: .8em solid rgba(228,242,253,.95);
@@ -344,7 +350,7 @@ a.subtext:hover {
 .btn-half {
 	display: block;
 	float: left;
-	margin: 0 .6em 0 0;
+	margin: 0 .6em 0 0;f
 	width: calc(50% - .3rem);
 }
 
@@ -509,7 +515,7 @@ a.subtext:hover {
 	line-height: .5rem;
 	margin: 0;
 	transition: .4s;
-	width: 50%;
+	width: 50%;detaile
 }
 
 .datePicker ul.prevNextMonth li:hover { color: #cce1f1 }
@@ -958,12 +964,133 @@ a.subtext:hover {
 	padding: .8rem;
 }
 
+#stats > hr:last-of-type {
+	display: none
+}
+
 #tripStartDate, #tripEndDate {
 	float: left;
 	width: calc(50% - .3rem);
 }
 
 #tripStartDate { margin-right: .6rem; }
+
+
+/* Report
+ */
+
+.report .axis td { padding: 0; }
+
+.report .axis td div {
+	padding: 0 .25rem;
+	float: left;
+	width: 50%;
+}
+
+.report .axis td div:only-child {
+	width: 100%;
+}
+
+.report .axis td:first-child div {
+	border-left: 1px dotted #495a69;
+}
+
+.report .axis td:first-child .center {
+	border: none;
+	border-right: 1px dotted #495a69;
+	text-align: right;
+}
+
+.report .axis td:last-child div {
+	border-right: 1px dotted #495a69;
+}
+
+.report .axis td:last-child .center {
+	border: none;
+	border-left: 1px dotted #495a69;
+	text-align: left;
+}
+
+.report .axis td:last-child .pays {
+	float: right;
+}
+
+.report .header p { margin: 0; }
+
+.report .header p:first-of-type {
+	 float: left;
+}
+
+.report .header p:last-of-type {
+	float: right;
+}
+
+.report .graph > table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.report .graph .tile {
+	width: 100%;
+	float: left;
+}
+
+.report .graph .tile p {
+	margin: 0;
+}
+
+.report .graph .tile.left{
+	text-align: right;
+}
+
+.report .graph .tile.left > .progressbar {
+	float: right;
+}
+
+.report .graph > table .total td {
+	border-top: 1px solid #495a69;
+}
+
+.report .pay { widows: 100%; }
+
+.closeoutReport .spenderGroup:last-of-type hr {
+	display: none;
+}
+
+.closeoutReport p.line {
+	background: rgb(222, 222, 242);
+	border: 1px solid #495a69;
+	border-radius: .25rem;
+	padding: .125rem .25rem;
+}
+
+.closeoutReport p.description {
+	font-size: .75rem;
+	font-weight: bold;
+	letter-spacing: .1rem;
+	line-height: .75rem;
+}
+
+.closeoutReport p span {
+	font-size: 1.2em;
+}
+
+.closeoutReport p span > span {
+	height: 1em;
+	font-size: 24px;
+	vertical-align: middle;
+}
+
+.detailedReport td,
+.detailedReport th { padding: .25rem .25rem }
+
+.detailedReport tr:nth-of-type(2n+2) {
+	background: rgba(0, 0, 0, .125);
+}
+
+.detailedReport tr *:nth-of-type(n+3) {
+	text-align: right;
+}
 
 
 /* Media Queries

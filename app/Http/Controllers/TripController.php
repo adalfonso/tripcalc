@@ -80,9 +80,13 @@ class TripController extends Controller {
             ->with('creator')
     		->get();
 
-    	$inTrip = true;
+		$friendsInvitable = true;
 
-    	return view('trips.show', compact('transactions', 'trip', 'inTrip'));
+		$sum = $transactions->sum('amount');
+
+    	return view('trips.show', compact(
+			'transactions', 'trip', 'sum', 'friendsInvitable'
+		));
     }
 
     public function data(Trip $trip) {
