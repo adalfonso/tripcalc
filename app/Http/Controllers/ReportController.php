@@ -18,7 +18,7 @@ class ReportController extends Controller {
             return collect($user->credits)->sum();
         }
 
-        return collect($user->debits)->sum();
+        return - collect($user->debits)->sum();
     }
 
     public function closeout(Trip $trip) {

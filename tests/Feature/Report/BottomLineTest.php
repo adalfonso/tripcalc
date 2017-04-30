@@ -54,4 +54,19 @@ class BottomLine extends DuskTestCase {
 
         $this->assertEquals(round(35.66), round($response));
     }
+
+    /** @test */
+    public function it_can_tell_the_difference_between_credit_and_debit() {
+        $transaction = $this->maker->transaction(
+            $this->trip, $this->user1, 90
+        );
+        $this->maker->login($this->user1);
+
+        $response = $this->get('/trips/' . $this->trip->id . '/report/bottomLine')->json();
+        $this->assertEquals(60, round($response));
+
+        $this->maker->login($this->user2);
+        $response = $this->get('/trips/' . $this->trip->id . '/report/bottomLine')->json();
+        $this->assertEquals(-30, round($response));
+    }
 }

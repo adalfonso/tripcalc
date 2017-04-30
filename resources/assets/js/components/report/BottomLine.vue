@@ -50,7 +50,7 @@ export default {
         },
 
         status() {
-            return this.total > 0 ? 'You are owed': 'You owe';
+            return this.total < 0 ? 'You are owed': 'You owe';
         }
     },
 
