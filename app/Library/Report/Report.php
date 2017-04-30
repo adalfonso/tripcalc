@@ -6,30 +6,27 @@ use Auth;
 
 abstract class Report {
 
-	protected $report;
 	protected $transactions;
 	protected $trip;
 
-	public function __construct(Trip $trip) {
+	public function __construct(Trip $trip, $transactions = null) {
 		$this->trip = $trip;
-		$this->transactions = $this->trip->transactions;
+
+		if (!$transactions) {
+			$this->transactions = $this->trip->transactions;
+		} else {
+			$this->transactions = $transactions;
+		}
 	}
 
-	abstract public function generate();
+	abstract protected function generate();
 
 	/**
-	 * Get all possible users associated with trip, spending, and splits
-	 * @return Illuminate\Database\Eloquent\Collection
+	 * Static helper to generate a report
+	 * @return mixed
 	 */
-	public function allUsers() {
-		$usersFromSpend = $this->transactions->pluck('creator');
-
-		$usersFromSplit = $this->transactions->pluck('users')->collapse();
-
-		return $this->trip->users
-			->merge($usersFromSpend)
-			->merge($usersFromSplit)
-		    ->unique('id');
+	public static function make(Trip $trip) {
+		return (new static($trip))->generate();
 	}
 
 	/**
@@ -62,7 +59,23 @@ abstract class Report {
 	}
 
 	/**
-	 * Get net transaction amount on transaction paid by the user
+	 * Get net amount for a transaction
+	 * @param  App\Transaction
+	 * @param  Integer - optional
+	 * @return number
+	 */
+	public function netTransaction($transaction, $userId = null) {
+		if ($userId === null) {
+			$userId = Auth::id();
+		}
+
+		return $transaction->created_by === $userId
+			? $this->netIfPaidByUser($transaction)
+			: $this->netIfPaidByOther($transaction);
+	}
+
+	/**
+	 * Get net amount on transaction when paid by the user
 	 * @param  App\Transaction
 	 * @return number
 	 */
@@ -80,7 +93,7 @@ abstract class Report {
 	}
 
 	/**
-	 * Get net transaction amount on transaction paid by another user
+	 * Get net amount on transaction when paid by another user
 	 * @param  App\Transaction
 	 * @return number
 	 */
@@ -97,7 +110,7 @@ abstract class Report {
 	}
 
 	/**
-	 * Get the amount a user is responsible for on a split transaction
+	 * Get the amount a user is responsible for on an unevenly split transaction
 	 * @param  App\Transaction
 	 * @return number
 	 */
@@ -114,7 +127,7 @@ abstract class Report {
 	}
 
 	/**
-	 * Sum the total split ratios for a transaction
+	 * Sum the total split ratio for a transaction
 	 * @param  App\Transaction
 	 * @return number
 	 */
@@ -147,22 +160,15 @@ abstract class Report {
 	}
 
 	/**
-	 * Get net amount for a transaction
-	 * @param  App\Transaction
-	 * @return number
-	 */
-	public function transactionNet($transaction) {
-		return $transaction->created_by === Auth::id()
-			? $this->netIfPaidByUser($transaction)
-			: $this->netIfPaidByOther($transaction);
-	}
-
-	/**
 	 * Get only the transactions the user is related to
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function userOnlyTransactions() {
-		return Transaction::where("trip_id", $this->trip->id)
+	public function userOnlyTransactions(Trip $trip = null) {
+		if ($trip === null) {
+			$trip = $this->trip;
+		}
+
+		return Transaction::where("trip_id", $trip->id)
             ->where(function($query) {
               $query->where('created_by', Auth::id())
                     ->orWhereHas('users', function($user) {

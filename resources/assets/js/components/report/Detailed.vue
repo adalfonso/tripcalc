@@ -11,26 +11,27 @@
             <table>
                 <tr>
                     <th>Date</th>
-                    <th>Paid By</th>
-                    <th>Amount</th>
-                    <th>Net</th>
+                    <th v-if="multiUser">Paid By</th>
+                    <th class="align-right">Amount</th>
+                    <th v-if="multiUser">Net</th>
                 </tr>
                 <tr v-for="transaction in transactions">
                     <td>{{ transaction.date }}</td>
-                    <td>{{ transaction.creator }}</td>
-                    <td>${{ transaction.amount }}</td>
-                    <td>{{ currency(transaction.net) }}</td>
+                    <td v-if="multiUser">{{ transaction.creator }}</td>
+                    <td class="align-right">${{ transaction.amount }}</td>
+                    <td v-if="multiUser">{{ currency(transaction.net) }}</td>
                 </tr>
-                <tr class="total">
+                <tr class="total" v-if="multiUser">
                     <td><strong>{{ balanceVerbiage }}</strong></td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>${{ fixedLength(Math.abs(balance)) }}</td>
                 </tr>
                 <tr class="total">
-                    <td colspan="2"><strong>Personal total</strong></td>
-                    <td>&nbsp;</td>
-                    <td>${{ total }}</td>
+                    <td><strong>Personal total</strong></td>
+                    <td v-if="multiUser">&nbsp;</td>
+                    <td v-if="multiUser">&nbsp;</td>
+                    <td class="align-right">${{ total }}</td>
                 </tr>
             </table>
         </div>
@@ -47,13 +48,17 @@ export default {
     },
 
     data() {
-        return { transactions: [] };
+        return {
+            transactions: [],
+            multiUser: false
+        };
     },
 
 	created() {
 		axios.get(`/trips/${ this.trip_id }/report/detailed`)
         .then(response => {
-           this.transactions = response.data;
+           this.transactions = response.data.transactions;
+           this.multiUser = response.data.multiUser;
         });
 	},
 

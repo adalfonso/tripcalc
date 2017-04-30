@@ -7,9 +7,9 @@
         <img src="/img/icon/closePopup.png" class="closePopup"
             @click="close">
 
-        <div class="centered">
-            <h4>{{ status }}</h4>
-            <h1 style="font-size: 3.6rem">${{ absoluteTotal }}</h1>
+        <div class="centered" v-if="response">
+            <h4 v-if="total !== 0">{{ status }}</h4>
+            <h1 style="font-size: 3rem">{{ absoluteTotal }}</h1>
         </div>
 
     </div>
@@ -24,20 +24,27 @@ export default {
     },
 
     data() {
-        return { total: 0 };
+        return {
+            total: 0,
+            response: false
+        };
     },
 
 	created() {
 		axios.get(`/trips/${ this.trip_id }/report/bottomLine`)
         .then(response => {
            this.total = response.data;
+           this.response = true;
         });
 	},
 
     computed: {
 
         absoluteTotal() {
-            return Number(
+            if (this.total === 0) {
+                return 'You are square.'
+            }
+            return '$' + Number(
                 Math.abs(this.total)
             ).toFixed(2);
         },

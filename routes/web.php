@@ -38,6 +38,7 @@ Route::group(['middleware' => 'activeAccount'], function() {
 
 	Route::group(['middleware' => 'canAccessTrip'], function() {
 		Route::get('/trips/{trip}/report/bottomLine', 'ReportController@bottomLine');
+		Route::get('/trips/{trip}/report/closeout', 'ReportController@closeout');
 		Route::get('/trips/{trip}/report/detailed', 'ReportController@detailed');
 		Route::get('/trips/{trip}/report/distribution', 'ReportController@distribution');
 		Route::get('/trips/{trip}/report/topSpenders', 'ReportController@topSpenders');

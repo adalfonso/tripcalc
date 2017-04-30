@@ -1,35 +1,44 @@
 <?php namespace App\Http\Controllers;
 
 use App\Trip;
+use Auth;
 use App\Library\Report\BottomLineReport;
+use App\Library\Report\CloseoutReport;
 use App\Library\Report\DetailedReport;
 use App\Library\Report\DistributionReport;
 use App\Library\Report\TopSpendersReport;
 
-
 class ReportController extends Controller {
 
     public function bottomLine(Trip $trip) {
-        $report = new BottomLineReport($trip);
+        $user = CloseoutReport::make($trip)['spenders']
+            ->where('id', Auth::id())->first();
 
-        return $report->generate();
+        if (sizeof($user->credits) > 0) {
+            return collect($user->credits)->sum();
+        }
+
+        return collect($user->debits)->sum();
+    }
+
+    public function closeout(Trip $trip) {
+        return CloseoutReport::make($trip);
     }
 
     public function distribution(Trip $trip) {
-        $report = new DistributionReport($trip);
-
-        return $report->generate();
+        return DistributionReport::make($trip);
     }
 
     public function topSpenders(Trip $trip) {
-        $report = new TopSpendersReport($trip);
-
-        return $report->generate();
+        return TopSpendersReport::make($trip);
     }
 
     public function detailed(Trip $trip) {
-        $report = new DetailedReport($trip);
+        $transactions = DetailedReport::make($trip);
 
-        return $report->generate();
+        return [
+            'transactions' => $transactions,
+            'multiUser' => $transactions->unique('creatorId')->count() > 1
+        ];
     }
 }

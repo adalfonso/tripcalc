@@ -72,6 +72,17 @@
 			Detailed
 		</p>
 
+		{{-- Closeout Report --}}
+		<report-closeout v-if="report.visible && report.type === 'closeout'"
+			:trip_id="{{$trip->id}}" @close="closeReport">
+		</report-closeout>
+
+		@if ($trip->users->count() > 1)
+			<p class="item" @click="showReport('closeout')">
+				Closeout
+			</p>
+		@endif
+
 		<hr>
 	@endif
 </div>

@@ -83,7 +83,7 @@ export default {
         min() {
             let min = Math.abs(
                 this.spenders.reduce(function(carry, spender) {
-                    return spender.total < carry ? spender.total : carry;
+                    return Number(spender.total) < carry ? Number(spender.total) : carry;
                 }, 0)
             );
 
@@ -95,7 +95,7 @@ export default {
         max() {
             let max = Math.abs(
                 this.spenders.reduce(function(carry, spender) {
-                    return spender.total > carry ? spender.total : carry;
+                    return Number(spender.total) > carry ? Number(spender.total) : carry;
                 }, 0)
             );
 

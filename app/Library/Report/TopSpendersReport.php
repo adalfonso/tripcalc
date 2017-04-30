@@ -11,7 +11,7 @@ class TopSpendersReport extends Report {
 	 * Generate report data
 	 * @return array
 	 */
-	public function generate() {
+	protected function generate() {
 		$spend = $this->transactions->map(function($spendersTransactions) {
                 $creator = $spendersTransactions->first()->creator;
                 $itemSum = $spendersTransactions->sum('amount');

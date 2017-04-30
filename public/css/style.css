@@ -1,4 +1,4 @@
-\/*
+/*
 
 #495a69 - Borders, headings, submit buttons, paragraphs,
 	      placeholder color on light inputs
@@ -328,6 +328,10 @@ a.subtext:hover {
 
 /*	General Classes
  */
+
+.align-right, .align-right > * { text-align: right; }
+.align-left, .align-left > * { text-align: left; }
+
 .arw-up {
 	border: .8em solid transparent;
 	border-bottom: .8em solid rgba(228,242,253,.95);
@@ -1041,6 +1045,34 @@ a.subtext:hover {
 
 .report .graph > table .total td {
 	border-top: 1px solid #495a69;
+}
+
+.closeoutReport .spenderGroup:last-of-type hr {
+	display: none;
+}
+
+.closeoutReport p.line {
+	background: rgb(222, 222, 242);
+	border: 1px solid #495a69;
+	border-radius: .25rem;
+	padding: .125rem .25rem;
+}
+
+.closeoutReport p.description {
+	font-size: .75rem;
+	font-weight: bold;
+	letter-spacing: .1rem;
+	line-height: .75rem;
+}
+
+.closeoutReport p span {
+	font-size: 1.2em;
+}
+
+.closeoutReport p span > span {
+	height: 1em;
+	font-size: 24px;
+	vertical-align: middle;
 }
 
 .detailedReport td,
