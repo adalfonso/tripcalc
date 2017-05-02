@@ -44,13 +44,16 @@ export default {
             if (this.total === 0) {
                 return 'You are square.'
             }
-            return '$' + Number(
-                Math.abs(this.total)
-            ).toFixed(2);
+
+            let usd = new Intl.NumberFormat('us-US', {
+                minimumFractionDigits: 2
+            });
+
+            return '$' + usd.format(Math.abs(this.total));
         },
 
         status() {
-            return this.total < 0 ? 'You are owed': 'You owe';
+            return this.total > 0 ? 'You are owed': 'You owe';
         }
     },
 

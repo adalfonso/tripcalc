@@ -39,8 +39,9 @@ class TransactionController extends Controller {
 		return [
 			'transaction' => $transaction,
 			'hashtags'    => $transaction->hashtags->pluck('tag'),
-			'travelers'   => $travelers,
-			'creator'     => $transaction->creator->fullname
+			'travelers'   => collect($travelers)->keyBy('id'),
+			'creator'     => $transaction->creator->fullname,
+			'user'        => Auth::id()
 		];
 	}
 

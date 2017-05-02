@@ -15,7 +15,7 @@
         <div class="ui-input-btn">
             <img src="/img/icon/calendar-white-256x256.png" @click="start_date.show()">
         </div>
-        <input type="text" class="hasBtn" name="start_date" placeholder="Start Date" maxlength="50"
+        <input type="text" class="hasBtn" name="start_date" placeholder="*Start Date" maxlength="50"
             v-model="startDatePretty" required>
 
         <date-picker v-if="end_date.visible" :date="end_date"></date-picker>
@@ -23,7 +23,7 @@
         <div class="ui-input-btn">
             <img src="/img/icon/calendar-white-256x256.png" @click="end_date.show()">
         </div>
-        <input type="text" class="hasBtn" name="end_date" placeholder="End Date" maxlength="50"
+        <input type="text" class="hasBtn" name="end_date" placeholder="*End Date" maxlength="50"
             v-model="endDatePretty" @blur="" required>
 
         <p class="ui-error" v-text="form.errors.get('budget')"></p>
@@ -36,6 +36,11 @@
         </textarea>
 
         <div class="ui-checkbox" v-if="trip_id">
+
+            <!-- Fake fields to stop browser from trying to save password -->
+            <input style="display:none" type="text" name="userFix">
+            <input style="display:none" type="password" name="passwordFix">
+            
             <label id="delete">
                 <input type="checkbox" name="delete" v-model="form.delete"
                 @click="setPasswordNull">

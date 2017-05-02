@@ -46,8 +46,20 @@
 
         <p><strong>How to Split:</strong></p>
 
+        <div class="toggleGroup clearfix">
+            <div :active="split === 'even'" @click="evenSplit">
+                Evenly
+            </div>
+            <div :active="split === 'personal'" @click="personalSplit">
+                Personal
+            </div>
+            <div :active="split === 'custom'" @click="customSplit">
+                Custom
+            </div>
+        </div>
+
         <div class="travelers">
-            <div v-for="(traveler, index) in form.travelers">
+            <div v-show="split === 'custom'" v-for="(traveler, index) in form.travelers">
                 <p class="ui-error"
                     v-if="form.errors.has('travelers.' + index + '.split_ratio')">
                     *Invalid Split Ratio for {{ traveler.full_name }}
@@ -65,7 +77,14 @@
             </div>
         </div>
 
+        <hr v-if="transaction_id">
+
         <div class="ui-checkbox" v-if="transaction_id">
+
+            <!-- Fake fields to stop browser from trying to save password -->
+            <input style="display:none" type="text" name="userFix">
+            <input style="display:none" type="password" name="passwordFix">
+
             <label id="delete">
                 <input type="checkbox" name="delete" v-model="form.delete"
                     @click="setPasswordNull">
@@ -113,7 +132,9 @@ props: {
 data() {
     return {
         creator: null,
+        split: '',
         date: new DatePicker(),
+        user: '',
         form: new Form({
             date: '',
             amount: '',
@@ -160,10 +181,55 @@ methods: {
         this.form.hashtagInput = '';
     },
 
+    evenSplit() {
+        this.resetSplit('even');
+    },
+
+    personalSplit() {
+        this.resetSplit('personal');
+        this.form.travelers[this.user].is_spender = true;
+        this.form.travelers[this.user].split_ratio = 1;
+    },
+
+    customSplit() {
+        this.resetSplit('custom');
+    },
+
+    resetSplit(type) {
+        this.split = type;
+
+        for (let traveler in this.form.travelers) {
+            this.form.travelers[traveler].is_spender = false;
+            this.form.travelers[traveler].split_ratio = null;
+        }
+    },
+
+    interpretSplit() {
+        let userIsSpender = this.form.travelers[this.user].is_spender;
+
+        let spenders = [];
+
+        for (let id in this.form.travelers) {
+            if (this.form.travelers[id].is_spender) {
+                spenders.push(id);
+            }
+        }
+
+        if (spenders.length === 0) {
+            return this.split = 'even';
+        } else if (spenders.length === 1 && userIsSpender) {
+            return this.split = 'personal';
+        }
+
+        return this.split = 'custom';
+    },
+
     getTravelers() {
         axios.get(`/trips/${ this.trip_id }/travelers`)
-        .then(travelers => {
-           this.form.travelers = travelers.data;
+        .then(response => {
+           this.form.travelers = response.data.travelers;
+           this.user = response.data.user;
+           this.split = 'even';
         });
     },
 
@@ -172,25 +238,27 @@ methods: {
             /trips/${ this.trip_id }/transactions/${ this.transaction_id }
         `)
         .then(response => {
-            let hashtags = response.data.hashtags;
             let transaction = response.data.transaction;
-            let travelers = response.data.travelers;
 
             this.form = new Form({
                 date: '',
                 amount: transaction.amount,
                 description: transaction.description,
-                travelers: travelers,
+                travelers: response.data.travelers,
                 delete: false, delete_confirmation: false,
                 password: null,
-                hashtags: new Hashtags(hashtags)
+                hashtags: new Hashtags(response.data.hashtags)
             });
 
+            this.user = response.data.user;
             this.creator = response.data.creator;
+
+            this.interpretSplit();
 
             this.setDate(transaction.date, this.date);
         });
     },
+
 
     isUpdatable() {
         return this.transaction_id !== null;

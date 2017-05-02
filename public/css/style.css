@@ -406,7 +406,7 @@ a.subtext:hover {
 .marginless { margin: 0; }
 
 .popup {
-	background: rgba(202, 202, 222, .9);
+	background: rgba(202, 202, 222, .98);
 	border-radius: .2rem;
 	box-sizing: border-box;
 	left: 0;
@@ -929,13 +929,37 @@ a.subtext:hover {
 .transaction:hover .editButton {display: inline !important;}
 
 .travelers {
-	/*overflow: auto;*/
-	margin-bottom: .6rem;
-	/*max-height: calc(2.6rem * 5 + .6rem * 4);*/
+	margin: .6rem 0;
 }
 
 .travelers div:last-of-type .ui-checkbox {
 	margin-bottom: 0;
+}
+
+.toggleGroup {
+	display: table;
+	margin: 0 auto;
+}
+
+.toggleGroup div {
+	background: #798a99;
+	color: #fff;
+	float: left;
+	padding: .6rem 1rem;
+}
+
+.toggleGroup div:first-of-type {
+	border-top-left-radius: .2rem;
+	border-bottom-left-radius: .2rem;
+}
+
+.toggleGroup div:last-of-type {
+	border-top-right-radius: .2rem;
+	border-bottom-right-radius: .2rem;
+}
+
+.toggleGroup [active="true"] {
+	background: #495a69;
 }
 
 /* Trip List Section
@@ -1110,6 +1134,7 @@ a.subtext:hover {
 	.dialogue {	width: 400px; }
 
 	.popup {
+		background:rgba(202, 202, 222, .9);
 		left: calc(50% - 200px);
 		top: 1rem;
 		width: 400px;

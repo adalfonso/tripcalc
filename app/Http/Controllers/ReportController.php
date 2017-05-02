@@ -36,9 +36,12 @@ class ReportController extends Controller {
     public function detailed(Trip $trip) {
         $transactions = DetailedReport::make($trip);
 
+        $multiUser = $transactions->unique('creatorId')->count() > 1
+            || $trip->users->count() > 1;
+
         return [
             'transactions' => $transactions,
-            'multiUser' => $transactions->unique('creatorId')->count() > 1
+            'multiUser' => $multiUser
         ];
     }
 }

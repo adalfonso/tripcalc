@@ -83,7 +83,7 @@
 		    		this.transactionForm.id = null;
 		    	},
 
-		    	openTransactionForm(id = null) {  console.log('open');
+		    	openTransactionForm(id = null) {
 		    		// When going from a blank transaction to an actual one
 		    		if (this.transactionForm.visible) {
 		    			return new Promise((resolve) => {

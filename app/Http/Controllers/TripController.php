@@ -126,19 +126,20 @@ class TripController extends Controller {
     }
 
     public function Travelers(Trip $trip) {
-        $travelers = Trip::with('users')
-            ->where('id', $trip->id)
-            ->first()
-            ->users;
-
-        return $travelers->mapWithKeys(function($item){
-           return [$item->id => [
+        $travelers = $trip->users->mapWithKeys(function($item) {
+            return [
+				$item->id => [
                     'id' => $item->id,
                     'full_name'   => $item->full_name,
                     'is_spender'  => false,
-                    'split_ratio' => ''
+                    'split_ratio' => null
                 ]
             ];
         });
+
+		return [
+			'travelers' => $travelers,
+			'user'      => Auth::id()
+		];
     }
 }
