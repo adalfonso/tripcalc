@@ -40,9 +40,6 @@ export default {
         });
 	},
 
-    computed: {
-    },
-
     methods: {
         close() {
             this.$emit('close');

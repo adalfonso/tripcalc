@@ -1,18 +1,20 @@
 class Queue {
 
     constructor() {
+        this.input = null;
         this.items = [];
     }
 
-    add(item) {
-        if (this.contains(item)) {
-            return {
-                success: false, response: 'This item is already added.'
-            };
-        } else {
-            this.items.push(item);
-            return true;
+    add(data = this.input) {
+        if (!data) {
+            return false;
         }
+
+        if (!this.contains(data)) {
+            this.items.push(data);
+        }
+
+        this.input = null;
     }
 
     remove(item) {
@@ -23,10 +25,6 @@ class Queue {
 
     contains(item) {
         return this.items.indexOf(item) != -1;
-    }
-
-    isEmpty() {
-        // console.log(this.items.length === 0);
     }
 }
 

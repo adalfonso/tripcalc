@@ -55,6 +55,11 @@ class Form {
         this.errors.clear();
     }
 
+    setPasswordNull() {
+        this.password = null;
+        this.delete_confirmation = false;
+    }
+
     submit(requestType, url) {
         return new Promise((resolve, reject) => {
             axios[requestType](url, this.data())
@@ -67,6 +72,14 @@ class Form {
                     reject(error.response.data);
                 });
         });
+    }
+
+    toggle(property) { console.log('fuck');
+        this[property] = !this[property];
+
+        if (property === 'delete') {
+            this.setPasswordNull();
+        }
     }
 
     onSuccess(data) {

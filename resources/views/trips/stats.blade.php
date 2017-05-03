@@ -1,5 +1,9 @@
 <div id="stats" class="left-col clearfix">
 
+	@if(!$trip->description && !$trip->budget && $sum === 0)
+		<p>No stats to show yet.</p>
+	@endif
+
 	{{-- Description --}}
 	@if ($trip->description)
 		<h5><strong>Description:</strong></h5>

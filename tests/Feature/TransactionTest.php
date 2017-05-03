@@ -80,11 +80,13 @@ class TransactionTest extends DuskTestCase {
             'hashtags' => [
                 'items' => [1, 2, 3]
             ],
-            'travelers' => [
-                [
-                    'id' => $this->user1->id,
-                    'split_ratio' => 2,
-                    'is_spender' => true
+            'split' => [
+                'travelers' => [
+                    [
+                        'id' => $this->user1->id,
+                        'split_ratio' => 2,
+                        'is_spender' => true
+                    ]
                 ]
             ]
         ]);
@@ -107,7 +109,7 @@ class TransactionTest extends DuskTestCase {
             'date'     => '2010-12-12',
             'description' => 'hello',
             'hashtags' => [ 'items' => [] ],
-            'travelers' => []
+            'split' => [ 'travelers' => [] ]
         ]);
 
         $find = Transaction::find($this->transaction->id);
@@ -128,11 +130,13 @@ class TransactionTest extends DuskTestCase {
             'date'     => '2010-12-12',
             'description' => 'hello',
             'hashtags' => [ 'items' => [] ],
-            'travelers' => [
-                [
-                    'id' => $this->user1->id,
-                    'split_ratio' => 2.00,
-                    'is_spender' => true
+            'split' => [
+                'travelers' => [
+                    [
+                        'id' => $this->user1->id,
+                        'split_ratio' => 2.00,
+                        'is_spender' => true
+                    ]
                 ]
             ]
         ]);
@@ -158,11 +162,13 @@ class TransactionTest extends DuskTestCase {
             'date'     => '2010-12-12',
             'description' => 'hello',
             'hashtags' => [ 'items' => [] ],
-            'travelers' => [
-                [
-                    'id' => $this->user1->id,
-                    'split_ratio' => 2.00,
-                    'is_spender' => true
+            'split' => [
+                'travelers' => [
+                    [
+                        'id' => $this->user1->id,
+                        'split_ratio' => 2.00,
+                        'is_spender' => true
+                    ]
                 ]
             ]
         ]);
@@ -188,7 +194,7 @@ class TransactionTest extends DuskTestCase {
             'date'     => '2010-12-12',
             'description' => 'hello',
             'hashtags' => [ 'items' => [] ],
-            'travelers' => []
+            'split' => [ 'travelers' => [] ]
         ]);
 
         $spenders = $this->transaction->fresh()->users;
@@ -206,7 +212,7 @@ class TransactionTest extends DuskTestCase {
             'date'     => '2010-12-12',
             'description' => 'hello',
             'hashtags' => [ 'items' => ['hello'] ],
-            'travelers' => []
+            'split' => [ 'travelers' => [] ]
         ]);
 
         $hashtags = $this->transaction->fresh()->hashtags;
@@ -229,7 +235,7 @@ class TransactionTest extends DuskTestCase {
             'date'     => '2010-12-12',
             'description' => 'hello',
             'hashtags' => [ 'items' => [] ],
-            'travelers' => []
+            'split' => [ 'travelers' => [] ]
         ]);
 
         $hashtags = $this->transaction->fresh()->hashtags;
@@ -248,7 +254,7 @@ class TransactionTest extends DuskTestCase {
             'date'     => '2010-12-12',
             'description' => 'hello',
             'hashtags' => [ 'items' => [] ],
-            'travelers' => [],
+            'split' => [ 'travelers' => [] ],
             'delete' => true,
             'delete_confirmation' => true,
             'password' =>'password'
@@ -270,7 +276,7 @@ class TransactionTest extends DuskTestCase {
             'date'     => '2010-12-12',
             'description' => 'hello',
             'hashtags' => [ 'items' => [] ],
-            'travelers' => [],
+            'split' => [ 'travelers' => [] ],
             'delete' => true,
             'delete_confirmation' => true,
             'password' =>'wrongpassword'
@@ -293,7 +299,7 @@ class TransactionTest extends DuskTestCase {
             'date'     => '2010-12-12',
             'description' => 'hello',
             'hashtags' => [ 'items' => [] ],
-            'travelers' => [],
+            'split' => [ 'travelers' => [] ],
             'delete' => true,
             'delete_confirmation' => true,
             'password' =>'password'
