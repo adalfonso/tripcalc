@@ -54,6 +54,11 @@ class Form {
 
         this.errors.clear();
     }
+    
+    setPasswordNull() {
+        this.password = null;
+        this.delete_confirmation = false;
+    }
 
     submit(requestType, url) {
         return new Promise((resolve, reject) => {

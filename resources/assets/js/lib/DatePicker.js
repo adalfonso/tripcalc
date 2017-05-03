@@ -108,11 +108,11 @@ class DatePicker {
 		let parts;
 
         if (parts = input.match(this.regex.prettyDate)){
-            this.setDate(parts[3], parts[1] - 1, parts[2]);
+            this.set(parts[3], parts[1] - 1, parts[2]);
             this.sync();
 
         } else if (parts = input.match(this.regex.lessPrettyDate)){
-            this.setDate(parts[1], parts[2] - 1, parts[3]);
+            this.set(parts[1], parts[2] - 1, parts[3]);
             this.sync();
         }
 	}
@@ -135,7 +135,7 @@ class DatePicker {
 			+ this.date.getDate();
 	}
 
-	setDate(year, month, day) {
+	set(year, month, day) {
 		this.date = new Date(year, month, day);
 		this.displayDate = new Date(year, month, day);
 		this.getDays();
@@ -146,6 +146,10 @@ class DatePicker {
 	show() {
 		this.getDays();
 		this.visible = true;
+	}
+
+	hide() {
+		this.visible = false;
 	}
 
 	sync() {

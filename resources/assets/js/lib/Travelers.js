@@ -12,15 +12,11 @@ class Hashtags extends Queue {
         }
     }
 
-    add(data = this.input) {
-        if (!data) {
-            return false;
-        }
+    add() {
+        let cleanData = this.input.replace(/[\s|,]/g, '');
 
-        let clean = data.replace(/[\s|,]/g, '');
-
-        if (clean !== '') {
-            return super.add(clean);
+        if (cleanData != '') {
+            return super.add();
         }
     }
 }

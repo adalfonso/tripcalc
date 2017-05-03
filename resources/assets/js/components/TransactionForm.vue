@@ -12,29 +12,32 @@
 
         <p><strong>Basic Info:</strong></p>
 
+        <!-- Date -->
         <date-picker v-if="date.visible" :date="date"></date-picker>
         <p class="ui-error" v-text="form.errors.get('date')"></p>
         <div class="ui-input-btn">
             <img src="/img/icon/calendar-white-256x256.png" @click="date.show()">
         </div>
         <input class="hasBtn "type="text" placeholder="*Transaction Date"
-            maxlength="50"  v-model="datePretty" required>
+            maxlength="50" v-model="datePretty" required>
 
+        <!-- Amount -->
         <p class="ui-error" v-text="form.errors.get('amount')"></p>
         <div class="ui-input-btn">$</div>
         <input type="text" class="hasBtn" placeholder="*Transaction Amount" maxlength="50"
             v-model="form.amount" required>
 
+        <!-- Description -->
         <textarea type="text" placeholder="Description" maxlength="500"
             v-model="form.description">
         </textarea>
 
-        <div class="ui-input-btn" @click="addHashtag">
+        <!-- Hashtags -->
+        <div class="ui-input-btn" @click="form.hashtags.add()">
             <span class="font-large">+</span>
         </div>
         <input class="hasBtn" type="text" placeholder="#hashtags" maxlength="25"
-            v-model="form.hashtagInput" @keyup.enter.prevent="addHashtag">
-
+            v-model="form.hashtags.input" @keyup.enter.prevent="form.hashtags.add()">
         <div class="item-wrapper clearfix" v-if="form.hashtags.items.length > 0">
             <div class="item" v-for="hashtag in form.hashtags.items"
                 @click="form.hashtags.remove(hashtag)">
@@ -42,24 +45,25 @@
             </div>
         </div>
 
+        <!-- Split -->
         <hr class="marginless">
-
         <p><strong>How to Split:</strong></p>
-
         <div class="toggleGroup clearfix">
-            <div :active="split === 'even'" @click="evenSplit">
+            <div :active="form.split.is('even')" @click="form.split.even()">
                 Evenly
             </div>
-            <div :active="split === 'personal'" @click="personalSplit">
+            <div :active="form.split.is('personal')" @click="form.split.personal()">
                 Personal
             </div>
-            <div :active="split === 'custom'" @click="customSplit">
+            <div :active="form.split.is('custom')" @click="form.split.custom()">
                 Custom
             </div>
         </div>
 
+        <!-- Travelers - Custom Split -->
         <div class="travelers">
-            <div v-show="split === 'custom'" v-for="(traveler, index) in form.travelers">
+            <div v-show="form.split.type === 'custom'"
+                v-for="(traveler, index) in form.split.travelers">
                 <p class="ui-error"
                     v-if="form.errors.has('travelers.' + index + '.split_ratio')">
                     *Invalid Split Ratio for {{ traveler.full_name }}
@@ -77,21 +81,19 @@
             </div>
         </div>
 
+        <!-- Delete this transaction -->
         <hr v-if="transaction_id">
-
         <div class="ui-checkbox" v-if="transaction_id">
-
             <!-- Fake fields to stop browser from trying to save password -->
             <input style="display:none" type="text" name="userFix">
             <input style="display:none" type="password" name="passwordFix">
 
             <label id="delete">
                 <input type="checkbox" name="delete" v-model="form.delete"
-                    @click="setPasswordNull">
+                    @click="form.setPasswordNull()">
                 Delete this transaction
             </label>
         </div>
-
         <div class="ui-checkbox" v-if="form.delete">
             <label id="deleteConfirmation">
                 <input type="checkbox" name="deleteConfirmation"
@@ -99,7 +101,6 @@
                 Are you really sure? There is no going back!
             </label>
         </div>
-
         <p class="ui-error" v-if="form.errors.has('password') && form.delete &&
             form.delete_confirmation" v-text="form.errors.get('password')">
         </p>
@@ -116,6 +117,7 @@
 <script>
 import Form from '../lib/Form.js';
 import Hashtags from '../lib/Hashtags.js';
+import Split from '../lib/Split.js';
 import DatePicker from '../lib/DatePicker.js';
 
 export default {
@@ -132,17 +134,15 @@ props: {
 data() {
     return {
         creator: null,
-        split: '',
         date: new DatePicker(),
         user: '',
         form: new Form({
             date: '',
             amount: '',
             description: '',
-            travelers: [],
+            split:  new Split(),
             delete: false, delete_confirmation: false,
             password: null,
-            hashtagInput: '',
             hashtags: new Hashtags()
         }),
     };
@@ -162,12 +162,11 @@ computed: {
         get() { return this.date.pretty(); },
 
         set(input) {
-            return this.setDate(input, this.date);
+            return this.date.parse(input);
         }
     }
 },
 
-// Watcher for form date
 watch: {
     datePretty(){
         this.form.date = this.date.lessPretty();
@@ -176,60 +175,13 @@ watch: {
 
 methods: {
 
-    addHashtag() {
-        this.form.hashtags.add(this.form.hashtagInput);
-        this.form.hashtagInput = '';
-    },
-
-    evenSplit() {
-        this.resetSplit('even');
-    },
-
-    personalSplit() {
-        this.resetSplit('personal');
-        this.form.travelers[this.user].is_spender = true;
-        this.form.travelers[this.user].split_ratio = 1;
-    },
-
-    customSplit() {
-        this.resetSplit('custom');
-    },
-
-    resetSplit(type) {
-        this.split = type;
-
-        for (let traveler in this.form.travelers) {
-            this.form.travelers[traveler].is_spender = false;
-            this.form.travelers[traveler].split_ratio = null;
-        }
-    },
-
-    interpretSplit() {
-        let userIsSpender = this.form.travelers[this.user].is_spender;
-
-        let spenders = [];
-
-        for (let id in this.form.travelers) {
-            if (this.form.travelers[id].is_spender) {
-                spenders.push(id);
-            }
-        }
-
-        if (spenders.length === 0) {
-            return this.split = 'even';
-        } else if (spenders.length === 1 && userIsSpender) {
-            return this.split = 'personal';
-        }
-
-        return this.split = 'custom';
-    },
-
     getTravelers() {
         axios.get(`/trips/${ this.trip_id }/travelers`)
         .then(response => {
-           this.form.travelers = response.data.travelers;
-           this.user = response.data.user;
-           this.split = 'even';
+            this.form.split = new Split(
+                response.data.travelers,
+                response.data.user
+            );
         });
     },
 
@@ -244,33 +196,21 @@ methods: {
                 date: '',
                 amount: transaction.amount,
                 description: transaction.description,
-                travelers: response.data.travelers,
                 delete: false, delete_confirmation: false,
                 password: null,
+                split: new Split(response.data.travelers, response.data.user),
                 hashtags: new Hashtags(response.data.hashtags)
             });
 
-            this.user = response.data.user;
             this.creator = response.data.creator;
-
-            this.interpretSplit();
-
-            this.setDate(transaction.date, this.date);
+            this.form.split.interpret();
+            this.date.parse(transaction.date, this.date);
         });
     },
 
 
     isUpdatable() {
         return this.transaction_id !== null;
-    },
-
-    setDate(input, reference) {
-        return reference.parse(input);
-    },
-
-    setPasswordNull() {
-        this.form.password = null;
-        this.form.delete_confirmation = false;
     },
 
     create() {

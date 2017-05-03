@@ -36,27 +36,16 @@
            date: { required: true }
         },
 
-        data() {
-            return {
-
-            };
-        },
-
-        created() {
-
-        },
-
         methods: {
 
             setDate(day, month, year) {
-                this.date.setDate(day, month, year);
-                this.date.visible = false;
+                this.date.set(day, month, year);
+                this.date.hide();
             },
 
             displayPreviousMonth() {
                 this.date.displayPreviousMonth();
             }
-
         }
     }
 </script>

@@ -59,7 +59,7 @@ class TransactionController extends Controller {
 				'updated_by' => Auth::user()->id
 			]);
 
-			$spenders = $this->parseSpenders($request->travelers);
+			$spenders = $this->parseSpenders($request->split['travelers']);
 			$transaction->users()->sync($spenders);
 
 			foreach ($request->hashtags['items'] as $hashtag) {
@@ -84,7 +84,7 @@ class TransactionController extends Controller {
 			]);
 
 			$transaction->users()->sync(
-				$this->parseSpenders($request->travelers)
+				$this->parseSpenders($request->split['travelers'])
 			);
 
 			$hashtags = collect($request->hashtags['items'])->map(function($hashtag) {
@@ -111,11 +111,12 @@ class TransactionController extends Controller {
 	}
 
 	public function validateTransaction() {
+
 		return $this->validate(request(), [
 			'date' => 'required|date_format:Y-n-j',
 			'amount' => 'required|regex:/^\d+(\.\d{1,2})?$/',
 			'hashtags.items.*' => 'regex:/^[^,\s]{1,32}$/',
-			'travelers.*.split_ratio' => [
+			'split.travelers.*.split_ratio' => [
 				'nullable', 'regex:/(^\d*\.?\d+$)|(^\d+\.?\d*$)/'
 			]
 		]);
