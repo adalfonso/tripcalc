@@ -43,13 +43,6 @@
 
         <button type="submit" class="btn-full btn-thin second">Login</button>
     </div>
-
-    @if ($errors->has('resendActivationEmail'))
-        <a class="margin-bottom" ng-show="data.resendActivationEmail"
-            @click="resendActivationEmail">
-            Resend my activation email, please!
-        </a>
-    @endif
 </form>
 @stop
 
@@ -61,7 +54,7 @@
             data: { remember: false },
 
             created() {
-                this.remember = {{ old('remember') ? 'true' : 'false'}};
+                this.remember = {{ old('remember') ? 'true' : 'false' }};
 
                 document.querySelector('#body').style.paddingTop = 0;
             },

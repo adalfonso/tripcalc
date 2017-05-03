@@ -54,7 +54,7 @@ class Form {
 
         this.errors.clear();
     }
-    
+
     setPasswordNull() {
         this.password = null;
         this.delete_confirmation = false;
@@ -72,6 +72,14 @@ class Form {
                     reject(error.response.data);
                 });
         });
+    }
+
+    toggle(property) { console.log('fuck');
+        this[property] = !this[property];
+
+        if (property === 'delete') {
+            this.setPasswordNull();
+        }
     }
 
     onSuccess(data) {

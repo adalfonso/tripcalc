@@ -45,6 +45,10 @@ class Split {
         return this.type = 'custom';
     }
 
+    toggle(index) {
+        this.travelers[index].is_spender = !this.travelers[index].is_spender;
+    }
+
     reset(type) {
         this.type = type;
 

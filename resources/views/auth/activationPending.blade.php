@@ -3,7 +3,7 @@
 @section('nav')
 	<nav id="nav" class="clearfix">
 		<hamburger></hamburger>
-		<a class="logout" href="/logout">Log Out</a>
+		<logout></logout>
 	</nav>
 @overwrite
 

@@ -39,12 +39,11 @@
 			<h4 class="margin-top">Recent Activity</h4>
 
 			@foreach($transactions as $transaction)
-				<div class="transaction">
+				<div class="transaction" @click="openTransactionForm({{ $transaction->id }})">
 					<p>
 						<strong>{{ $transaction->dateFormat }}</strong>
 						 - ${{ $transaction->amount }}
-						<img class="editButton" src="/img/icon/edit.png"
-							@click="openTransactionForm({{ $transaction->id }})">
+						<img class="editButton" src="/img/icon/edit.png">
 					</p>
 					<p>{{ $transaction->description }}</p>
 				</div>

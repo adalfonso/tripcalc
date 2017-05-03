@@ -41,28 +41,29 @@
         </textarea>
 
         <!-- Delete this trip -->
-        <div class="ui-checkbox" v-if="trip_id">
+        <div class="ui-checkbox" v-if="trip_id" @click="form.toggle('delete')">
             <!-- Fake fields to stop browser from trying to save password -->
-            <input style="display:none" type="text" name="userFix">
-            <input style="display:none" type="password" name="passwordFix">
+            <input style="display:none" type="text">
+            <input style="display:none" type="password">
+            <div class="ui-input-btn no-hover" style="font-size: 2rem"
+                v-html="form.delete ? '&#9760;' : '' "></div>
+            <p>Delete this trip</p>
+        </div>
 
-            <label id="delete">
-                <input type="checkbox" name="delete" v-model="form.delete"
-                @click="form.setPasswordNull()">
-                Delete this trip
-            </label>
+        <!-- Delete Confirmation -->
+        <div class="ui-checkbox" v-if="form.delete" @click="form.toggle('delete_confirmation')">
+            <div class="ui-input-btn no-hover"
+                v-html="form.delete_confirmation ? '&#10004;' : '' "></div>
+            <p>Are you really sure?</p>
         </div>
-        <div class="ui-checkbox" v-if="form.delete">
-            <label id="deleteConfirmation">
-                <input type="checkbox" name="deleteConfirmation" v-model="form.delete_confirmation">
-                Are you sure? There is no going back!
-            </label>
-        </div>
-        <p class="ui-error" v-if="form.errors.has('password') && form.delete &&
-            form.delete_confirmation" v-text="form.errors.get('password')"></p>
-        <input type="password" name="deleteTripPassword" v-if="form.delete &&
-            form.delete_confirmation" v-model="form.password"
+
+        <!-- Password To Delete -->
+        <div v-if="form.isDeletable()">
+        <p class="ui-error" v-if="form.errors.has('password')"
+            v-text="form.errors.get('password')"></p>
+        <input type="password" name="deleteTripPassword" v-model="form.password"
             placeholder="Enter password to continue">
+        </div>
 
         <button class="btn-full form-button" type="submit">Submit Trip</button>
     </form>
