@@ -16,7 +16,7 @@
 
 	<div class="trip-header clearfix">
 		<h3 id="name">
-			{{ $trip->name }}
+		{{ $trip->name }}
 			<img trip class="editButton" src="/img/icon/edit.png"
 				@click="tripForm.visible = true">
 		</h3>
@@ -30,7 +30,18 @@
 
 	@include('trips.stats')
 
-	<div id="activity" transaction class="clearfix right-col">
+	<div id="activity" class="clearfix right-col">
+
+		<post-form :trip_id="{{$trip->id}}"></post-form>
+		@foreach($posts as $post)
+			<p>
+				<strong>
+					{{ $post->dateFormat }} - {{ $post->user->full_name }}
+				</strong>
+			</p>
+			<p>{{ $post->content }}</p>
+		@endforeach
+
 		<button class="btn-full" @click="transactionForm.visible = true">
 			+ New Transaction
 		</button>

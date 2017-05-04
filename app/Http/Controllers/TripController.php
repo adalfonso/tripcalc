@@ -3,6 +3,7 @@
 use App\Transaction;
 use App\Trip;
 use App\User;
+use App\Post;
 use Auth;
 use DB;
 use Hash;
@@ -76,16 +77,21 @@ class TripController extends Controller {
     }
 
     public function show(Trip $trip) {
-    	$transactions = Transaction::where("trip_id", $trip->id)
+    	$transactions = Transaction::where('trip_id', $trip->id)
             ->with('creator')
     		->get();
+
+		$posts = Post::where('trip_id', $trip->id)
+			->with('user')
+			->get()
+			->sortByDesc('created_at');
 
 		$friendsInvitable = true;
 
 		$sum = $transactions->sum('amount');
 
     	return view('trips.show', compact(
-			'transactions', 'trip', 'sum', 'friendsInvitable'
+			'transactions', 'posts', 'trip', 'sum', 'friendsInvitable'
 		));
     }
 
