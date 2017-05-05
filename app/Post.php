@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Post extends Model {
 
@@ -11,8 +12,7 @@ class Post extends Model {
             ->select('id', 'first_name', 'last_name');
     }
 
-    public function getDateFormatAttribute() {
-        return \Carbon\Carbon::parse($this->date)->format('M d, Y');
+    public function getDiffForHumansAttribute() {
+        return $this->created_at->diffForHumans();
     }
-
 }

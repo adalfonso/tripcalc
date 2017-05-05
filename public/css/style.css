@@ -18,7 +18,7 @@ rgba(228,242,253,.95) - Search results background
 
 /* Default Element Styles
  */
-
+activ
 html { height: 100%; }
 
 body {
@@ -1007,10 +1007,65 @@ a.subtext:hover {
 
 #tripStartDate { margin-right: .6rem; }
 
+.activity-item {
+	margin-top: .5rem;
+}
+
+.activity-item .type {
+	background: #495a69;
+	border-bottom-left-radius: .2rem;
+	border-top-left-radius: .2rem;
+	color: #fff;
+	float: left;
+	height: 2.4rem; width: 2.4rem;
+	padding: .4rem;
+	position: relative;
+	text-align: center;
+}
+
+.activity-item .type p {
+	color: #fff;
+	line-height: 1.8rem;
+	margin: 0;
+}
+
+.activity-item .info {
+	padding: 0 .5rem;
+	border: 1px solid #495a69;
+	border-radius: .2rem;
+	border-top-left-radius: 0;
+	float: left;
+	width: calc(100% - 2.4rem);
+}
+
+.activity-item .info:first-of-type { margin-top: 0; }
+
+.speech-bubble {
+	position: absolute;
+	background: #fff;
+	border-radius: .2em;
+	height: 50%; width: 60%;
+	top: 25%; left: 16%;
+}
+
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	right: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: .4em solid transparent;
+	border-left-color: #fff;
+	border-right: 0;
+	border-top: 0;
+	margin-top: -0.4em;
+	margin-right: -.4em;
+}
+
 
 /* Report
  */
-
 .report .axis td { padding: 0; }
 
 .report .axis td div {

@@ -83,15 +83,16 @@ class TripController extends Controller {
 
 		$posts = Post::where('trip_id', $trip->id)
 			->with('user')
-			->get()
-			->sortByDesc('created_at');
+			->get();
+
+		$activities = $transactions->merge($posts)->sortByDesc('created_at');
 
 		$friendsInvitable = true;
 
 		$sum = $transactions->sum('amount');
 
     	return view('trips.show', compact(
-			'transactions', 'posts', 'trip', 'sum', 'friendsInvitable'
+			'activities', 'trip', 'sum', 'friendsInvitable'
 		));
     }
 

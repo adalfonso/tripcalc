@@ -30,38 +30,7 @@
 
 	@include('trips.stats')
 
-	<div id="activity" class="clearfix right-col">
-
-		<post-form :trip_id="{{$trip->id}}"></post-form>
-		@foreach($posts as $post)
-			<p>
-				<strong>
-					{{ $post->dateFormat }} - {{ $post->user->full_name }}
-				</strong>
-			</p>
-			<p>{{ $post->content }}</p>
-		@endforeach
-
-		<button class="btn-full" @click="transactionForm.visible = true">
-			+ New Transaction
-		</button>
-
-		@if ($transactions->count() > 0)
-			<h4 class="margin-top">Recent Activity</h4>
-
-			@foreach($transactions as $transaction)
-				<div class="transaction" @click="openTransactionForm({{ $transaction->id }})">
-					<p>
-						<strong>{{ $transaction->dateFormat }}</strong>
-						 - ${{ $transaction->amount }}
-						<img class="editButton" src="/img/icon/edit.png">
-					</p>
-					<p>{{ $transaction->description }}</p>
-				</div>
-			@endforeach
-		@endif
-	</div>
-
+	@include('trips.activities')
 </div>
 @endsection
 

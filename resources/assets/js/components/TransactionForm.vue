@@ -29,7 +29,7 @@
         v-model="form.amount" required>
 
     <!-- Description -->
-    <textarea type="text" placeholder="Description" maxlength="500"
+    <textarea type="text" placeholder="Description" maxlength="32"
         v-model="form.description">
     </textarea>
 
