@@ -3,6 +3,7 @@
 use App\Transaction;
 use App\Trip;
 use App\User;
+use App\Post;
 use Auth;
 use DB;
 use Hash;
@@ -11,10 +12,6 @@ use Illuminate\Http\Request;
 use Validator;
 
 class TripController extends Controller {
-
-	public function __construct() {
-        $this->middleware('auth');
-    }
 
     public function index () {
     	$trips = Trip::whereHas('users', function($query) {
@@ -76,16 +73,35 @@ class TripController extends Controller {
     }
 
     public function show(Trip $trip) {
-    	$transactions = Transaction::where("trip_id", $trip->id)
+    	$transactions = Transaction::where('trip_id', $trip->id)
             ->with('creator')
     		->get();
+
+		$posts = Post::where('trip_id', $trip->id)
+			->with('user')
+			->get();
+
+		$activities = $transactions->merge($posts)
+			->sortByDesc('created_at')
+			->map(function($item){
+				if (get_class($item) === 'App\Transaction') {
+					return $item;
+				}
+				return (object) [
+					'post' => $item->id,
+					'poster' => $item->user->fullname,
+					'edit' => $item->created_by === Auth::id(),
+					'content' => $item->content,
+					'date' => $item->diffForHumans
+				];
+			});
 
 		$friendsInvitable = true;
 
 		$sum = $transactions->sum('amount');
 
     	return view('trips.show', compact(
-			'transactions', 'trip', 'sum', 'friendsInvitable'
+			'activities', 'trip', 'sum', 'friendsInvitable'
 		));
     }
 
@@ -125,7 +141,7 @@ class TripController extends Controller {
         ], $messages);
     }
 
-    public function Travelers(Trip $trip) {
+    public function travelers(Trip $trip) {
         $travelers = $trip->users->mapWithKeys(function($item) {
             return [
 				$item->id => [

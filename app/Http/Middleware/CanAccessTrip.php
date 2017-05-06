@@ -2,7 +2,7 @@
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use \App\User;
+use App\User;
 
 class CanAccessTrip {
 

@@ -25,7 +25,6 @@ Route::group(['middleware' => 'auth'], function() {
 });
 
 Route::group(['middleware' => 'activeAccount'], function() {
-
 	Route::get('/friend/requests', 'FriendController@getPendingRequests');
 	Route::post('/friend/requests/{friend}', 'FriendController@resolveFriendRequest');
 	Route::get('/profile', 'ProfileController@personal');
@@ -51,6 +50,13 @@ Route::group(['middleware' => 'activeAccount'], function() {
 		Route::post('/trips/{trip}/searchEligibleFriends', 'FriendController@searchEligibleFriends');
 		Route::post('/trips/{trip}/transactions/', 'TransactionController@store');
 		Route::get('/trips/{trip}/travelers', 'TripController@travelers');
+
+		Route::post('/trips/{trip}/posts', 'PostController@store');
+
+		Route::group(['middleware' => 'ownsPost'], function() {
+			Route::patch('/trips/{trip}/posts/{post}', 'PostController@update');
+			Route::delete('/trips/{trip}/posts/{post}', 'PostController@destroy');
+		});
 	});
 
 	Route::group(['middleware' => ['canAccessTrip', 'tripHasTransaction']], function() {

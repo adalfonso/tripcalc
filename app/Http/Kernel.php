@@ -59,6 +59,7 @@ class Kernel extends HttpKernel
 
         'activeAccount' => \App\Http\Middleware\ActiveAccount::class,
         'canAccessTrip' => \App\Http\Middleware\CanAccessTrip::class,
+        'ownsPost' => \App\Http\Middleware\OwnsPost::class,
         'tripHasTransaction' => \App\Http\Middleware\TripHasTransaction::class,
 
         'isAdmin' => \App\Http\Middleware\IsAdmin::class

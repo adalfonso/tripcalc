@@ -29,9 +29,8 @@
         v-model="form.amount" required>
 
     <!-- Description -->
-    <textarea type="text" placeholder="Description" maxlength="500"
+    <input type="text" placeholder="Description" maxlength="32"
         v-model="form.description">
-    </textarea>
 
     <!-- Hashtags -->
     <div class="ui-input-btn" @click="form.hashtags.add()">

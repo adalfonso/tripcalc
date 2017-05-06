@@ -16,7 +16,7 @@
 
 	<div class="trip-header clearfix">
 		<h3 id="name">
-			{{ $trip->name }}
+		{{ $trip->name }}
 			<img trip class="editButton" src="/img/icon/edit.png"
 				@click="tripForm.visible = true">
 		</h3>
@@ -30,27 +30,7 @@
 
 	@include('trips.stats')
 
-	<div id="activity" transaction class="clearfix right-col">
-		<button class="btn-full" @click="transactionForm.visible = true">
-			+ New Transaction
-		</button>
-
-		@if ($transactions->count() > 0)
-			<h4 class="margin-top">Recent Activity</h4>
-
-			@foreach($transactions as $transaction)
-				<div class="transaction" @click="openTransactionForm({{ $transaction->id }})">
-					<p>
-						<strong>{{ $transaction->dateFormat }}</strong>
-						 - ${{ $transaction->amount }}
-						<img class="editButton" src="/img/icon/edit.png">
-					</p>
-					<p>{{ $transaction->description }}</p>
-				</div>
-			@endforeach
-		@endif
-	</div>
-
+	@include('trips.activities')
 </div>
 @endsection
 
