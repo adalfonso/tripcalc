@@ -13,10 +13,6 @@ use Validator;
 
 class TripController extends Controller {
 
-	public function __construct() {
-        $this->middleware('auth');
-    }
-
     public function index () {
     	$trips = Trip::whereHas('users', function($query) {
             $query->where([
@@ -85,7 +81,20 @@ class TripController extends Controller {
 			->with('user')
 			->get();
 
-		$activities = $transactions->merge($posts)->sortByDesc('created_at');
+		$activities = $transactions->merge($posts)
+			->sortByDesc('created_at')
+			->map(function($item){
+				if (get_class($item) === 'App\Transaction') {
+					return $item;
+				}
+				return (object) [
+					'post' => $item->id,
+					'poster' => $item->user->fullname,
+					'edit' => $item->created_by === Auth::id(),
+					'content' => $item->content,
+					'date' => $item->diffForHumans
+				];
+			});
 
 		$friendsInvitable = true;
 
@@ -132,7 +141,7 @@ class TripController extends Controller {
         ], $messages);
     }
 
-    public function Travelers(Trip $trip) {
+    public function travelers(Trip $trip) {
         $travelers = $trip->users->mapWithKeys(function($item) {
             return [
 				$item->id => [

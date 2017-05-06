@@ -18,7 +18,6 @@ rgba(228,242,253,.95) - Search results background
 
 /* Default Element Styles
  */
-activ
 html { height: 100%; }
 
 body {
@@ -42,11 +41,21 @@ body {
 *::-webkit-input-placeholder {
 	color: rgba(237, 244, 248, .5) !important;
 } *:-moz-placeholder {
-	color: #rgba(237, 244, 248, .5) !important;
+	color: rgba(237, 244, 248, .5) !important;
 } *::-moz-placeholder {
-	color: #rgba(237, 244, 248, .5) !important;
+	color: rgba(237, 244, 248, .5) !important;
 } *:-ms-input-placeholder {
-	color: #rgba(237, 244, 248, .5) !important;
+	color: rgba(237, 244, 248, .5) !important;
+}
+
+.placeholder-dark::-webkit-input-placeholder {
+	color: #495a69 !important;
+} .placeholder-dark:-moz-placeholder {
+	color: #495a69 !important;
+} .placeholder-dark::-moz-placeholder {
+	color: #495a69 !important;
+} .placeholder-dark:-ms-input-placeholder {
+	color: #495a69 !important;
 }
 
 a, .fake-link {
@@ -175,6 +184,20 @@ textarea {
 	height: 6.6rem;
 	line-height: 1rem;
 	resize: none;
+	height: 4.4rem;
+	line-height: 1.2rem;
+	padding: .25rem .5rem;
+}
+
+textarea.plain {
+	background: transparent;
+    box-shadow: none;
+    border: 1px solid #798a99;
+    border-radius: 0;
+	color: #495a69;
+	height: 4rem;
+	line-height: 1.2rem;
+	padding: .25rem .5rem;
 }
 
 th { text-align:left }
@@ -193,6 +216,10 @@ th { text-align:left }
 	top: 2%;
 	width: 96%;
 	z-index: 10;
+}
+
+.floatable-left > * {
+	float: left;
 }
 
 .hashtagInput { margin-bottom: 0; }
@@ -1030,7 +1057,7 @@ a.subtext:hover {
 }
 
 .activity-item .info {
-	padding: 0 .5rem;
+	padding: 0 .6rem;
 	border: 1px solid #495a69;
 	border-radius: .2rem;
 	border-top-left-radius: 0;

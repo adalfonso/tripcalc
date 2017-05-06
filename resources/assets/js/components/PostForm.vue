@@ -1,8 +1,8 @@
 <template>
-    <form  @submit.prevent="onSubmit">
+    <form  @submit.prevent="create">
 
         <!-- Content -->
-        <textarea name="description" type="text" maxlength="255"
+        <textarea name="description" type="text" maxlength="255" style="border-radius: 0"
             placeholder="Enter a message..." v-model="form.content">
         </textarea>
 
@@ -36,18 +36,6 @@ methods: {
         this.form.post(`/trips/${ this.trip_id }/posts`)
         .then(data => { window.location = '/trips/' + this.trip_id })
         .catch(errors => {});
-    },
-
-    update() {
-        this.form.patch(`/trips/${ this.trip_id }/posts`)
-        .then(data => { window.location = '/trips/' + this.trip_id })
-        .catch(errors => {});
-    },
-
-    onSubmit() {
-        return this.isUpdatable()
-            ? this.update()
-            : this.create();
     }
 }
 

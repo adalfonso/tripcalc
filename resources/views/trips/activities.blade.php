@@ -14,40 +14,29 @@
 
 @foreach($activities as $item)
 
-@if (get_class($item) === 'App\Post')
-
-<div class="activity-item clearfix">
-    <div class="type">
-        <div class="speech-bubble"></div>
-    </div>
-    <div class="info">
-        <p>
-            <strong>{{ $item->diffForHumans }}</strong>
-            | {{ $item->user->full_name }}
-        </p>
-        <p>{{ $item->content }}</p>
-    </div>
-</div>
-
+@if (get_class($item) === 'App\Transaction')
+	<div class="activity-item clearfix">
+	    <div class="type"><p>$</p></div>
+	    <div class="info">
+	        <p>
+	            <strong>{{ $item->created_at->diffForHumans() }}</strong>
+	            <img style="float: right;" class="editButton"
+	                src="/img/icon/edit.png" @click="openTransactionForm({{ $item->id }})">
+	        </p>
+	        <p>
+	            <strong>{{ $item->dateFormat }}</strong>
+	             - ${{ $item->amount }}
+	        </p>
+	        <p>{{ $item->description }}</p>
+	    </div>
+	</div>
 @else
-
-<div class="activity-item clearfix">
-    <div class="type"><p>$</p></div>
-    <div class="info">
-        <p>
-            <strong>{{ $item->created_at->diffForHumans() }}</strong>
-            <img style="float: right;" class="editButton"
-                src="/img/icon/edit.png" @click="openTransactionForm({{ $item->id }})">
-        </p>
-        <p>
-            <strong>{{ $item->dateFormat }}</strong>
-             - ${{ $item->amount }}
-
-        </p>
-        <p>{{ $item->description }}</p>
-    </div>
-</div>
-
+	<div class="activity-item clearfix">
+	    <div class="type">
+	        <div class="speech-bubble"></div>
+	    </div>
+		<post :data="{{json_encode($item)}}" :trip_id="'{{$trip->id}}'"></post>
+	</div>
 @endif
 
 @endforeach

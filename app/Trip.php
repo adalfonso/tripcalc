@@ -27,15 +27,15 @@ class Trip extends Model {
 		$end = Carbon::parse($this->end_date);
 
 		if ($start->diffInDays($end) == 0) {
-			return $start->format('F d, Y');
+			return $start->format('F j, Y');
 
 		} else if ($start->diffInMonths($end) == 0) {
-			return $start->format('F d') . ' - ' . $end->format('d, Y');
+			return $start->format('F j') . ' - ' . $end->format('j, Y');
 
 		} else if ($start->year == $end->year) {
-			return $start->format('F d') . ' - ' . $end->format('F d, Y');
+			return $start->format('F j') . ' - ' . $end->format('F j, Y');
 		}
 
-		return $start->format('F d, Y') . ' - ' . $end->format('F d, Y');
+		return $start->format('F j, Y') . ' - ' . $end->format('F j, Y');
 	}
 }
