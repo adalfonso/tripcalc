@@ -83,7 +83,7 @@ export default {
         },
 
         balanceVerbiage() {
-            return this.owedTotal > 0 ? 'You owe' : 'You are owed';
+            return this.balance > 0 ? 'You are owed' : 'You owe';
         }
     },
 

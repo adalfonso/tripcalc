@@ -17,11 +17,11 @@ class Hashtags extends Queue {
             return false;
         }
 
-        let clean = data.replace(/[\s|,]/g, '');
+        let hashtags = this.input.replace(/#/g, ' ').trim().split(/\s+/);
 
-        if (clean !== '') {
-            return super.add(clean);
-        }
+        hashtags.forEach( hashtag => {
+            super.add(hashtag);
+        });
     }
 }
 

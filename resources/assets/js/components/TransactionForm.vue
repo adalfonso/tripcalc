@@ -151,6 +151,10 @@ created() {
     }
 
     this.getTravelers();
+
+    // Auto set date when new transaction
+    let now = this.date.date;
+    this.date.set(now.getFullYear(), now.getMonth(), now.getDate());
 },
 
 computed: {
@@ -205,7 +209,7 @@ methods: {
 
             this.creator = response.data.creator;
             this.form.split.interpret();
-            this.date.parse(transaction.date, this.date);
+            this.date.parse(transaction.date);
         });
     },
 
@@ -239,6 +243,10 @@ methods: {
     },
 
     onSubmit() {
+        if (this.form.hashtags.input) {
+            this.form.hashtags.add();
+        }
+
         if (this.form.isDeletable()) {
             return this.delete();
 
