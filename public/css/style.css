@@ -329,6 +329,15 @@ a.subtext:hover {
 	color: #fff;
 }
 
+.ui-input-duo-mobile > * {
+	float: left;
+	padding: .4rem 0;
+	width: calc(50% - .3rem) !important;
+}
+
+.ui-input-duo-mobile > :first-child { margin-right: .3rem; }
+.ui-input-duo-mobile > :last-child { margin-left: .3rem; }
+
 .ui-error {
 	margin: 0;
 	text-align: left;
@@ -1067,6 +1076,13 @@ a.subtext:hover {
 
 .activity-item .info:first-of-type { margin-top: 0; }
 
+.hashtags-plaintext { margin: .5rem 0; }
+
+.hashtags-plaintext li {
+	float: left;
+	margin-right: .4rem;
+}
+
 .speech-bubble {
 	position: absolute;
 	background: #fff;
@@ -1312,11 +1328,11 @@ a.subtext:hover {
 }
 
 @media (min-width: 414px) {
-	.ui-inputDuo > * {
+	.ui-input-duo > * {
 		float: left;
 		width: calc(50% - .3rem) !important;
 	}
 
-	.ui-inputDuo .first { margin-right: .3rem; }
-	.ui-inputDuo .second { margin-left: .3rem; }
+	.ui-input-duo > :first-child { margin-right: .3rem; }
+	.ui-input-duo > :last-child { margin-left: .3rem; }
 }

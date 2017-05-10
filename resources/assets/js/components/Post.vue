@@ -21,14 +21,15 @@
 				<div v-if="edit" @click.stop="deletable = true" class="btn">Delete</div>
 				<div v-if="deletable" class="btn" @click="deletePost">Are you sure?</div>
 			</div>
-			
+
 		</form>
     </div>
 </template>
 
 <style>
 	.floatable-left > * {
-		margin: 0 .6rem .6rem 0;
+		margin: 0 .5rem .5rem 0;
+		padding: .25rem .6rem;
 	}
 </style>
 

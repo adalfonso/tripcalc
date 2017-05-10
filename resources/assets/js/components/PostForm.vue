@@ -1,12 +1,25 @@
+<style>
+    .post-form textarea {
+        background: transparent;
+        color: #495a69;
+        box-shadow: none;
+        border: 1px solid #495a69;
+        opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+        .post-form { margin-top: 1.5rem }
+    }
+</style>
+
 <template>
-    <form  @submit.prevent="create">
+    <form @submit.prevent="create" class="post-form">
 
         <!-- Content -->
-        <textarea name="description" type="text" maxlength="255" style="border-radius: 0"
+        <textarea name="description" type="text" maxlength="255" class="placeholder-dark"
             placeholder="Enter a message..." v-model="form.content">
         </textarea>
 
-        <button class="btn form-button" type="submit" style="float: right">Post</button>
     </form>
 </template>
 
@@ -18,6 +31,12 @@ export default {
 
 props: {
     trip_id: { default: null }
+},
+
+created() {
+    bus.$on('submit', () => {
+        return this.create();
+    });
 },
 
 data() {

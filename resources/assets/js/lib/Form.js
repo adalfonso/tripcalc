@@ -74,7 +74,7 @@ class Form {
         });
     }
 
-    toggle(property) { console.log('fuck');
+    toggle(property) {
         this[property] = !this[property];
 
         if (property === 'delete') {

@@ -94,7 +94,7 @@ class TripController extends Controller {
 					'content' => $item->content,
 					'date' => $item->diffForHumans
 				];
-			});
+			})->take(15);
 
 		$friendsInvitable = true;
 

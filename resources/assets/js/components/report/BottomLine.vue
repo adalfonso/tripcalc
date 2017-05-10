@@ -5,7 +5,7 @@
         <hr>
 
         <img src="/img/icon/closePopup.png" class="closePopup"
-            @click="close">
+            @click="hide">
 
         <div class="centered" v-if="response">
             <h4 v-if="total !== 0">{{ status }}</h4>
@@ -58,8 +58,8 @@ export default {
     },
 
     methods: {
-        close() {
-            this.$emit('close');
+        hide() {
+            this.$emit('hide');
         }
     }
 }

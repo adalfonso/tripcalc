@@ -115,7 +115,7 @@ class TransactionController extends Controller {
 		return $this->validate(request(), [
 			'date' => 'required|date_format:Y-n-j',
 			'amount' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-			'hashtags.items.*' => 'regex:/^[^,\s]{1,32}$/',
+			'hashtags.items.*' => 'regex:/^[^,#\s]{1,32}$/',
 			'split.travelers.*.split_ratio' => [
 				'nullable', 'regex:/(^\d*\.?\d+$)|(^\d+\.?\d*$)/'
 			]

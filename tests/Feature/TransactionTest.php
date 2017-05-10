@@ -244,6 +244,25 @@ class TransactionTest extends DuskTestCase {
     }
 
     /** @test */
+    public function it_doesnt_add_invalid_hashtags_to_a_transaction() {
+        Session::start();
+        $this->maker->login($this->user1);
+
+        $this->transaction->hashtags()->detach();
+
+        $transaction = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id, [
+            '_token' => csrf_token(),
+            'amount'   => 666,
+            'date'     => '2010-12-12',
+            'description' => 'hello',
+            'hashtags' => [ 'items' => [' dsf', 'dfgdf,g', '#sdf'] ],
+            'split' => [ 'travelers' => [] ]
+        ]);
+        $hashtags = $this->transaction->fresh()->hashtags;
+        $this->assertEquals(0, $hashtags->count());
+    }
+
+    /** @test */
     public function it_deletes_a_transaction() {
         Session::start();
         $this->maker->login($this->user1);

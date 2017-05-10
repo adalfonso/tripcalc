@@ -1,12 +1,13 @@
 <div class="right-col clearfix">
 
-<post-form :trip_id="{{$trip->id}}"></post-form>
+<post-form ref="post" :trip_id="{{$trip->id}}"></post-form>
 
-<div class="clearfix" style="margin-bottom: .6rem">
-<button class="btn" @click="transactionForm.visible = true"
-    style="float: right; margin-right: .5rem;">
+<div class="ui-input-duo-mobile clearfix" style="margin-bottom: .6rem">
+<button class="btn" @click="showTransactionForm(null)">
     + New Transaction
 </button>
+
+<button class="btn form-button" @click="createPost" type="submit">Post</button>
 </div>
 
 <div id="activity" class="clearfix">
@@ -21,13 +22,20 @@
 	        <p>
 	            <strong>{{ $item->created_at->diffForHumans() }}</strong>
 	            <img style="float: right;" class="editButton"
-	                src="/img/icon/edit.png" @click="openTransactionForm({{ $item->id }})">
+	                src="/img/icon/edit.png" @click="showTransactionForm({{ $item->id }})">
 	        </p>
 	        <p>
 	            <strong>{{ $item->dateFormat }}</strong>
 	             - ${{ $item->amount }}
 	        </p>
-	        <p>{{ $item->description }}</p>
+            @if ($item->description)
+    	        <p>{{ $item->description }}</p>
+            @endif
+            <ul class="hashtags-plaintext clearfix">
+                @foreach($item->hashtags as $hashtag)
+                    <li>#{{ $hashtag->tag }}</li>
+                @endforeach
+            </ul>
 	    </div>
 	</div>
 @else

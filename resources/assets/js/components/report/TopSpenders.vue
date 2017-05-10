@@ -2,7 +2,7 @@
     <div class="dialogue popup report">
         <h4 class="centered form-header">Top Spenders Report</h4>
         <hr>
-        <img src="/img/icon/closePopup.png" class="closePopup" @click="close">
+        <img src="/img/icon/closePopup.png" class="closePopup" @click="hide">
 
         <div v-for="spend in spenders">
 			<p style="margin-bottom: 0">
@@ -41,8 +41,8 @@ export default {
 	},
 
     methods: {
-        close() {
-            this.$emit('close');
+        hide() {
+            this.$emit('hide');
         }
     }
 }

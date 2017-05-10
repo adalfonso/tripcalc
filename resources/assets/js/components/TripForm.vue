@@ -4,7 +4,7 @@
         <h4 class="centered form-header">Trip</h4>
         <hr>
         <img src="/img/icon/closePopup.png" id="closeTripForm" class="closePopup"
-            @click="$emit('close')">
+            @click="$emit('hide')">
 
         <!-- Trip Name -->
         <p class="ui-error" v-if="form.errors.has('name')" v-text="form.errors.get('name')"></p>

@@ -4,7 +4,7 @@
         <hr>
 
         <img src="/img/icon/closePopup.png" class="closePopup"
-            @click="close">
+            @click="hide">
 
         <div v-for="spender in spendersByLastName" class="spenderGroup">
             <h5>
@@ -71,8 +71,8 @@ export default {
     },
 
     methods: {
-        close() {
-            this.$emit('close');
+        hide() {
+            this.$emit('hide');
         },
 
         currency(amount) {

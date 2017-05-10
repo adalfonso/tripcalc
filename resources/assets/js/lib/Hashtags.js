@@ -17,7 +17,7 @@ class Hashtags extends Queue {
             return false;
         }
 
-        let hashtags = this.input.replace(/#/g, ' ').trim().split(/\s+/);
+        let hashtags = data.replace(/#/g, ' ').trim().split(/\s+/);
 
         hashtags.forEach( hashtag => {
             super.add(hashtag);

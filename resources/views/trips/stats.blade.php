@@ -36,7 +36,7 @@
 
 		{{-- Bottom Line Report --}}
 		<report-bottom-line v-if="report.visible && report.type === 'bottomLine'"
-			:trip_id="{{$trip->id}}" @close="closeReport">
+			:trip_id="{{$trip->id}}" @hide="hideAll">
 		</report-bottom-line>
 
 		@if ($trip->users->count() > 1)
@@ -47,7 +47,7 @@
 
 		{{-- Distribution Report --}}
 		<report-distribution v-if="report.visible && report.type === 'distribution'"
-			:trip_id="{{$trip->id}}" @close="closeReport">
+			:trip_id="{{$trip->id}}" @hide="hideAll">
 		</report-distribution>
 
 		@if ($trip->users->count() > 1)
@@ -58,7 +58,7 @@
 
 		{{-- Top Spenders Report --}}
 		<report-top-spenders v-if="report.visible && report.type === 'top-spenders'"
-			:trip_id="{{$trip->id}}" @close="closeReport">
+			:trip_id="{{$trip->id}}" @hide="hideAll">
 		</report-top-spenders>
 
 		@if ($trip->users->count() > 1)
@@ -69,7 +69,7 @@
 
 		{{-- Detailed Report --}}
 		<report-detailed v-if="report.visible && report.type === 'detailed'"
-			:trip_id="{{$trip->id}}" @close="closeReport">
+			:trip_id="{{$trip->id}}" @hide="hideAll">
 		</report-detailed>
 
 		<p class="item" @click="showReport('detailed')">
@@ -78,7 +78,7 @@
 
 		{{-- Closeout Report --}}
 		<report-closeout v-if="report.visible && report.type === 'closeout'"
-			:trip_id="{{$trip->id}}" @close="closeReport">
+			:trip_id="{{$trip->id}}" @hide="hideAll">
 		</report-closeout>
 
 		@if ($trip->users->count() > 1)

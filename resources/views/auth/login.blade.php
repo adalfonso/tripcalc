@@ -29,8 +29,8 @@
     <input type="password" placeholder="Password" class="form-control"
         name="password" required>
 
-    <div class="ui-inputDuo clearfix">
-        <div class="rememberMe first" @click="toggleRemember">
+    <div class="ui-input-duo clearfix">
+        <div class="rememberMe" @click="toggleRemember">
 
             <input type="checkbox" name="remember" class="hidden" :checked="remember">
 
@@ -41,7 +41,7 @@
 
         </div>
 
-        <button type="submit" class="btn-full btn-thin second">Login</button>
+        <button type="submit" class="btn-full btn-thin">Login</button>
     </div>
 </form>
 @stop

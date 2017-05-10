@@ -5,7 +5,7 @@
         <hr>
 
         <img src="/img/icon/closePopup.png" class="closePopup"
-            @click="close">
+            @click="hide">
 
         <div class="header clearfix">
             <p>Gets Paid</p>
@@ -134,8 +134,8 @@ export default {
             });
         },
 
-        close() {
-            this.$emit('close');
+        hide() {
+            this.$emit('hide');
         }
     }
 }

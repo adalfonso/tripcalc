@@ -8,6 +8,8 @@ window.axios = axios;
 window.Form = Form;
 window.Vue = Vue;
 
+window.bus = new Vue();
+
 Vue.component('alert', require('./components/Alert.vue'));
 Vue.component('carousel', require('./components/Carousel.vue'));
 Vue.component('date-picker', require('./components/DatePicker.vue'));

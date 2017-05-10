@@ -3,22 +3,22 @@
 @section('content')
 <div id="trip">
 	<trip-form v-if="tripForm.visible" :trip_id="{{$trip->id}}"
-		@close="tripForm.visible = false">
+		@hide="hideAll">
     </trip-form>
 
     <invite-friend v-if="inviteFriend.visible" :trip_id="{{$trip->id}}"
-    	@close="inviteFriend.visible = false">
+    	@hide="hideAll">
     </invite-friend>
 
     <transaction-form v-if="transactionForm.visible" :trip_id="{{$trip->id}}"
-    	:transaction_id="transactionForm.id" @close="closeTransactionForm">
+    	:transaction_id="transactionForm.id" @hide="hideAll">
     </transaction-form>
 
 	<div class="trip-header clearfix">
 		<h3 id="name">
 		{{ $trip->name }}
 			<img trip class="editButton" src="/img/icon/edit.png"
-				@click="tripForm.visible = true">
+				@click="showTripForm">
 		</h3>
 
 		@if ($trip->start_date != "00/00/0000")
@@ -36,16 +36,21 @@
 
 @section('vue')
 	<script>
+
 		new Vue({
 		    el: '#app',
 
 		    data: {
+
 		        tripForm: { visible: false },
+
 		        inviteFriend: { visible: false },
+
 				report: {
 					visible: false,
 					type: null
 				},
+
 		        transactionForm: {
 		        	visible: false,
 		        	id: null
@@ -53,24 +58,36 @@
 		    },
 
 		    methods: {
-				closeReport() {
+
+				hideAll() {
+					this.tripForm.visible = false;
+					this.inviteFriend.visible = false;
 					this.report.visible = false;
+					this.transactionForm.visible = false;
 				},
 
-		    	closeTransactionForm() {
-		    		this.transactionForm.visible = false;
-		    		this.transactionForm.id = null;
-		    	},
+				popupVisible() {
+					for (prop in this._data) {
+						if (this._data[prop].visible) {
+							return true;
+						}
+					}
 
-		    	openTransactionForm(id = null) {
-		    		// When going from a blank transaction to an actual one
-		    		if (this.transactionForm.visible) {
+					return false;
+				},
+
+				createPost() {
+					bus.$emit('submit');
+				},
+
+		    	showTransactionForm(id = null) {
+		    		if (this.popupVisible()) {
 		    			return new Promise((resolve) => {
-		    				this.closeTransactionForm();
+		    				this.hideAll();
 		    				resolve();
 
 		    			}).then(() => {
-		    				this.openTransactionForm(id);
+		    				this.showTransactionForm(id);
 		    			});
 		    		}
 
@@ -78,11 +95,21 @@
 		    		this.transactionForm.id = id;
 		    	},
 
+				showTripForm() {
+					this.hideAll();
+					this.tripForm.visible = true;
+				},
+
+				showInviteFriendsForm() {
+					this.hideAll();
+					bus.$emit('closeNav');
+					this.inviteFriend.visible = true;
+				},
+
 				showReport(type) {
-					// When switching reports
-		    		if (this.report.visible) {
+		    		if (this.popupVisible()) {
 		    			return new Promise((resolve) => {
-		    				this.closeReport();
+		    				this.hideAll();
 		    				resolve();
 
 		    			}).then(() => {

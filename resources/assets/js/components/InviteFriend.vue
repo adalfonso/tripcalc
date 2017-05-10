@@ -3,11 +3,11 @@
     <loading v-if="loading.visible"></loading>
 
     <alert v-if="alert.visible" :message="alert.message"
-        @close="hideAlert">
+        @hide="hideAlert">
     </alert>
 
     <img src="/img/icon/closePopup.png" class="closePopup"
-        @click="$emit('close')">
+        @click="$emit('hide')">
 
     <h4 class="centered form-header">Invite Friends</h4>
     <hr>
@@ -94,16 +94,16 @@ export default {
         },
 
         alertTimeout(timeout) {
-            return setTimeout(function() {
-                this.closeForm();
-            }.bind(this), timeout);
+            return setTimeout(() => {
+                this.hideForm();
+            }, timeout);
         },
 
         clearResults() { this.results = []; },
 
-        closeForm() {
+        hideForm() {
             this.hideAlert();
-            this.$emit('close');
+            this.$emit('hide');
         },
 
         setAlert(message, timeout = null) {
@@ -149,7 +149,8 @@ export default {
 
                 axios.post(`/trips/${this.trip_id}/searchEligibleFriends`, {
                     input: this.input,
-                    trip_id : this.trip_id
+                    trip_id : this.trip_id,
+                    excluded: this.queue.userIds()
                 })
                 .then(response => {
                     this.results = response.data;

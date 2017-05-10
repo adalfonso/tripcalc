@@ -4,7 +4,7 @@
     <h4 class="centered form-header">Transaction</h4>
     <hr>
     <img src="/img/icon/closePopup.png" class="closePopup"
-        @click="$emit('close')">
+        @click="$emit('hide')">
 
     <div v-if="isUpdatable()">
         <p><strong>Paid by:</strong> {{ creator }}</p>
@@ -233,7 +233,7 @@ methods: {
         }).catch(errors => {});
     },
 
-    delete(){
+    delete() {
         this.form.post(`/trips/${ this.trip_id }/transactions/${ this.transaction_id }/delete`)
         .then(data => {
             if (data.success === true ) {
