@@ -1,14 +1,12 @@
 <template>
+<div class="popup-wrap">
 <form id="inviteFriendForm" class="dialogue popup" @submit.prevent>
+    <div class="popup-close" @click="$emit('hide')">&times;</div>
     <loading v-if="loading.visible"></loading>
 
     <alert v-if="alert.visible" :message="alert.message"
         @hide="hideAlert">
     </alert>
-
-    <img src="/img/icon/closePopup.png" class="closePopup"
-        @click="$emit('hide')">
-
     <h4 class="centered form-header">Invite Friends</h4>
     <hr>
 
@@ -37,6 +35,7 @@
         Send Invitations
     </button>
 </form>
+</div>
 </template>
 
 <script>

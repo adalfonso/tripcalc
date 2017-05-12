@@ -1,10 +1,9 @@
 <template>
-
+<div class="popup-wrap">
 <form id="transactionForm" class="dialogue popup" @submit.prevent="onSubmit">
+    <div class="popup-close" @click="$emit('hide')">&times;</div>
     <h4 class="centered form-header">Transaction</h4>
-    <hr>
-    <img src="/img/icon/closePopup.png" class="closePopup"
-        @click="$emit('hide')">
+    <hr>    
 
     <div v-if="isUpdatable()">
         <p><strong>Paid by:</strong> {{ creator }}</p>
@@ -108,6 +107,7 @@
         Submit Transaction
     </button>
 </form>
+</div>
 
 </template>
 

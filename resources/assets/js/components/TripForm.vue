@@ -1,10 +1,9 @@
 <template>
+    <div class="popup-wrap">
     <form id="tripForm" class="dialogue popup" @submit.prevent="onSubmit">
-
+        <div class="popup-close" @click="$emit('hide')">&times;</div>
         <h4 class="centered form-header">Trip</h4>
         <hr>
-        <img src="/img/icon/closePopup.png" id="closeTripForm" class="closePopup"
-            @click="$emit('hide')">
 
         <!-- Trip Name -->
         <p class="ui-error" v-if="form.errors.has('name')" v-text="form.errors.get('name')"></p>
@@ -67,6 +66,7 @@
 
         <button class="btn-full form-button" type="submit">Submit Trip</button>
     </form>
+    </div>
 </template>
 
 <script>
