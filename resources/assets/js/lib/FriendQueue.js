@@ -19,7 +19,7 @@ class FriendQueue extends Queue {
                 data.input
         };
 
-        return Queue.prototype.add.call(this, newItem);
+        return super.add(newItem);
     }
 
     contains(item) {
@@ -34,6 +34,14 @@ class FriendQueue extends Queue {
     isValidEmail(email) {
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(email);
+    }
+
+    userIds() {
+        return this.items.filter( user => {
+            return user.type === 'id';
+        }).map( user => {
+            return user.data;
+        });
     }
 
 }

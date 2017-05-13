@@ -50,14 +50,16 @@ class TransactionController extends Controller {
 
 		return $transaction = DB::transaction(function() use ($request, $trip) {
 
-			$transaction = Transaction::create([
-				'trip_id' => $trip->id,
-				'amount' => request('amount'),
-				'date' => request('date'),
-				'description' => request('description'),
-				'created_by' => Auth::user()->id,
-				'updated_by' => Auth::user()->id
+			$transaction = new Transaction([
+				'amount'      => request('amount'),
+				'date'        => request('date'),
+				'description' => request('description')
 			]);
+
+			$transaction->trip_id = $trip->id;
+			$transaction->created_by = Auth::user()->id;
+			$transaction->updated_by = Auth::user()->id;
+			$transaction->save();
 
 			$spenders = $this->parseSpenders($request->split['travelers']);
 			$transaction->users()->sync($spenders);
@@ -76,12 +78,11 @@ class TransactionController extends Controller {
 
 		return DB::transaction(function() use ($request, $transaction) {
 
-			$transaction->update([
-				'date' => request('date'),
-				'amount' => request('amount'),
-				'description' => request('description'),
-				'updated_by' => Auth::user()->id
-			]);
+			$transaction->date = request('date');
+			$transaction->amount = request('amount');
+			$transaction->description = request('description');
+			$transaction->updated_by = Auth::user()->id;
+			$transaction->save();
 
 			$transaction->users()->sync(
 				$this->parseSpenders($request->split['travelers'])
@@ -115,7 +116,7 @@ class TransactionController extends Controller {
 		return $this->validate(request(), [
 			'date' => 'required|date_format:Y-n-j',
 			'amount' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-			'hashtags.items.*' => 'regex:/^[^,\s]{1,32}$/',
+			'hashtags.items.*' => 'regex:/^[^,#\s]{1,32}$/',
 			'split.travelers.*.split_ratio' => [
 				'nullable', 'regex:/(^\d*\.?\d+$)|(^\d+\.?\d*$)/'
 			]

@@ -1,29 +1,29 @@
 <template>
-    <div class="dialogue popup report closeoutReport">
-        <h4 class="centered form-header">Closeout Report</h4>
-        <hr>
-
-        <img src="/img/icon/closePopup.png" class="closePopup"
-            @click="close">
-
-        <div v-for="spender in spendersByLastName" class="spenderGroup">
-            <h5>
-                <strong>
-                    {{ spender.last_name }}, {{ spender.first_name}}
-                </strong>
-            </h5>
-            <p class="description">{{ description(spender) }}</p>
-
-            <p v-for="(credit, id) in spender.credits" class="line">
-                <span>${{ currency(credit) }} &larr;</span>
-                {{ allUsers[id] }}
-            </p>
-
-            <p v-for="(debit, id) in spender.debits" class="line">
-                <span>${{ currency(debit) }} &rarr;</span>
-                {{ allUsers[id] }}
-            </p>
+    <div class="popup-wrap" @click.self="hide">
+        <div class="dialogue popup report closeoutReport">
+            <div class="popup-close" @click="hide">&times;</div>
+            <h4 class="centered form-header">Closeout Report</h4>
             <hr>
+
+            <div v-for="spender in spendersByLastName" class="spenderGroup">
+                <h5>
+                    <strong>
+                        {{ spender.last_name }}, {{ spender.first_name}}
+                    </strong>
+                </h5>
+                <p class="description">{{ description(spender) }}</p>
+
+                <p v-for="(credit, id) in spender.credits" class="line">
+                    <span>${{ currency(credit) }} &larr;</span>
+                    {{ allUsers[id] }}
+                </p>
+
+                <p v-for="(debit, id) in spender.debits" class="line">
+                    <span>${{ currency(debit) }} &rarr;</span>
+                    {{ allUsers[id] }}
+                </p>
+                <hr>
+            </div>
         </div>
     </div>
 </template>
@@ -71,8 +71,8 @@ export default {
     },
 
     methods: {
-        close() {
-            this.$emit('close');
+        hide() {
+            this.$emit('hide');
         },
 
         currency(amount) {

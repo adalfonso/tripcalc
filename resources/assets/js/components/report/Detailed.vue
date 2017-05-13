@@ -1,41 +1,39 @@
 <template>
-    <div class="dialogue popup report detailedReport">
-        <h4 class="centered form-header">Detailed Report</h4>
+    <div class="popup-wrap" @click.self="hide">
+        <div class="dialogue popup report detailedReport">
+            <div class="popup-close" @click="hide">&times;</div>
+            <h4 class="centered form-header">Detailed Report</h4>
+            <hr>
 
-        <hr>
-
-        <img src="/img/icon/closePopup.png" class="closePopup"
-            @click="close">
-
-        <div class="graph">
-            <table>
-                <tr>
-                    <th>Date</th>
-                    <th v-if="multiUser">Paid By</th>
-                    <th class="align-right">Amount</th>
-                    <th v-if="multiUser">Net</th>
-                </tr>
-                <tr v-for="transaction in transactions">
-                    <td>{{ transaction.date }}</td>
-                    <td v-if="multiUser">{{ transaction.creator }}</td>
-                    <td class="align-right">${{ transaction.amount }}</td>
-                    <td v-if="multiUser">{{ currency(transaction.net) }}</td>
-                </tr>
-                <tr class="total" v-if="multiUser">
-                    <td><strong>{{ balanceVerbiage }}</strong></td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>${{ fixedLength(Math.abs(balance)) }}</td>
-                </tr>
-                <tr class="total">
-                    <td><strong>Personal total</strong></td>
-                    <td v-if="multiUser">&nbsp;</td>
-                    <td v-if="multiUser">&nbsp;</td>
-                    <td class="align-right">${{ total }}</td>
-                </tr>
-            </table>
+            <div class="graph">
+                <table>
+                    <tr>
+                        <th>Date</th>
+                        <th v-if="multiUser">Paid By</th>
+                        <th class="align-right">Amount</th>
+                        <th v-if="multiUser">Net</th>
+                    </tr>
+                    <tr v-for="transaction in transactions">
+                        <td>{{ transaction.date }}</td>
+                        <td v-if="multiUser">{{ transaction.creator }}</td>
+                        <td class="align-right">${{ transaction.amount }}</td>
+                        <td v-if="multiUser">{{ currency(transaction.net) }}</td>
+                    </tr>
+                    <tr class="total" v-if="multiUser">
+                        <td><strong>{{ balanceVerbiage }}</strong></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>${{ fixedLength(Math.abs(balance)) }}</td>
+                    </tr>
+                    <tr class="total">
+                        <td><strong>Personal total</strong></td>
+                        <td v-if="multiUser">&nbsp;</td>
+                        <td v-if="multiUser">&nbsp;</td>
+                        <td class="align-right">${{ total }}</td>
+                    </tr>
+                </table>
+            </div>
         </div>
-
     </div>
 </template>
 
@@ -99,8 +97,8 @@ export default {
             return '$' + this.fixedLength(amount);
         },
 
-        close() {
-            this.$emit('close');
+        hide() {
+            this.$emit('hide');
         },
 
         fixedLength(amount) {

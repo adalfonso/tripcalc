@@ -18,7 +18,7 @@
         <h3>+ Add New Trip</h3>
     </div>
 
-    <trip-form v-if="tripForm.visible" @close="tripForm.visible = false">
+    <trip-form v-if="tripForm.visible" @hide="tripForm.visible = false">
     </trip-form>
 
     @if (isset($trips))

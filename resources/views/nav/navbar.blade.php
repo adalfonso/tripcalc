@@ -9,7 +9,7 @@
 		@endif
 
 		@if (isset($friendsInvitable))
-			<a @click="inviteFriend.visible = true">Invite Friends</a>
+			<a @click="showInviteFriendsForm">Invite Friends</a>
 		@endif
 
 		<logout></logout>

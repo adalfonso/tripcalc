@@ -15,6 +15,7 @@ class Queue {
         }
 
         this.input = null;
+        return true;
     }
 
     remove(item) {

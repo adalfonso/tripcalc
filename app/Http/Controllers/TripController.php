@@ -8,6 +8,7 @@ use Auth;
 use DB;
 use Hash;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 use Validator;
 
@@ -73,36 +74,81 @@ class TripController extends Controller {
     }
 
     public function show(Trip $trip) {
-    	$transactions = Transaction::where('trip_id', $trip->id)
-            ->with('creator')
-    		->get();
 
-		$posts = Post::where('trip_id', $trip->id)
-			->with('user')
-			->get();
-
-		$activities = $transactions->merge($posts)
-			->sortByDesc('created_at')
-			->map(function($item){
-				if (get_class($item) === 'App\Transaction') {
-					return $item;
-				}
-				return (object) [
-					'post' => $item->id,
-					'poster' => $item->user->fullname,
-					'edit' => $item->created_by === Auth::id(),
-					'content' => $item->content,
-					'date' => $item->diffForHumans
-				];
-			});
-
+        $activities = $this->activities($trip);
 		$friendsInvitable = true;
-
-		$sum = $transactions->sum('amount');
+		$sum = $trip->transactions->sum('amount');
 
     	return view('trips.show', compact(
 			'activities', 'trip', 'sum', 'friendsInvitable'
 		));
+    }
+
+    public function activities(Trip $trip, Request $request = null) {
+
+        if ($request !== null && $request->has('oldestDate')) {
+            $oldestDate = Carbon::parse($request->oldestDate['date']);
+            $dateRange = "<";
+
+        } else {
+            $oldestDate = Carbon::now();
+            $dateRange = "<=";
+        }
+
+        $transactions = Transaction::where([
+                'trip_id' => $trip->id,
+                ['created_at', $dateRange, $oldestDate]
+            ])
+            ->with('creator', 'updater')
+            ->limit(15)->get()
+            ->map(function($item) {
+                return (object) [
+                    'type' => 'transaction',
+					'id' => $item->id,
+                    'creator' => $item->creator->fullname,
+                    'updater' => $item->updater->fullname,
+                    'created_at' => $item->created_at,
+                    'date' => $item->dateFormat,
+                    'dateForHumans' => $item->created_at->diffForHumans(),
+                    'updatedDateForHumans' => $item->updated_at->diffForHumans(),
+					'description' => $item->description,
+					'amount' => $item->amount,
+                    'hashtags' => $item->hashtags->pluck('tag')->toArray()
+				];
+            });
+
+
+		$posts = Post::where([
+                'trip_id' => $trip->id,
+                ['created_at', $dateRange, $oldestDate]
+            ])
+			->with('user')
+            ->orderBy('created_at', 'DESC')
+            ->limit(15)->get()
+			->map(function($item) {
+				return (object) [
+                    'type' => 'post',
+					'id' => $item->id,
+					'poster' => $item->user->fullname,
+                    'created_at' => $item->created_at,
+					'editable' => $item->created_by === Auth::id(),
+					'content' => $item->content,
+					'dateForHumans' => $item->created_at->diffForHumans()
+				];
+			});
+
+        // Cannot merge into empty collection
+        if ($transactions->isEmpty()) {
+            $activities = $posts;
+
+        } else {
+            $activities = $transactions->merge($posts);
+        }
+
+        return $activities = $activities
+            ->sortByDesc('created_at')
+            ->take(15)
+            ->values();
     }
 
     public function data(Trip $trip) {

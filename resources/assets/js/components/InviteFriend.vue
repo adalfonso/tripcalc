@@ -1,14 +1,12 @@
 <template>
+<div class="popup-wrap" @click.self="hide">
 <form id="inviteFriendForm" class="dialogue popup" @submit.prevent>
+    <div class="popup-close" @click="hide">&times;</div>
     <loading v-if="loading.visible"></loading>
 
     <alert v-if="alert.visible" :message="alert.message"
-        @close="hideAlert">
+        @hide="hideAlert">
     </alert>
-
-    <img src="/img/icon/closePopup.png" class="closePopup"
-        @click="$emit('close')">
-
     <h4 class="centered form-header">Invite Friends</h4>
     <hr>
 
@@ -37,6 +35,7 @@
         Send Invitations
     </button>
 </form>
+</div>
 </template>
 
 <script>
@@ -94,16 +93,15 @@ export default {
         },
 
         alertTimeout(timeout) {
-            return setTimeout(function() {
-                this.closeForm();
-            }.bind(this), timeout);
+            return setTimeout(() => {
+                this.hide();
+            }, timeout);
         },
 
         clearResults() { this.results = []; },
 
-        closeForm() {
-            this.hideAlert();
-            this.$emit('close');
+        hide() {
+            this.$emit('hide');
         },
 
         setAlert(message, timeout = null) {
@@ -149,7 +147,8 @@ export default {
 
                 axios.post(`/trips/${this.trip_id}/searchEligibleFriends`, {
                     input: this.input,
-                    trip_id : this.trip_id
+                    trip_id : this.trip_id,
+                    excluded: this.queue.userIds()
                 })
                 .then(response => {
                     this.results = response.data;

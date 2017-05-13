@@ -1,8 +1,6 @@
 <template>
    <div class="datePicker clearfix">
-        <img src="/img/icon/closePopup.png" class="closePopup closePopup-small"
-            @click="date.visible = false">
-
+       <div class="popup-close popup-close-small" @click="date.visible = false">&times;</div>
         <h4>{{ date.calendarDate() }}</h4>
 
         <ul class="prevNextMonth clearfix">

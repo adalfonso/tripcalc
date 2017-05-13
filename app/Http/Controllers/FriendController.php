@@ -16,33 +16,36 @@ class FriendController extends Controller {
 
     public function searchEligibleFriends(Request $request, Trip $trip) {
     	$string = $request->input;
-    	$user_id = Auth::User()->id;
 
-    	$results = DB::select('
-    		SELECT u.id, first_name, last_name, username
-			FROM users u
-			JOIN friends f
-			ON (
-				(f.requester_id = u.id AND f.recipient_id = :user_id1)
-				OR (f.recipient_id = u.id AND f.requester_id = :user_id2)
-				AND confirmed = 1
-			)
-			AND (
-				(first_name LIKE :search_input1 OR last_name LIKE :search_input2)
-				OR (CONCAT(first_name, " ", last_name) LIKE :search_input3)
-			)
-			AND u.id NOT IN (SELECT user_id from trip_user where trip_id = :trip_id)
-			ORDER BY last_name
-			',
-			[
-				'user_id1' => Auth::user()->id,
-                'user_id2' => Auth::user()->id,
-				'search_input1' => "%$string%",
-                'search_input2' => "%$string%",
-				'search_input3' => "%$string%",
-				'trip_id' => $trip->id
-			]
-		);
+        $results = User
+
+        // Name match
+        ::where(function($query) use ($string) {
+            $query->where('first_name', 'LIKE', "%$string%")
+                ->orWhere('last_name', 'LIKE', "%$string%")
+                ->orWhere(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', "%$string%");
+        })
+
+        // Has friendship
+        ->where(function($query){
+            $query->whereHas('friendshipAsRequester', function($query){
+                $query->where('recipient_id', Auth::id());
+
+            })->orWhereHas('friendshipAsRecipient', function($query){
+                $query->where('requester_id', Auth::id());
+            });
+        })
+
+        // Not already in trip
+        ->whereDoesntHave('trips', function($query) use ($trip){
+            $query->where('id', $trip->id);
+        })
+
+        // Not already selected on invite friend form
+        ->whereNotIn('id', collect($request->excluded))
+
+        ->select('id', 'first_name', 'last_name')
+        ->get();
 
     	return $results;
     }

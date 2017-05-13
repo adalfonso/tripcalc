@@ -1,6 +1,6 @@
 <template>
     <div class="alert">
-        <img src="/img/icon/closePopup.png" class="closePopup closePopup-small" @click="$emit('close')">
+        <div class="popup-close" @click="$emit('hide')">&times;</div>
         <p>{{ message }}</p>
     </div>
 </template>

@@ -1,10 +1,9 @@
 <template>
-
+<div class="popup-wrap" @click.self="hide">
 <form id="transactionForm" class="dialogue popup" @submit.prevent="onSubmit">
+    <div class="popup-close" @click="hide">&times;</div>
     <h4 class="centered form-header">Transaction</h4>
     <hr>
-    <img src="/img/icon/closePopup.png" class="closePopup"
-        @click="$emit('close')">
 
     <div v-if="isUpdatable()">
         <p><strong>Paid by:</strong> {{ creator }}</p>
@@ -108,6 +107,7 @@
         Submit Transaction
     </button>
 </form>
+</div>
 
 </template>
 
@@ -191,9 +191,7 @@ methods: {
     },
 
     getTransactionData() {
-        axios.get(`
-            /trips/${ this.trip_id }/transactions/${ this.transaction_id }
-        `)
+        axios.get(`/trips/${this.trip_id}/transactions/${this.transaction_id}`)
         .then(response => {
             let transaction = response.data.transaction;
 
@@ -213,27 +211,29 @@ methods: {
         });
     },
 
+    hide() {
+        this.$emit('hide');
+    },
+
     isUpdatable() {
         return this.transaction_id !== null;
     },
 
     create() {
-        this.form.post(`/trips/${ this.trip_id }/transactions`
-        )
+        this.form.post(`/trips/${ this.trip_id }/transactions`)
         .then(data => {
             location.reload();
         }).catch(errors => {});
     },
 
     update(){
-        this.form.post(`/trips/${ this.trip_id }/transactions/${ this.transaction_id }`
-        )
+        this.form.post(`/trips/${ this.trip_id }/transactions/${ this.transaction_id }`)
         .then(data => {
             location.reload();
         }).catch(errors => {});
     },
 
-    delete(){
+    delete() {
         this.form.post(`/trips/${ this.trip_id }/transactions/${ this.transaction_id }/delete`)
         .then(data => {
             if (data.success === true ) {

@@ -3,22 +3,18 @@
 @section('content')
 <div id="trip">
 	<trip-form v-if="tripForm.visible" :trip_id="{{$trip->id}}"
-		@close="tripForm.visible = false">
+		@hide="hideAll">
     </trip-form>
 
     <invite-friend v-if="inviteFriend.visible" :trip_id="{{$trip->id}}"
-    	@close="inviteFriend.visible = false">
+    	@hide="hideAll">
     </invite-friend>
-
-    <transaction-form v-if="transactionForm.visible" :trip_id="{{$trip->id}}"
-    	:transaction_id="transactionForm.id" @close="closeTransactionForm">
-    </transaction-form>
 
 	<div class="trip-header clearfix">
 		<h3 id="name">
 		{{ $trip->name }}
 			<img trip class="editButton" src="/img/icon/edit.png"
-				@click="tripForm.visible = true">
+				@click="showTripForm">
 		</h3>
 
 		@if ($trip->start_date != "00/00/0000")
@@ -36,64 +32,60 @@
 
 @section('vue')
 	<script>
+
 		new Vue({
 		    el: '#app',
 
 		    data: {
+
 		        tripForm: { visible: false },
+
 		        inviteFriend: { visible: false },
+
 				report: {
 					visible: false,
 					type: null
-				},
-		        transactionForm: {
-		        	visible: false,
-		        	id: null
-		        }
+				}
 		    },
 
+			created() {
+				bus.$on('closeModals', this.hideAll);
+			},
+
 		    methods: {
-				closeReport() {
+
+				hideAll() {
+					this.tripForm.visible = false;
+					this.inviteFriend.visible = false;
 					this.report.visible = false;
 				},
 
-		    	closeTransactionForm() {
-		    		this.transactionForm.visible = false;
-		    		this.transactionForm.id = null;
-		    	},
+				createPost() {
+					bus.$emit('submit');
+				},
 
-		    	openTransactionForm(id = null) {
-		    		// When going from a blank transaction to an actual one
-		    		if (this.transactionForm.visible) {
-		    			return new Promise((resolve) => {
-		    				this.closeTransactionForm();
-		    				resolve();
+				showTripForm() {
+					bus.$emit('closeModals');
+					this.tripForm.visible = true;
+				},
 
-		    			}).then(() => {
-		    				this.openTransactionForm(id);
-		    			});
-		    		}
+				showInviteFriendsForm() {
+					bus.$emit('closeNav');
+					bus.$emit('closeModals');
+					this.inviteFriend.visible = true;
+				},
 
-		    		this.transactionForm.visible = true;
-		    		this.transactionForm.id = id;
-		    	},
+				showTransactionForm() {
+			    	bus.$emit('showTransactionForm');
+			    },
 
 				showReport(type) {
-					// When switching reports
-		    		if (this.report.visible) {
-		    			return new Promise((resolve) => {
-		    				this.closeReport();
-		    				resolve();
-
-		    			}).then(() => {
-		    				this.showReport(type);
-		    			});
-		    		}
+					if (!type) {
+						return false;
+					}
 
 					this.report.visible = true;
-					if (type) {
-						this.report.type= type;
-					}
+					this.report.type= type;
 				}
 		    }
 		});

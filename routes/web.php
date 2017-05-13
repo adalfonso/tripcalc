@@ -44,6 +44,7 @@ Route::group(['middleware' => 'activeAccount'], function() {
 
 		Route::get('/trips/{trip}', 'TripController@show');
 		Route::post('/trips/{trip}', 'TripController@update');
+		Route::post('/trips/{trip}/activities', 'TripController@activities');
 		Route::post('/trips/{trip}/delete', 'TripController@destroy');
 		Route::get('/trips/{trip}/data', 'TripController@data');
 		Route::post('/trips/{trip}/inviteFriends', 'FriendController@inviteToTrip');

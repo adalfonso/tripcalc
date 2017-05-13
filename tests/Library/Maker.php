@@ -3,6 +3,7 @@
 use Auth;
 
 use App\Friend;
+use App\Post;
 use App\Hashtag;
 use App\Transaction;
 use App\Trip;
@@ -33,15 +34,30 @@ class Maker {
         return $user;
     }
 
+    public function post($trip, $user) {
+        $post = new Post([
+            'date' => $this->faker->dateTime(),
+            'content' => $this->faker->sentence()
+        ]);
+
+        $post->trip_id =  $trip->id;
+        $post->created_by = $user->id;
+        $post->save();
+
+        return $post;
+    }
+
     public function transaction($trip, $user, $amount = null) {
-        $transaction = Transaction::create([
+        $transaction = new Transaction([
             'trip_id' => $trip->id,
             'amount' => $amount != null ? $amount : $this->faker->numberBetween(0, 1000),
             'date' => $this->faker->dateTime(),
-            'description' => $this->faker->sentence(),
-            'created_by' => $user->id,
-            'updated_by' => $user->id
+            'description' => $this->faker->sentence()
         ]);
+
+        $transaction->created_by = $user->id;
+        $transaction->updated_by = $user->id;
+        $transaction->save();
 
         $transaction->hashtags()->sync(
             [$this->hashtag()->id, $this->hashtag()->id]

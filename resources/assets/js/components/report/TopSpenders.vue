@@ -1,19 +1,21 @@
 <template>
-    <div class="dialogue popup report">
-        <h4 class="centered form-header">Top Spenders Report</h4>
-        <hr>
-        <img src="/img/icon/closePopup.png" class="closePopup" @click="close">
+    <div class="popup-wrap" @click.self="hide">
+        <div class="dialogue popup report">
+            <div class="popup-close" @click="hide">&times;</div>
+            <h4 class="centered form-header">Top Spenders Report</h4>
+            <hr>
 
-        <div v-for="spend in spenders">
-			<p style="margin-bottom: 0">
-				{{ spend.name }} - ${{ spend.currency }}
-			</p>
-			<div class="progressbar" :style="{ width: spend.sum / max * 100 + '%' }">
-				<div v-if="spend.sum / max * 100 > 7.5">
-					{{ spend.percent }}%
-				</div>
-			</div>
-    	</div>
+            <div v-for="spend in spenders">
+    			<p style="margin-bottom: 0">
+    				{{ spend.name }} - ${{ spend.currency }}
+    			</p>
+    			<div class="progressbar" :style="{ width: spend.sum / max * 100 + '%' }">
+    				<div v-if="spend.sum / max * 100 > 7.5">
+    					{{ spend.percent }}%
+    				</div>
+    			</div>
+        	</div>
+        </div>
     </div>
 </template>
 
@@ -41,8 +43,8 @@ export default {
 	},
 
     methods: {
-        close() {
-            this.$emit('close');
+        hide() {
+            this.$emit('hide');
         }
     }
 }

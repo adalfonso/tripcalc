@@ -1,17 +1,15 @@
 <template>
-    <div class="dialogue popup report">
-        <h4 class="centered form-header">Bottom Line Report</h4>
+    <div class="popup-wrap" @click.self="hide">
+        <div class="dialogue popup report">
+            <div class="popup-close" @click="hide">&times;</div>
+            <h4 class="centered form-header">Bottom Line Report</h4>
+            <hr>
 
-        <hr>
-
-        <img src="/img/icon/closePopup.png" class="closePopup"
-            @click="close">
-
-        <div class="centered" v-if="response">
-            <h4 v-if="total !== 0">{{ status }}</h4>
-            <h1 style="font-size: 3rem">{{ absoluteTotal }}</h1>
+            <div class="centered" v-if="response">
+                <h4 v-if="total !== 0">{{ status }}</h4>
+                <h1 style="font-size: 3rem">{{ absoluteTotal }}</h1>
+            </div>
         </div>
-
     </div>
 </template>
 
@@ -58,8 +56,8 @@ export default {
     },
 
     methods: {
-        close() {
-            this.$emit('close');
+        hide() {
+            this.$emit('hide');
         }
     }
 }
