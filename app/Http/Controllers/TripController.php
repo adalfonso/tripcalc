@@ -8,6 +8,7 @@ use Auth;
 use DB;
 use Hash;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 use Validator;
 
@@ -73,9 +74,34 @@ class TripController extends Controller {
     }
 
     public function show(Trip $trip) {
-    	$transactions = Transaction::where('trip_id', $trip->id)
+
+        $activities = $this->activities($trip);
+		$friendsInvitable = true;
+		$sum = $trip->transactions->sum('amount');
+
+    	return view('trips.show', compact(
+			'activities', 'trip', 'sum', 'friendsInvitable'
+		));
+    }
+
+    public function activities(Trip $trip, Request $request = null) {
+
+        if ($request !== null && $request->has('oldestDate')) {
+            $oldestDate = Carbon::parse($request->oldestDate['date']);
+            $dateRange = "<";
+
+        } else {
+            $oldestDate = Carbon::now();
+            $dateRange = "<=";
+        }
+
+        $transactions = Transaction::where([
+                'trip_id' => $trip->id,
+                ['created_at', $dateRange, $oldestDate]
+            ])
             ->with('creator', 'updater')
-    		->get()->map(function($item) {
+            ->limit(15)->get()
+            ->map(function($item) {
                 return (object) [
                     'type' => 'transaction',
 					'id' => $item->id,
@@ -91,9 +117,15 @@ class TripController extends Controller {
 				];
             });
 
-		$posts = Post::where('trip_id', $trip->id)
+
+		$posts = Post::where([
+                'trip_id' => $trip->id,
+                ['created_at', $dateRange, $oldestDate]
+            ])
 			->with('user')
-			->get()->map(function($item) {
+            ->orderBy('created_at', 'DESC')
+            ->limit(15)->get()
+			->map(function($item) {
 				return (object) [
                     'type' => 'post',
 					'id' => $item->id,
@@ -105,7 +137,6 @@ class TripController extends Controller {
 				];
 			});
 
-
         // Cannot merge into empty collection
         if ($transactions->isEmpty()) {
             $activities = $posts;
@@ -114,17 +145,10 @@ class TripController extends Controller {
             $activities = $transactions->merge($posts);
         }
 
-        $activities = $activities->take(15)
+        return $activities = $activities
             ->sortByDesc('created_at')
+            ->take(15)
             ->values();
-
-		$friendsInvitable = true;
-
-		$sum = $transactions->sum('amount');
-
-    	return view('trips.show', compact(
-			'activities', 'trip', 'sum', 'friendsInvitable'
-		));
     }
 
     public function data(Trip $trip) {

@@ -220,16 +220,14 @@ methods: {
     },
 
     create() {
-        this.form.post(`/trips/${ this.trip_id }/transactions`
-        )
+        this.form.post(`/trips/${ this.trip_id }/transactions`)
         .then(data => {
             location.reload();
         }).catch(errors => {});
     },
 
     update(){
-        this.form.post(`/trips/${ this.trip_id }/transactions/${ this.transaction_id }`
-        )
+        this.form.post(`/trips/${ this.trip_id }/transactions/${ this.transaction_id }`)
         .then(data => {
             location.reload();
         }).catch(errors => {});

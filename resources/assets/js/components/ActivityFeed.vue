@@ -4,7 +4,7 @@
             :transaction_id="transactionForm.id" @hide="hideTransactionForm">
         </transaction-form>
 
-        <div v-for="item in feed" class="activity-item clearfix">
+        <div v-for="item in localFeed" class="activity-item clearfix">
 
             <!-- Transaction -->
             <div v-if="item.type == 'transaction'">
@@ -38,7 +38,9 @@ data() {
         transactionForm: {
             id      : null,
             visible : false
-        }
+        },
+
+        localFeed: {}
     };
 },
 
@@ -52,6 +54,8 @@ created() {
 	});
 
     window.addEventListener('scroll', this.scroll);
+
+    this.localFeed = this.feed;
 },
 
 methods: {
@@ -70,23 +74,31 @@ methods: {
         clearInterval(this.scrollTimeout);
 
         this.scrollTimeout = setTimeout(() => {
-            this.emitScroll();
-        }, 400);
+            this.checkPagePosition();
+        }, 200);
     },
 
-    emitScroll() {
+    checkPagePosition() {
         let element = document.querySelector('body');
-
         let scrollAmount = element.scrollTop;
         let maximumScroll = element.scrollHeight - element.clientHeight;
 
         if (scrollAmount / maximumScroll === 1) {
-            this.$emit('scrollBottom');
+            this.growActivityFeed();
         }
     },
 
-    onSubmit() {
+    growActivityFeed() {
+        axios.post(`/trips/${this.trip_id}/activities`, {
+            oldestDate: this.localFeed[this.localFeed.length - 1].created_at
 
+        }).then(response => {
+            if (response.data.length === 0) {
+                return;
+            }
+
+            this.localFeed = this.localFeed.concat(response.data);
+        });
     }
 }
 
