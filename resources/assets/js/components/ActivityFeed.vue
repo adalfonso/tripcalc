@@ -75,7 +75,7 @@ methods: {
 
         this.scrollTimeout = setTimeout(() => {
             this.checkPagePosition();
-        }, 200);
+        }, 400);
     },
 
     checkPagePosition() {
@@ -83,7 +83,7 @@ methods: {
         let scrollAmount = element.scrollTop;
         let maximumScroll = element.scrollHeight - element.clientHeight;
 
-        if (scrollAmount / maximumScroll === 1) {
+        if (scrollAmount / maximumScroll >= .95) {
             this.growActivityFeed();
         }
     },
