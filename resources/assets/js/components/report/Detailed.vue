@@ -1,5 +1,5 @@
 <template>
-    <div class="popup-wrap">
+    <div class="popup-wrap" @click.self="hide">
         <div class="dialogue popup report detailedReport">
             <div class="popup-close" @click="hide">&times;</div>
             <h4 class="centered form-header">Detailed Report</h4>

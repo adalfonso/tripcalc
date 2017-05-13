@@ -1,7 +1,7 @@
 <template>
-    <div class="popup-wrap">
+    <div class="popup-wrap" @click.self="hide">
     <form id="tripForm" class="dialogue popup" @submit.prevent="onSubmit">
-        <div class="popup-close" @click="$emit('hide')">&times;</div>
+        <div class="popup-close" @click="hide">&times;</div>
         <h4 class="centered form-header">Trip</h4>
         <hr>
 
@@ -147,6 +147,10 @@ watch: {
 },
 
 methods: {
+
+    hide() {
+        this.$emit('hide');
+    },
 
     isUpdatable() { return this.trip_id !== null; },
 

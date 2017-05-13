@@ -74,27 +74,49 @@ class TripController extends Controller {
 
     public function show(Trip $trip) {
     	$transactions = Transaction::where('trip_id', $trip->id)
-            ->with('creator')
-    		->get();
+            ->with('creator', 'updater')
+    		->get()->map(function($item) {
+                return (object) [
+                    'type' => 'transaction',
+					'id' => $item->id,
+                    'creator' => $item->creator->fullname,
+                    'updater' => $item->updater->fullname,
+                    'created_at' => $item->created_at,
+                    'date' => $item->dateFormat,
+                    'dateForHumans' => $item->created_at->diffForHumans(),
+                    'updatedDateForHumans' => $item->updated_at->diffForHumans(),
+					'description' => $item->description,
+					'amount' => $item->amount,
+                    'hashtags' => $item->hashtags->pluck('tag')->toArray()
+				];
+            });
 
 		$posts = Post::where('trip_id', $trip->id)
 			->with('user')
-			->get();
-
-		$activities = $transactions->merge($posts)
-			->sortByDesc('created_at')
-			->map(function($item){
-				if (get_class($item) === 'App\Transaction') {
-					return $item;
-				}
+			->get()->map(function($item) {
 				return (object) [
-					'post' => $item->id,
+                    'type' => 'post',
+					'id' => $item->id,
 					'poster' => $item->user->fullname,
-					'edit' => $item->created_by === Auth::id(),
+                    'created_at' => $item->created_at,
+					'editable' => $item->created_by === Auth::id(),
 					'content' => $item->content,
-					'date' => $item->diffForHumans
+					'dateForHumans' => $item->created_at->diffForHumans()
 				];
-			})->take(15);
+			});
+
+
+        // Cannot merge into empty collection
+        if ($transactions->isEmpty()) {
+            $activities = $posts;
+
+        } else {
+            $activities = $transactions->merge($posts);
+        }
+
+        $activities = $activities->take(15)
+            ->sortByDesc('created_at')
+            ->values();
 
 		$friendsInvitable = true;
 

@@ -1,9 +1,9 @@
 <template>
-<div class="popup-wrap">
+<div class="popup-wrap" @click.self="hide">
 <form id="transactionForm" class="dialogue popup" @submit.prevent="onSubmit">
-    <div class="popup-close" @click="$emit('hide')">&times;</div>
+    <div class="popup-close" @click="hide">&times;</div>
     <h4 class="centered form-header">Transaction</h4>
-    <hr>    
+    <hr>
 
     <div v-if="isUpdatable()">
         <p><strong>Paid by:</strong> {{ creator }}</p>
@@ -191,9 +191,7 @@ methods: {
     },
 
     getTransactionData() {
-        axios.get(`
-            /trips/${ this.trip_id }/transactions/${ this.transaction_id }
-        `)
+        axios.get(`/trips/${this.trip_id}/transactions/${this.transaction_id}`)
         .then(response => {
             let transaction = response.data.transaction;
 
@@ -211,6 +209,10 @@ methods: {
             this.form.split.interpret();
             this.date.parse(transaction.date);
         });
+    },
+
+    hide() {
+        this.$emit('hide');
     },
 
     isUpdatable() {

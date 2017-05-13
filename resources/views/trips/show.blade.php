@@ -10,10 +10,6 @@
     	@hide="hideAll">
     </invite-friend>
 
-    <transaction-form v-if="transactionForm.visible" :trip_id="{{$trip->id}}"
-    	:transaction_id="transactionForm.id" @hide="hideAll">
-    </transaction-form>
-
 	<div class="trip-header clearfix">
 		<h3 id="name">
 		{{ $trip->name }}
@@ -49,13 +45,12 @@
 				report: {
 					visible: false,
 					type: null
-				},
-
-		        transactionForm: {
-		        	visible: false,
-		        	id: null
-		        }
+				}
 		    },
+
+			created() {
+				bus.$on('closeModals', this.hideAll);
+			},
 
 		    methods: {
 
@@ -63,64 +58,34 @@
 					this.tripForm.visible = false;
 					this.inviteFriend.visible = false;
 					this.report.visible = false;
-					this.transactionForm.visible = false;
-				},
-
-				popupVisible() {
-					for (prop in this._data) {
-						if (this._data[prop].visible) {
-							return true;
-						}
-					}
-
-					return false;
 				},
 
 				createPost() {
 					bus.$emit('submit');
 				},
 
-		    	showTransactionForm(id = null) {
-		    		if (this.popupVisible()) {
-		    			return new Promise((resolve) => {
-		    				this.hideAll();
-		    				resolve();
-
-		    			}).then(() => {
-		    				this.showTransactionForm(id);
-		    			});
-		    		}
-
-		    		this.transactionForm.visible = true;
-		    		this.transactionForm.id = id;
-		    	},
-
 				showTripForm() {
-					this.hideAll();
+					bus.$emit('closeModals');
 					this.tripForm.visible = true;
 				},
 
 				showInviteFriendsForm() {
-					this.hideAll();
 					bus.$emit('closeNav');
+					bus.$emit('closeModals');
 					this.inviteFriend.visible = true;
 				},
 
-				showReport(type) {
-		    		if (this.popupVisible()) {
-		    			return new Promise((resolve) => {
-		    				this.hideAll();
-		    				resolve();
+				showTransactionForm() {
+			    	bus.$emit('showTransactionForm');
+			    },
 
-		    			}).then(() => {
-		    				this.showReport(type);
-		    			});
-		    		}
+				showReport(type) {
+					if (!type) {
+						return false;
+					}
 
 					this.report.visible = true;
-					if (type) {
-						this.report.type= type;
-					}
+					this.report.type= type;
 				}
 		    }
 		});

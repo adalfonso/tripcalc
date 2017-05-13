@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model {
     protected $fillable = [
-    	'trip_id', 'user_id', 'amount', 'date',
-        'description', 'created_by', 'updated_by'
+    	'trip_id', 'user_id', 'amount', 'date', 'description'
     ];
 
     protected $casts = [
@@ -24,6 +23,10 @@ class Transaction extends Model {
 
     public function creator() {
         return $this->belongsTo('App\User', 'created_by');
+    }
+
+    public function updater() {
+        return $this->belongsTo('App\User', 'updated_by');
     }
 
     public function hashtags() {

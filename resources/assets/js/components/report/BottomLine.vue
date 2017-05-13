@@ -1,9 +1,9 @@
 <template>
-    <div class="popup-wrap">
+    <div class="popup-wrap" @click.self="hide">
         <div class="dialogue popup report">
             <div class="popup-close" @click="hide">&times;</div>
             <h4 class="centered form-header">Bottom Line Report</h4>
-            <hr>            
+            <hr>
 
             <div class="centered" v-if="response">
                 <h4 v-if="total !== 0">{{ status }}</h4>

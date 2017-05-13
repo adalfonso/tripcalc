@@ -1,7 +1,7 @@
 <template>
-<div class="popup-wrap">
+<div class="popup-wrap" @click.self="hide">
 <form id="inviteFriendForm" class="dialogue popup" @submit.prevent>
-    <div class="popup-close" @click="$emit('hide')">&times;</div>
+    <div class="popup-close" @click="hide">&times;</div>
     <loading v-if="loading.visible"></loading>
 
     <alert v-if="alert.visible" :message="alert.message"
@@ -94,14 +94,13 @@ export default {
 
         alertTimeout(timeout) {
             return setTimeout(() => {
-                this.hideForm();
+                this.hide();
             }, timeout);
         },
 
         clearResults() { this.results = []; },
 
-        hideForm() {
-            this.hideAlert();
+        hide() {
             this.$emit('hide');
         },
 

@@ -17,12 +17,16 @@ Vue.component('hamburger', require('./components/Hamburger.vue'));
 Vue.component('invite-friend', require('./components/InviteFriend.vue'));
 Vue.component('loading', require('./components/Loading.vue'));
 Vue.component('logout', require('./components/Logout.vue'));
-Vue.component('post-form', require('./components/PostForm.vue'));
-Vue.component('post', require('./components/Post.vue'));
 Vue.component('request-popup', require('./components/RequestPopup.vue'));
 Vue.component('search-people', require('./components/SearchPeople.vue'));
-Vue.component('transaction-form', require('./components/TransactionForm.vue'));
 Vue.component('trip-form', require('./components/TripForm.vue'));
+
+// Activity Feed
+Vue.component('activity-feed', require('./components/ActivityFeed.vue'));
+Vue.component('post', require('./components/Post.vue'));
+Vue.component('post-form', require('./components/PostForm.vue'));
+Vue.component('transaction', require('./components/Transaction.vue'));
+Vue.component('transaction-form', require('./components/TransactionForm.vue'));
 
 // Reports
 Vue.component('spender-progress-bar', require('./components/report/SpenderProgressBar.vue'));
