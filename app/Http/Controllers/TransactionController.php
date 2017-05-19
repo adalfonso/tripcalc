@@ -23,6 +23,9 @@ class TransactionController extends Controller {
 				JOIN trip_user tu ON u.id = tu.user_id
 				JOIN trips t      ON tu.trip_id = t.id
 				WHERE t.id = :trip_id
+				AND u.activated = true
+				AND tu.active = true
+
 			) tb1
 			LEFT JOIN (
 				SELECT user_id AS join_on, split_ratio, count(*) AS is_spender

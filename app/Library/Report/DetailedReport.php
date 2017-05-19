@@ -20,8 +20,12 @@ class DetailedReport extends Report {
                 'amount' => $transaction->amount,
                 'description' => $transaction->description,
                 'creator' => $this->creatorName($transaction),
-				'creatorId' =>$transaction->created_by,
-                'net' => money_format('%i', $this->netTransaction($transaction))
+				'isCreator' => $transaction->created_by === Auth::id(),
+                'net' => money_format('%i', $this->netTransaction($transaction)),
+				'splitTotal' => number_format($transaction->splitTotal, 2),
+				'splitType' => $transaction->splitType,
+				'split' => $transaction->users,
+				'userSplit' => number_format($transaction->userSplit, 2 )
             ];
         });
 	}

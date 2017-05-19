@@ -19,6 +19,11 @@ class Trip extends Model {
 
 	public function users() {
 		return $this->belongsToMany('\App\User', 'trip_user')
+
+					// Activated Account
+					->where('activated', true)
+
+					// Active On Trip
 					->where('active', true);
 	}
 

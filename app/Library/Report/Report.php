@@ -40,25 +40,6 @@ abstract class Report {
 	}
 
 	/**
-	 * Determine if transaction is split evenly between everyone
-	 * @param  App\Transaction
-	 * @return boolean
-	 */
-	public function isEvenSplit($transaction) {
-		return $transaction->users->isEmpty();
-	}
-
-	/**
-	 * Determine if transaction a personal transaction
-	 * @param  App\Transaction
-	 * @return boolean
-	 */
-	public function isPersonalTransaction($transaction) {
-		return $transaction->users->count() === 1
-			&& $transaction->users->first()->id === Auth::id();
-	}
-
-	/**
 	 * Get net amount for a transaction
 	 * @param  App\Transaction
 	 * @param  Integer - optional
@@ -80,12 +61,12 @@ abstract class Report {
 	 * @return number
 	 */
 	public function netIfPaidByUser($transaction) {
-		if ($this->isEvenSplit($transaction)) {
+		if ($transaction->isEvenSplit()) {
 			$users = $transaction->trip->users->count();
 
 			return $transaction->amount * ($users - 1) / $users;
 
-		} elseif ($this->isPersonalTransaction($transaction)) {
+		} elseif ($transaction->isPersonal()) {
 			return 0;
 		}
 
@@ -98,11 +79,11 @@ abstract class Report {
 	 * @return number
 	 */
 	public function netIfPaidByOther($transaction) {
-		if ($this->isEvenSplit($transaction)) {
+		if ($transaction->isEvenSplit()) {
 			$users = $transaction->trip->users->count();
 			return - $transaction->amount * (1 / $users);
 
-		} elseif ($this->isPersonalTransaction($transaction)) {
+		} elseif ($transaction->isPersonal()) {
 			return - $transaction->amount;
 		}
 
@@ -124,15 +105,6 @@ abstract class Report {
 		}
 
 		return 0;
-	}
-
-	/**
-	 * Sum the total split ratio for a transaction
-	 * @param  App\Transaction
-	 * @return number
-	 */
-	public function splitTotal($transaction) {
-		return $transaction->users->sum('pivot.split_ratio');
 	}
 
 	/**

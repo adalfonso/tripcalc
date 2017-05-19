@@ -68,6 +68,39 @@ class TransactionTest extends DuskTestCase {
     }
 
     /** @test */
+    public function it_doesnt_fetch_user_accounts_that_are_inactive() {
+        $user2 = $this->maker->user();
+        $user2->activated = false;
+        $this->maker->attachTripUser($this->trip, $user2);
+        $user2->save();
+
+        $this->maker->login($this->user1);
+
+        $response = $this->get(
+            '/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id
+        )->json();
+
+        $this->assertEquals(1, sizeof($response['travelers']));
+    }
+
+    /** @test */
+    public function it_doesnt_fetch_users_who_are_inactive_on_the_trip() {
+        $user2 = $this->maker->user();
+        $this->maker->attachTripUser($this->trip, $user2);
+
+        $user2->trips()->updateExistingPivot($this->trip->id, ['active' => 0]);
+
+        $this->maker->login($this->user1);
+
+        $response = $this->get(
+            '/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id
+        )->json();
+
+        $this->assertEquals(1, sizeof($response['travelers']));
+    }
+
+
+    /** @test */
     public function it_creates_a_transaction() {
         Session::start();
         $this->maker->login($this->user1);
@@ -325,5 +358,21 @@ class TransactionTest extends DuskTestCase {
         ]);
 
         $response->assertStatus(302);
+    }
+
+    /** @test */
+    public function it_accurately_gets_split_type() {
+        Session::start();
+        $this->user2 = $this->maker->user();
+        $this->maker->login($this->user1);
+
+        $this->transaction->users()->detach();
+        $this->assertEquals('even', $this->transaction->splitType);
+
+        $this->transaction->users()->attach($this->user1, ['split_ratio' => 1]);
+        $this->assertEquals('personal', $this->transaction->fresh()->splitType);
+
+        $this->transaction->users()->attach($this->user2, ['split_ratio' => 1]);
+        $this->assertEquals('custom', $this->transaction->fresh()->splitType);
     }
 }
