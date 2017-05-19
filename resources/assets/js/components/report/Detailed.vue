@@ -11,25 +11,19 @@
                         <th>Date</th>
                         <th v-if="multiUser">Paid By</th>
                         <th class="align-right">Amount</th>
-                        <th v-if="multiUser">Net</th>
+                        <th v-if="multiUser" class="align-right">Net</th>
                     </tr>
                     <tr v-for="transaction in transactions">
                         <td>{{ transaction.date }}</td>
                         <td v-if="multiUser">{{ transaction.creator }}</td>
-                        <td class="align-right">${{ transaction.amount }}</td>
-                        <td v-if="multiUser">{{ currency(transaction.net) }}</td>
+                        <td class="align-right">{{ transaction.amount }}</td>
+                        <td v-if="multiUser" class="align-right">{{ currency(transaction.net) }}</td>
                     </tr>
                     <tr class="total" v-if="multiUser">
                         <td><strong>{{ balanceVerbiage }}</strong></td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
-                        <td>${{ fixedLength(Math.abs(balance)) }}</td>
-                    </tr>
-                    <tr class="total">
-                        <td><strong>Personal total</strong></td>
-                        <td v-if="multiUser">&nbsp;</td>
-                        <td v-if="multiUser">&nbsp;</td>
-                        <td class="align-right">${{ total }}</td>
+                        <td class="align-right">{{ fixedLength(Math.abs(balance)) }}</td>
                     </tr>
                 </table>
             </div>
@@ -61,16 +55,6 @@ export default {
 	},
 
     computed: {
-        total() {
-            let total = this.transactions.filter(function(transaction) {
-                return transaction.creator === 'You';
-
-            }).reduce(function(carry, transaction) {
-                return carry += Number(transaction.amount);
-            }, 0);
-
-            return Number(total - this.balance).toFixed(2);
-        },
 
         balance() {
             let total = this.transactions.reduce(function(carry, transaction){
@@ -91,10 +75,10 @@ export default {
                 return '';
 
             } else if (amount < 0 ) {
-                return '-$' +  this.fixedLength(Math.abs(amount));
+                return this.fixedLength(amount);
             }
 
-            return '$' + this.fixedLength(amount);
+            return this.fixedLength(amount);
         },
 
         hide() {

@@ -37,7 +37,54 @@ class Transaction extends Model {
         return $this->belongsTo('App\Trip');
     }
 
+    /**
+	 * Determine if transaction is split evenly between everyone
+	 * @return boolean
+	 */
+    public function isEvenSplit() {
+        return $this->users->isEmpty();
+    }
+
+    /**
+	 * Determine if transaction a personal transaction
+	 * @return boolean
+	 */
+	public function isPersonal() {
+		return $this->users->count() === 1
+			&& $this->users->first()->id === \Auth::id();
+	}
+
     public function getDateFormatAttribute() {
         return Carbon::parse($this->date)->format('M d, Y');
     }
+
+        /**
+	 * Sum the total split ratio for the logged in user
+	 * @return mixed
+	 */
+	public function getUserSplitAttribute() {
+		$user = $this->users->where('id', \Auth::id());
+
+        return $user->count() !== 1 ? null : $user->first()->pivot->split_ratio;
+	}
+
+    /**
+	 * Get the type of transaction as a string
+	 * @return string
+	 */
+	public function getSplitTypeAttribute() {
+		if ($this->isPersonal()) {
+			return 'personal';
+		}
+
+		return $this->isEvenSplit() ? 'even' : 'custom';
+	}
+
+    /**
+	 * Sum the total split ratio for a transaction
+	 * @return number
+	 */
+	public function getSplitTotalAttribute() {
+		return $this->users->sum('pivot.split_ratio');
+	}
 }

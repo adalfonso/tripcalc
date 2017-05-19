@@ -39,42 +39,20 @@
 			:trip_id="{{$trip->id}}" @hide="hideAll">
 		</report-bottom-line>
 
-		@if ($trip->users->count() > 1)
-			<p class="item" @click="showReport('bottomLine')">
-				Bottom Line
-			</p>
-		@endif
-
 		{{-- Distribution Report --}}
 		<report-distribution v-if="report.visible && report.type === 'distribution'"
 			:trip_id="{{$trip->id}}" @hide="hideAll">
 		</report-distribution>
-
-		@if ($trip->users->count() > 1)
-			<p class="item" @click="showReport('distribution')">
-				Distribution
-			</p>
-		@endif
 
 		{{-- Top Spenders Report --}}
 		<report-top-spenders v-if="report.visible && report.type === 'top-spenders'"
 			:trip_id="{{$trip->id}}" @hide="hideAll">
 		</report-top-spenders>
 
-		@if ($trip->users->count() > 1)
-			<p class="item" @click="showReport('top-spenders')">
-				Top Spenders
-			</p>
-		@endif
-
 		{{-- Detailed Report --}}
 		<report-detailed v-if="report.visible && report.type === 'detailed'"
 			:trip_id="{{$trip->id}}" @hide="hideAll">
 		</report-detailed>
-
-		<p class="item" @click="showReport('detailed')">
-			Detailed
-		</p>
 
 		{{-- Closeout Report --}}
 		<report-closeout v-if="report.visible && report.type === 'closeout'"
@@ -82,9 +60,16 @@
 		</report-closeout>
 
 		@if ($trip->users->count() > 1)
-			<p class="item" @click="showReport('closeout')">
-				Closeout
-			</p>
+			<p class="item" @click="showReport('bottomLine')">Bottom Line</p>
+			<p class="item" @click="showReport('distribution')">Distribution</p>
+			<p class="item" @click="showReport('top-spenders')">Top Spenders</p>
+		@endif
+
+		<p class="item" @click="showReport('detailed')">Detailed</p>
+		<p class="item"><a class="normal" href="/trips/{{ $trip->id }}/report/extended">Detailed (Extended)</a></p>
+
+		@if ($trip->users->count() > 1)
+			<p class="item" @click="showReport('closeout')">Closeout</p>
 		@endif
 
 		<hr>

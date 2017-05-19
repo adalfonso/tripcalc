@@ -44,4 +44,11 @@ class ReportController extends Controller {
             'multiUser' => $multiUser
         ];
     }
+
+    public function extended(Trip $trip) {
+        $transactions = DetailedReport::make($trip);
+        $total = number_format($transactions->sum('net'), 2);
+
+        return view('report.extended', compact('transactions', 'total'));
+    }
 }

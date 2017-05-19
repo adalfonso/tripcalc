@@ -99,6 +99,43 @@ class Detailed extends DuskTestCase {
     }
 
     /** @test */
+    public function it_doesnt_get_a_non_user_paid_transaction_with_even_split_for_an_inactive_user() {
+        $this->transaction = $this->maker->transaction(
+            $this->trip, $this->user2, 60
+        );
+
+        $user3 = $this->maker->user();
+        $user3->activated = false;
+        $user3->save();
+        $this->maker->attachTripUser($this->trip, $user3);
+
+        $this->maker->login($this->user1);
+        $response = $this->get('/trips/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
+
+        $this->assertEquals(60, $response['amount']);
+        $this->assertEquals(-20, $response['net']);
+    }
+
+    /** @test */
+    public function it_doesnt_get_a_non_user_paid_transaction_with_even_split_for_user_not_active_on_the_trip() {
+        $this->transaction = $this->maker->transaction(
+            $this->trip, $this->user2, 60
+        );
+
+        $user4 = $this->maker->user();
+        $this->maker->attachTripUser($this->trip, $user4);
+        $user4->trips()->updateExistingPivot($this->trip->id, ['active' => 0]);
+
+        $this->maker->login($this->user1);
+
+        $response = $this->get('/trips/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
+
+        $this->assertEquals(60, $response['amount']);
+        $this->assertEquals(-20, $response['net']);
+    }
+
+
+    /** @test */
     public function it_gets_a_non_user_paid_transaction_with_uneven_split() {
         $this->transaction = $this->maker->transaction(
             $this->trip, $this->user2, 60

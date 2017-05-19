@@ -68,6 +68,11 @@ a, .fake-link {
 
 a:hover, .fake-link:hover { color: #798a99; }
 
+a.normal {
+	color: white;
+	font-weight: normal;
+}
+
 div {box-sizing: border-box;}
 
 h1, h2, h3, h4, h5, h6, p {
@@ -1239,10 +1244,6 @@ a.subtext:hover {
 
 .detailedReport tr:nth-of-type(2n+2) {
 	background: rgba(0, 0, 0, .125);
-}
-
-.detailedReport tr *:nth-of-type(n+3) {
-	text-align: right;
 }
 
 

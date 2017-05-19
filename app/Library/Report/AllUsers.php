@@ -47,7 +47,7 @@ trait AllUsers {
             $user = $this->report->where('id', $transaction->created_by)->first();
             $user->total = bcsub($user->total, $transaction->amount, 2);
 
-			if ($this->isEvenSplit($transaction)) {
+			if ($transaction->isEvenSplit()) {
 				return $this->splitEvenly($transaction);
 			}
 
@@ -183,7 +183,7 @@ trait AllUsers {
         return $this->report->each(function($user) use($transaction) {
             $splitPercent =
                 $this->splitRatio($user->id, $transaction) /
-                $this->splitTotal($transaction);
+                $transaction->splitTotal;
 
             $user->total += $transaction->amount * $splitPercent;
         });
