@@ -1,32 +1,29 @@
 <template>
     <div class="popup-wrap" @click.self="hide">
-        <div class="dialogue popup report detailedReport">
+        <div class="popup report detailedReport">
             <div class="popup-close" @click="hide">&times;</div>
-            <h4 class="centered form-header">Detailed Report</h4>
+            <h4 class="centered">Detailed Report</h4>
             <hr>
-
-            <div class="graph">
-                <table>
-                    <tr>
-                        <th>Date</th>
-                        <th v-if="multiUser">Paid By</th>
-                        <th class="align-right">Amount</th>
-                        <th v-if="multiUser" class="align-right">Net</th>
-                    </tr>
-                    <tr v-for="transaction in transactions">
-                        <td>{{ transaction.date }}</td>
-                        <td v-if="multiUser">{{ transaction.creator }}</td>
-                        <td class="align-right">{{ transaction.amount }}</td>
-                        <td v-if="multiUser" class="align-right">{{ currency(transaction.net) }}</td>
-                    </tr>
-                    <tr class="total" v-if="multiUser">
-                        <td><strong>{{ balanceVerbiage }}</strong></td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td class="align-right">{{ fixedLength(Math.abs(balance)) }}</td>
-                    </tr>
-                </table>
-            </div>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th v-if="multiUser">Paid By</th>
+                    <th class="align-right">Amount</th>
+                    <th v-if="multiUser" class="align-right">Net</th>
+                </tr>
+                <tr v-for="transaction in transactions">
+                    <td>{{ transaction.date }}</td>
+                    <td v-if="multiUser">{{ transaction.creator }}</td>
+                    <td class="align-right">{{ transaction.amount }}</td>
+                    <td v-if="multiUser" class="align-right">{{ currency(transaction.net) }}</td>
+                </tr>
+                <tr class="total" v-if="multiUser">
+                    <td><strong>{{ balanceVerbiage }}</strong></td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td class="align-right">{{ fixedLength(Math.abs(balance)) }}</td>
+                </tr>
+            </table>
         </div>
     </div>
 </template>

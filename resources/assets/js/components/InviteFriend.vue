@@ -1,13 +1,13 @@
 <template>
 <div class="popup-wrap" @click.self="hide">
-<form id="inviteFriendForm" class="dialogue popup" @submit.prevent>
+<form id="inviteFriendForm" class="popup" @submit.prevent>
     <div class="popup-close" @click="hide">&times;</div>
     <loading v-if="loading.visible"></loading>
 
     <alert v-if="alert.visible" :message="alert.message"
         @hide="hideAlert">
     </alert>
-    <h4 class="centered form-header">Invite Friends</h4>
+    <h4 class="centered">Invite Friends</h4>
     <hr>
 
     <p class="ui-error" v-if="errors.has('friend')" v-text="errors.get('friend')"></p>
@@ -25,15 +25,13 @@
         </h5>
     </div>
 
-    <div class="item-wrapper clearfix" v-if="queue.items.length > 0">
+    <div class="clearfix" v-if="queue.items.length > 0">
         <h6 class="item" v-for="friend in queue.items" @click="queue.remove(friend)">
             {{ friend.display }}
         </h6>
     </div>
 
-    <button class="btn-full form-button" type="button" @click="onSubmit">
-        Send Invitations
-    </button>
+    <div class=" btn btn-full" @click="onSubmit">Send Invitations</div>
 </form>
 </div>
 </template>

@@ -6,7 +6,7 @@
 				<strong>{{ data.dateForHumans }}</strong>
 				| {{ data.creator }}
 
-				<img style="float: right;" class="editButton"
+				<img style="float: right;" class="btn-edit"
 				   src="/img/icon/edit.png" @click="edit(data.id)">
 			</p>
 
@@ -24,7 +24,7 @@
 
 			<p v-if="data.description !== null">{{ data.description }}</p>
 
-			<ul class="hashtags-plaintext clearfix">
+			<ul class="hashtags clearfix">
 				<li v-for="hashtag in data.hashtags">#{{ hashtag }}</li>
 			</ul>
 		</div>

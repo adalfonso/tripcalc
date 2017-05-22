@@ -1,8 +1,8 @@
 <template>
     <div class="popup-wrap" @click.self="hide">
-        <div class="dialogue popup report closeoutReport">
+        <div class="popup report closeoutReport">
             <div class="popup-close" @click="hide">&times;</div>
-            <h4 class="centered form-header">Closeout Report</h4>
+            <h4 class="centered">Closeout Report</h4>
             <hr>
 
             <div v-for="spender in spendersByLastName" class="spenderGroup">

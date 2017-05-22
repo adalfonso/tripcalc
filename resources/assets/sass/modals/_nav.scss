@@ -1,0 +1,54 @@
+#nav {
+	left: 0; right: 0; top: 0;
+	position: fixed;
+	z-index: 1;
+
+    > a {
+    	border-bottom: 1px solid $midnight;
+    	background: $paleBlue;
+    	display: none;
+    	font-size: 1.2rem;
+    	margin: 0;
+    	padding: .6rem;
+    	width: 100%;
+    }
+
+    .menu {
+        display: block;
+
+        div {
+            background: $midnight;
+            border-radius: .12rem;
+            height: .5rem;
+            margin: .15rem 0;
+            width: 2.2rem;
+
+            &:first-child {    margin-top: 0; }
+            &:last-child  { margin-bottom: 0; }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+	#nav {
+		padding: .8em 1.4rem;
+		position: relative;
+
+		> a {
+			background: transparent;
+			border: none;
+			display: block;
+			float: left;
+			margin: 0 1rem 0 0;
+			padding: 0;
+			width: auto;
+		}
+
+		a.menu { display: none; }
+
+		.logout, #nav .login {
+			float: right;
+			margin: 0;
+		}
+	}
+}

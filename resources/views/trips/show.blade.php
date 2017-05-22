@@ -13,7 +13,7 @@
 	<div class="trip-header clearfix">
 		<h3 id="name">
 		{{ $trip->name }}
-			<img trip class="editButton" src="/img/icon/edit.png"
+			<img trip class="btn-edit" src="/img/icon/edit.png"
 				@click="showTripForm">
 		</h3>
 

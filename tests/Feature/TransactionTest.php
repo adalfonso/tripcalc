@@ -374,5 +374,5 @@ class TransactionTest extends DuskTestCase {
 
         $this->transaction->users()->attach($this->user2, ['split_ratio' => 1]);
         $this->assertEquals('custom', $this->transaction->fresh()->splitType);
-    }
+    }    
 }

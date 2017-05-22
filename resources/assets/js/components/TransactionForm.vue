@@ -1,8 +1,8 @@
 <template>
 <div class="popup-wrap" @click.self="hide">
-<form id="transactionForm" class="dialogue popup" @submit.prevent="onSubmit">
+<form id="transactionForm" class="popup" @submit.prevent="onSubmit">
     <div class="popup-close" @click="hide">&times;</div>
-    <h4 class="centered form-header">Transaction</h4>
+    <h4 class="centered">Transaction</h4>
     <hr>
 
     <div v-if="isUpdatable()">
@@ -37,7 +37,7 @@
     </div>
     <input class="hasBtn" type="text" placeholder="#hashtags" maxlength="25"
         v-model="form.hashtags.input" @keyup.enter.prevent="form.hashtags.add()">
-    <div class="item-wrapper clearfix" v-if="form.hashtags.items.length > 0">
+    <div class="clearfix" v-if="form.hashtags.items.length > 0">
         <div class="item" v-for="hashtag in form.hashtags.items"
             @click="form.hashtags.remove(hashtag)">
             #{{ hashtag }}
@@ -60,7 +60,7 @@
     </div>
 
     <!-- Travelers - Custom Split -->
-    <div class="travelers">
+    <div style="margin: .6rem 0">
         <div v-show="form.split.type === 'custom'"
             v-for="(traveler, index) in form.split.travelers">
             <p class="ui-error"
@@ -71,16 +71,17 @@
                 <div class="ui-input-btn no-hover"
                     v-html="traveler.is_spender ? '&#10004;' : '' "></div>
                 <p>{{ traveler.full_name }}</p>
-                <div class="splitRatio">
-                    <input type="text" placeholder="Split Ratio" maxlength="5"
-                        v-model="traveler.split_ratio" @click.stop>
-                </div>
+                <input type="text" placeholder="Split Ratio" maxlength="5"
+                    class="splitRatio" v-model="traveler.split_ratio"
+                    @click.stop="selectTraveler(traveler.id)">
             </div>
         </div>
     </div>
 
+    <hr>
+
     <!-- Delete This Transaction -->
-    <hr v-if="transaction_id">
+
     <div class="ui-checkbox" v-if="transaction_id" @click="form.toggle('delete')">
         <!-- Fake fields to stop browser from trying to save password -->
         <input style="display:none" type="text">
@@ -99,13 +100,13 @@
         form.delete_confirmation" v-text="form.errors.get('password')">
     </p>
 
+    <hr v-if="transaction_id">
+
     <!-- Password To Delete -->
     <input type="password" name="deletePassword" v-if="form.isDeletable()" v-model="form.password"
         placeholder="Enter password to continue">
 
-    <button class="btn-full form-button" type="button" @click="onSubmit">
-        Submit Transaction
-    </button>
+    <div class="btn btn-full" @click.prevent="onSubmit">Submit Transaction</div>
 </form>
 </div>
 
@@ -217,6 +218,10 @@ methods: {
 
     isUpdatable() {
         return this.transaction_id !== null;
+    },
+
+    selectTraveler(traveler) {
+        this.form.split.travelers[traveler].is_spender = 1;
     },
 
     create() {

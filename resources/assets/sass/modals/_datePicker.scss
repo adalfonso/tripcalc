@@ -1,0 +1,65 @@
+.datePicker {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	background: $paleSmoke;
+	border: 1px solid $midnight;
+	border-radius: .2rem;
+	left: calc(50% - 9.3em - 1px);
+	padding: .2rem;
+	position: absolute;
+	text-align: center;
+	top: 8rem;
+	width: calc(18.6em + 2px);
+	z-index: 6;
+
+    h4 { margin: .8em 0; }
+
+    .weekdays > div,
+    .currentMonth,
+    .otherMonth {
+    	border-radius: 50%;
+    	float: left;
+    	height: 2.2rem;
+    	line-height: 2rem;
+    	margin: .2rem;
+    	transition: .2s;
+    	width: 2.2rem;
+    }
+
+    .currentMonth {
+    	background: $paleBlue;
+    	color: $midnight;
+    }
+
+    .currentMonth:hover, .selected {
+    	background: $midnight;
+    	color: white;
+    }
+
+    .otherMonth {
+    	background: $paleSmoke;
+    	color: #ccc;
+
+        &:hover {
+        	background: $paleBlue;
+        	color: $midnight;
+        }
+    }
+
+    ul.prevNextMonth {
+    	padding: 0;
+    	margin: 0;
+
+        li {
+        	float: left;
+        	font-size: 2rem;
+        	height: .8rem;
+        	line-height: .5rem;
+        	transition: .2s;
+        	width: 50%;
+
+            &:hover { color: $paleBlue }
+        }
+    }
+}

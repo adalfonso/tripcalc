@@ -1,0 +1,159 @@
+.btn-edit {
+	height: 1em;
+	position: relative;
+    top: .1em;
+    transition: .2s;
+    z-index: 0;
+
+    &:hover { opacity: .5; }
+}
+
+.btn-full {
+	font-size: 1.6rem;
+	width: 100%;
+}
+
+.btn-thin {
+	height: 2.6rem;
+	line-height: 1rem;
+}
+
+.form-transparent {
+    padding: 0 .8rem .8rem .8rem;
+
+    h2, p {
+    	color: $smoke;
+    	text-align: center;
+    }
+
+    p {	font-size: .9rem; }
+
+    input {
+        background: rgba(228,242,253,.02);
+        border: 1px solid rgba(228,242,253,.1);
+    }
+}
+
+.item {
+	background: $midnight;
+	border-radius: .4rem;
+	color: white;
+	float: left;
+	padding: .2rem .4rem;
+	margin:  0 .4rem .4rem 0;
+	transition: .2s;
+
+    &:hover { background: $smoke; }
+}
+
+input.splitRatio {
+	position: absolute;
+	right: 0;
+	width: 5.7rem;
+}
+
+.toggleGroup {
+	display: table;
+	margin: 0 auto;
+
+    div {
+    	background: $smoke;
+    	color: white;
+    	float: left;
+    	padding: .6rem 1rem;
+
+        &:first-of-type {
+        	border-top-left-radius: .2rem;
+        	border-bottom-left-radius: .2rem;
+        }
+
+        &:last-of-type {
+        	border-top-right-radius: .2rem;
+        	border-bottom-right-radius: .2rem;
+        }
+    }
+
+    [active="true"] {
+    	background: $midnight;
+    }
+}
+
+.ui-checkbox {
+	background: $smoke;
+	border-radius: .2rem;
+	min-height: 2.6rem;
+	margin-bottom: .6rem;
+	position: relative;
+	width: 100%;
+
+    p {
+    	display: block;
+    	color: white;
+    	height: 100%;
+    	position: absolute;
+    	line-height: 2.6rem;
+    	margin: 0 0 0 3.1rem;
+    	vertical-align: middle;
+    }
+}
+
+.ui-input-duo-mobile > {
+    * {
+    	float: left;
+    	width: calc(50% - .3rem) !important;
+    }
+
+    button {
+        padding: .4rem 0;
+    }
+
+    :first-child { margin-right: .3rem; }
+    :last-child  {  margin-left: .3rem; }
+}
+
+.ui-error {
+	margin: 0;
+	text-align: left;
+}
+
+.ui-input-btn, .ui-checkbox-btn {
+	background: $midnight;
+	border-bottom-left-radius: .2rem;
+	border-top-left-radius: .2rem;
+	color: white;
+	float: left;
+	height: 2.6rem;
+	line-height: 2.6rem;
+	text-align: center;
+	transition: .2s;
+	width: 2.6rem;
+	vertical-align: middle;
+	user-select: none;
+
+    &:hover    { background: $smoke; }
+    &.no-hover { background: $midnight; }
+
+    .font-large { font-size: 2rem; }
+
+    img {
+    	vertical-align: middle;
+    	width: 2em;
+    }
+}
+
+@media (min-width: 768px) {
+	.form-small {
+		margin: 0 auto;
+		width: 400px;
+	}
+}
+
+@media (min-width: 414px) {
+	.ui-input-duo > * {
+		float: left;
+		width: calc(50% - .3rem) !important;
+	}
+
+	.ui-input-duo > :first-child { margin-right: .3rem; }
+	.ui-input-duo > :last-child { margin-left: .3rem; }
+}

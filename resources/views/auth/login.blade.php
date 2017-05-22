@@ -1,7 +1,7 @@
 @extends('auth.layout')
 
 @section('form')
-<form id="login" class="form-small" role="form" method="POST" action="{{ url('/login') }}">
+<form id="login" class="form-small form-transparent" role="form" method="POST" action="{{ url('/login') }}">
 
     @if (session('status'))
         <p><strong>{{ session('status') }}</strong></p>
@@ -11,7 +11,12 @@
     @endif
 
     <h2>Log In</h2>
-    <p>Don't have an account? <a href="/signup">Sign up</a></p>
+
+    <p>
+        Don't have an account?
+        <a class="paleBlue" href="/signup" >Sign up</a>
+    </p>
+
     <p>
         <a class="subtext" href="{{ url('/password/reset') }}">
             Forgot your Password?
@@ -20,14 +25,13 @@
 
     {{ csrf_field() }}
 
-    <input type="text" class="transparent" placeholder="Email / Username"
-        name="login" value="{{ old('login') }}" required autofocus>
+    <input type="text" placeholder="Email / Username" name="login"
+        value="{{ old('login') }}" required autofocus>
     @if ($errors->has('login'))
         <p>{{ $errors->first('login') }}</p>
     @endif
 
-    <input type="password" placeholder="Password" class="form-control"
-        name="password" required>
+    <input type="password" placeholder="Password" name="password" required>
 
     <div class="ui-input-duo clearfix">
         <div class="rememberMe" @click="toggleRemember">
@@ -35,7 +39,7 @@
             <input type="checkbox" name="remember" class="hidden" :checked="remember">
 
             <div class="ui-input-btn" v-html="rememberIcon"></div>
-            <div class="input-placeholder transparent hasBtn centered">
+            <div class="input-fake transparent hasBtn centered">
                 Remember Me
             </div>
 

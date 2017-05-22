@@ -8,7 +8,7 @@
 
         <title>TripCalc</title>
 
-        <link href="/css/style.css" rel="stylesheet" type="text/css">
+        <link href="/css/app.css" rel="stylesheet" type="text/css">
         <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,700'
               rel='stylesheet' type='text/css'>
     </head>

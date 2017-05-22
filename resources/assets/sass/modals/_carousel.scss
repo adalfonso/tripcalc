@@ -1,0 +1,56 @@
+.carousel-splash-enter-active,
+.carousel-splash-leave-active {
+	transition: 4s;
+	transition-timing-function: ease-in-out;
+}
+
+.carousel-splash-enter,
+.carousel-splash-leave-to,
+.carousel-icon-enter,
+.carousel-icon-leave-to {
+	opacity: 0;
+}
+
+.carousel-icon-enter-active,
+.carousel-icon-leave-active {
+	transition: all 2s;
+	transition-timing-function: ease-in-out;
+}
+
+.carousel-icon-enter-active {
+	transition-delay: 2s;
+}
+
+#splashWrapper {
+	background: #000;
+	position: fixed;
+	height: 100%; width: 100%;
+	top: 0; left: 0;
+	z-index: -1;
+
+    > div {
+    	background-size: cover !important;
+    	position: absolute;
+    	height: 100%; width: 100%;
+    }
+
+    .splash1 { background: url('../img/splash1.jpg') center center fixed; }
+    .splash2 { background: url('../img/splash2.jpg') center center fixed; }
+    .splash3 { background: url('../img/splash3.jpg') center center fixed; }
+    .splash4 { background: url('../img/splash4.jpg') center center fixed; }
+}
+
+#splashIconWrapper {
+	margin: 2rem auto 1.8rem auto;
+	position: relative;
+	height: 48px; width: 48px;
+
+    > img {
+    	height: 48px; width: 48px;
+    	position: absolute;
+    }
+}
+
+@media (min-width: 768px) {
+	#splash-iconWrapper { margin: 4rem auto 3.6rem auto; }
+}

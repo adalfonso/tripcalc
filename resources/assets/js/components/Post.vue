@@ -8,7 +8,7 @@
 			<p>
 				<strong>{{ data.dateForHumans }}</strong>
 				| {{ data.poster }}
-				<img style="float: right;" class="editButton" v-if="data.editable"
+				<img style="float: right;" class="btn-edit" v-if="data.editable"
 					src="/img/icon/edit.png" @click="editPost()">
 			</p>
 
@@ -21,9 +21,9 @@
 				</textarea>
 
 				<div class="floatable-left clearfix">
-					<button v-if="edit" class="btn">Update</button>
-					<div v-if="edit" @click.stop="deletable = true" class="btn">Delete</div>
-					<div v-if="deletable" class="btn" @click="deletePost">Are you sure?</div>
+					<button class="btn" v-if="edit">Update</button>
+					<div class="btn" v-if="edit" @click="deletable = true">Delete</div>
+					<div class="btn" v-if="deletable" @click="deletePost">Are you sure?</div>
 				</div>
 			</form>
 		</div>

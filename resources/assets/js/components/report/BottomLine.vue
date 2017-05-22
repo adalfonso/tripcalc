@@ -1,8 +1,8 @@
 <template>
     <div class="popup-wrap" @click.self="hide">
-        <div class="dialogue popup report">
+        <div class="popup report">
             <div class="popup-close" @click="hide">&times;</div>
-            <h4 class="centered form-header">Bottom Line Report</h4>
+            <h4 class="centered">Bottom Line Report</h4>
             <hr>
 
             <div class="centered" v-if="response">

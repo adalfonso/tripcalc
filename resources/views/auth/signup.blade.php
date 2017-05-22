@@ -1,9 +1,12 @@
 @extends('auth.layout')
 
 @section('form')
-<form id="signup" class="form-small" role="form" method="POST" action="{{ url('/register') }}">
+<form id="signup" class="form-small form-transparent" role="form" method="POST" action="{{ url('/register') }}">
     <h2>Sign Up</h2>
-    <p>Already have an account? <a a href="/login">Log in</a></p>
+    <p>
+        Already have an account?
+        <a class="paleBlue" href="/login">Log in</a>
+    </p>
 
     {{ csrf_field() }}
 
@@ -15,11 +18,13 @@
         <p>{{ $errors->first('last_name') }}</p>
     @endif
 
-    <input class="firstname" type="text" name="first_name" placeholder="First Name"
-        maxlength="15" value="{{ old('first_name') }}" required autofocus>
+    <div class="ui-input-duo-mobile">
+        <input class="firstname" type="text" name="first_name" placeholder="First Name"
+            maxlength="15" value="{{ old('first_name') }}" required autofocus>
 
-    <input class="lastname" type="text" name="last_name" placeholder="Last Name"
-        maxlength="15" value="{{ old('last_name') }}" required>
+        <input class="lastname" type="text" name="last_name" placeholder="Last Name"
+            maxlength="15" value="{{ old('last_name') }}" required>
+    </div>
 
     @if ($errors->has('username'))
         <p>{{ $errors->first('username') }}</p>
@@ -43,11 +48,13 @@
         <p>{{ $errors->first('password') }}</p>
     @endif
 
-    <input class="password1" type="password" name="password" placeholder="Password"
-        maxlength="30" required>
+    <div class="ui-input-duo-mobile">
+        <input class="password1" type="password" name="password" placeholder="Password"
+            maxlength="30" required>
 
-    <input class="password2" type="password" name="password_confirmation"
-        placeholder="Confirm Password" maxlength="30" required>
+        <input class="password2" type="password" name="password_confirmation"
+            placeholder="Confirm Password" maxlength="30" required>
+    </div>
 
     <button class="btn-full btn-thin" type="submit">Sign Up</button>
 </form>

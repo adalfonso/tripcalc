@@ -5,7 +5,7 @@
             <img src="/img/icon/search.png">
 
             <input type="text" placeholder="Search for Friends"
-                v-model="input" @keyup="search">
+                class="placeholder-dark" v-model="input" @keyup="search">
 
             <div id="searchResults" v-if="results.length > 0">
                 <a v-for="user in results" :href="'/profile/' + user.username">

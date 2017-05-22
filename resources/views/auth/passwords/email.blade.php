@@ -16,7 +16,7 @@
             <p>{{ $errors->first('email') }}</p>
         @endif
 
-        <input id="email" type="email" class="form-control" name="email"
+        <input id="email" type="email" name="email"
             value="{{ old('email') }}" placeholder="Email" required>
 
         <button type="submit" class="btn-full btn-thin">

@@ -1,4 +1,4 @@
-<div id="stats" class="left-col clearfix">
+<div id="stats" class="left-col section clearfix">
 
 	@if(!$trip->description && !$trip->budget && $sum === 0)
 		<p>No stats to show yet.</p>
@@ -66,7 +66,11 @@
 		@endif
 
 		<p class="item" @click="showReport('detailed')">Detailed</p>
-		<p class="item"><a class="normal" href="/trips/{{ $trip->id }}/report/extended">Detailed (Extended)</a></p>
+		<p class="item">
+			<a class="light" href="/trips/{{ $trip->id }}/report/extended">
+				Detailed (Extended)
+			</a>
+		</p>
 
 		@if ($trip->users->count() > 1)
 			<p class="item" @click="showReport('closeout')">Closeout</p>

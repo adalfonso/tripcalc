@@ -1,11 +1,11 @@
 <template>
-<div id="friendRequests" class="pendingRequests" v-if="size > 0">
+<div id="friendRequests" v-if="size > 0">
     <p @click="visible = !visible">
         You have
         <a id="friendRequestsNumeric">{{ size }}</a>
         new {{ type }} requests.
     </p>
-    <div id="tripRequestGroup" class="pendingRequestsPopup clearfix" v-if="visible">
+    <div id="tripRequestGroup" class="pendingRequests clearfix" v-if="visible">
         <div class="arw-up"></div>
         <table>
             <tr v-for="(request, index) in requests" :id="request.id">

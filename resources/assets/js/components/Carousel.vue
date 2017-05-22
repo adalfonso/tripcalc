@@ -1,5 +1,5 @@
 <template>
-        <div id="splash-iconWrapper">
+        <div id="splashIconWrapper">
 
             <transition v-for="(img, index) in icons" name="carousel-icon">
                 <img v-if="visible(index)" :src="'img/icon/' + img + '-256x256.png'">

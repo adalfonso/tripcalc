@@ -1,9 +1,293 @@
-
-// Fonts
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
-
 // Variables
 @import "variables";
 
-// Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+// Form Styles
+@import "formDefault";
+@import "formExtended";
+
+// Modal Styles
+@import "modals/activity";
+@import "modals/carousel";
+@import "modals/datePicker";
+@import "modals/nav";
+@import "modals/popup";
+@import "modals/report";
+@import "modals/search";
+
+// Basic Elements
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+*::-webkit-input-placeholder { color: $textTransparent !important; }
+*:-moz-placeholder           { color: $textTransparent !important; }
+*::-moz-placeholder          { color: $textTransparent !important; }
+*:-ms-input-placeholder      { color: $textTransparent !important; }
+
+.placeholder-dark {
+	&::-webkit-input-placeholder { color: $midnight !important; }
+	&:-moz-placeholder           { color: $midnight !important; }
+	&::-moz-placeholder          { color: $midnight !important; }
+	&:-ms-input-placeholder      { color: $midnight !important; }
+}
+
+* { box-sizing: border-box; }
+
+html { height: 100%; }
+
+body {
+	background: $background;
+	background-size: cover;
+	font-family: 'Raleway', sans-serif;
+	height: 100%;
+    margin: 0;
+    min-height: 100%;
+    padding-top: calc(3rem + 1px);
+}
+
+a, .fake-link {
+	color: $cool;
+	font-weight: 700;
+	margin: .4em 0;
+	text-decoration: none;
+	transition: color .2s;
+
+    &:hover { color: $smoke; }
+
+    &.light {
+    	color: white;
+    	font-weight: normal;
+    }
+
+    &.paleBlue { color: $paleBlue; }
+
+    &.subtext {
+    	color: $smoke;
+        font-weight: normal;
+    }
+}
+
+h1, h2, h3, h4, h5, h6, p {
+	color: $midnight;
+	font-weight: 500;
+	margin: .5em 0;
+}
+
+h1 { font-size: 36px; }
+h2 { font-size: 32px; }
+h3 { font-size: 28px; }
+h4 { font-size: 24px; }
+h5 { font-size: 20px; }
+h6 { font-size: 16px; }
+
+hr {
+	border: none;
+	border-bottom: 1px dashed $smoke;
+}
+
+p { line-height: 1.5rem; }
+
+th { text-align:left }
+
+ul {
+	font-weight: 400;
+	padding-left: 0;
+
+    li {
+       color: $midnight;
+       height: 1.5rem;
+       line-height: 1.5rem;
+       list-style: none;
+   }
+}
+
+// General
+.centered { text-align: center; }
+
+.clearfix:after {
+	clear: both;
+	content: " ";
+	display: block;
+	font-size: 0;
+	height: 0;
+	visibility: hidden;
+}
+
+.align-right, .align-right > * { text-align: right; }
+.floatable-left > *            { float: left; }
+.hidden, .delay-visible        { display: none; }
+.hovertext:hover               { opacity: .5; }
+.left-col                      { margin: .5rem .5rem .25rem .5rem; }
+.right-col                     { margin: .25rem .5rem; }
+.margin-bottom                 { margin-bottom: .5rem; }
+.margin-top                    { margin-top: .5rem; }
+.marginless                    { margin: 0; }
+.space-upper                   { margin: .6rem 0; }
+.visible                       { display: block !important; }
+
+.section {
+ 	background: $paleBlue;
+	margin-bottom: .5rem;
+	padding: .8rem;
+}
+
+.wordmark {
+	color: $backgroundTransparent;
+	font-size: 3rem;
+	text-align: center;
+}
+
+#main {
+	max-width: none;
+	width: 100%;
+
+	> div { overflow: auto; }
+}
+
+#splashWrapper {
+	background: #000;
+	position: fixed;
+	height: 100%; width: 100%;
+	top: 0; left: 0;
+	z-index: -1;
+
+    > div {
+    	background-size: cover !important;
+    	position: absolute;
+    	height: 100%; width: 100%;
+    }
+
+    .splash1 { background: url('../img/splash1.jpg') center center fixed; }
+    .splash2 { background: url('../img/splash2.jpg') center center fixed; }
+    .splash3 { background: url('../img/splash3.jpg') center center fixed; }
+    .splash4 { background: url('../img/splash4.jpg') center center fixed; }
+}
+
+// Modal Styles
+.alert {
+	background: $backgroundTransparent;
+	border: 1px solid $midnight;
+	border-radius: .2rem;
+	left: 2%;
+	padding: 2rem 1rem 1rem 1rem;
+	position: fixed;
+	top: 2%;
+	width: 96%;
+	z-index: 10;
+}
+
+.loading {
+	border: .8rem solid $midnight;
+	border-right-color: $smoke;
+	border-bottom-color: #A3B6C5;
+	border-left-color: $paleBlue;
+	border-radius: 50%;
+	height: 2.4rem; width: 2.4rem;
+	position: absolute;
+	top: calc(50% - .9rem); left: calc(50% - .9rem);
+	z-index: 6;
+	-webkit-animation:spin 1.5s linear infinite;
+    -moz-animation:spin 1.5s linear infinite;
+    animation:spin 1.5s linear infinite;
+}
+
+.pendingRequests {
+    position: absolute;
+    background: $backgroundTransparent;
+    padding: .6rem;
+    white-space: nowrap;
+    z-index: 2;
+
+    .arw-up {
+    	border: .8em solid transparent;
+    	border-bottom: .8em solid $backgroundTransparent;
+    	content: " ";
+    	height: 0;
+    	left: 0;
+    	position: absolute;
+    	bottom: 100%;
+    }
+
+    .btn {
+     	font-size: .8rem;
+        padding: .1em .5rem;
+        margin-left: .4rem;
+        transition: .2s;
+    }
+}
+
+// Profile
+.friendList li {
+	border: 1px solid $midnight;
+	border-radius: .1rem;
+	float: left;
+    font-weight: normal;
+	font-size: .86rem;
+	height: 6em; width: 31.33%;
+	line-height: 1.2em;
+	margin: 1%; padding: .5em;
+	transition: .2s;
+
+    &:hover { background: $paleSmoke; }
+}
+
+// Trip List
+.trip-tile {
+	border: 1px solid $midnight;
+	margin: .5rem;
+	padding: .5rem;
+	transition: .2s;
+
+    &:hover { background: $paleSmoke; }
+}
+
+ // Trip View
+.trip-header {
+	margin-bottom: .5rem;
+	overflow: auto;
+	padding: 0 .8rem;
+}
+
+#stats > hr:last-of-type {
+	display: none
+}
+
+// Responsive
+@media (min-width: 768px) {
+	body {
+		min-width: 768px;
+		padding-top: 0;
+	}
+
+	.alert {
+		left: calc(50% - 12.5rem);
+		top: 1rem;
+		width: 25rem;
+	}
+
+	.left-col, .right-col { float: left; }
+
+	.left-col {
+		margin: 0 2% 0 0;
+		width: 38%;
+	}
+
+	.right-col {
+		margin: 0;
+		width: 60%;
+	}
+
+	#main {
+		margin: 0 auto;
+		min-width: 900px; max-width: 1000px;
+	}
+
+	.trip-header { padding: 0; }
+	.trip-header > * { margin-top: 1rem; }
+	.trip-tile { margin: 0 0 .5rem 0; }
+
+	#trip {
+		#name { float: left; }
+		#dateRange { float: right; }
+	}
+}

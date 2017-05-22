@@ -1,8 +1,8 @@
 <template>
     <div class="popup-wrap" @click.self="hide">
-    <form id="tripForm" class="dialogue popup" @submit.prevent="onSubmit">
+    <form id="tripForm" class="popup" @submit.prevent="onSubmit">
         <div class="popup-close" @click="hide">&times;</div>
-        <h4 class="centered form-header">Trip</h4>
+        <h4 class="centered">Trip</h4>
         <hr>
 
         <!-- Trip Name -->

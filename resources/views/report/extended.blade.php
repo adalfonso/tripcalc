@@ -2,49 +2,46 @@
 
 @section('content')
 <div class="report detailedReport">
-	<h4 class="centered form-header">Detailed Report</h4>
+	<h4 class="centered">Detailed Report</h4>
 	<hr>
-
-	<div class="graph">
-		<table class="graph" style="width: 100%;">
+	<table>
+		<tr>
+			<th>Date</th>
+			<th>Paid By</th>
+			<th>Description</th>
+			<th>Split Type</th>
+			<th>Split</th>
+			<th class="align-right">Amount</th>
+			<th class="align-right">Net</th>
+		</tr>
+		@foreach ($transactions as $transaction)
 			<tr>
-				<th>Date</th>
-				<th>Paid By</th>
-				<th>Description</th>
-				<th>Split Type</th>
-				<th>Split</th>
-				<th class="align-right">Amount</th>
-				<th class="align-right">Net</th>
+				<td>{{ $transaction->date }}</td>
+				<td>{{ $transaction->creator }}</td>
+				<td>{{ $transaction->description or '-' }}</td>
+				<td>{{ ucfirst($transaction->splitType) }}</td>
+				<td>
+					@if ($transaction->splitType === 'custom')
+						{{ $transaction->userSplit }} / {{ $transaction->splitTotal }}
+					@endif
+				</td>
+				<td class="align-right">{{ $transaction->amount }}</td>
+				<td class="align-right">{{ $transaction->net == 0 ? '' : $transaction->net }}</td>
 			</tr>
-			@foreach ($transactions as $transaction)
-				<tr>
-					<td>{{ $transaction->date }}</td>
-					<td>{{ $transaction->creator }}</td>
-					<td>{{ $transaction->description or '-' }}</td>
-					<td>{{ ucfirst($transaction->splitType) }}</td>
-					<td>
-						@if ($transaction->splitType === 'custom')
-							{{ $transaction->userSplit }} / {{ $transaction->splitTotal }}
-						@endif
-					</td>
-					<td class="align-right">{{ $transaction->amount }}</td>
-					<td class="align-right">{{ $transaction->net == 0 ? '' : $transaction->net }}</td>
-				</tr>
-			@endforeach
-			<tr class="total">
-				<td><strong>{{ $total > 0 ? 'You are owed' : 'You Owe' }}</strong></td>
-				<td colspan="5">&nbsp;</td>
-				<td class="align-right">{{ money_format("%i", abs($netTotal)) }}</td>
-			</tr>
-		</table>
-		<p>
-			You have spent
-			<strong>{{ money_format("%i", $total) }}</strong>
-			and are accountable for
-			<strong>{{ money_format("%i", $total - $netTotal) }}</strong>.
-			You {{ $netTotal > 0 ? 'are owed' : 'owe' }}
-			<strong>{{ money_format("%i", abs($netTotal)) }}</strong>.
-		</p>
-	</div>
+		@endforeach
+		<tr class="total">
+			<td><strong>{{ $total > 0 ? 'You are owed' : 'You Owe' }}</strong></td>
+			<td colspan="5">&nbsp;</td>
+			<td class="align-right">{{ money_format("%i", abs($netTotal)) }}</td>
+		</tr>
+	</table>
+	<p>
+		You have spent
+		<strong>{{ money_format("%i", $total) }}</strong>
+		and are accountable for
+		<strong>{{ money_format("%i", $total - $netTotal) }}</strong>.
+		You {{ $netTotal > 0 ? 'are owed' : 'owe' }}
+		<strong>{{ money_format("%i", abs($netTotal)) }}</strong>.
+	</p>
 </div>
 @endsection
