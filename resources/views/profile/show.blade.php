@@ -27,7 +27,7 @@
 
         	methods: {
         		resolveRequest(resolution) {
-        			axios.post(`/friend/requests/{{ $profile->id }}`, {
+        			axios.post(`/friend/{{ $profile->id }}/resolveRequest`, {
         				resolution: resolution
 	                })
 	                .then(response => {
@@ -36,7 +36,7 @@
         		},
 
         		addFriend() {
-        			axios.post(`/users/{{ $profile->id }}/request`, {
+        			axios.post(`/friend/{{ $profile->id }}/request`, {
 
 	                })
 	                .then(response => {

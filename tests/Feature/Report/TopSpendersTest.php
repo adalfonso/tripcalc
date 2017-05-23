@@ -40,7 +40,7 @@ class TopSpendersTest extends DuskTestCase {
 
         $this->maker->login($this->user1);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/topSpenders')->json();
+        $response = $this->get('/trip/' . $this->trip->id . '/report/topSpenders')->json();
 
         $this->assertEquals(2, sizeof($response));
         $this->assertEquals(5, sizeof($response['spend']));
@@ -58,7 +58,7 @@ class TopSpendersTest extends DuskTestCase {
 
         $this->maker->login($this->user1);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/topSpenders')->json();
+        $response = $this->get('/trip/' . $this->trip->id . '/report/topSpenders')->json();
 
         $this->assertEquals(3, sizeof($response['spend']));
 

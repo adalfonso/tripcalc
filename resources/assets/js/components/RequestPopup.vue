@@ -55,7 +55,7 @@
             decline(id) { return this.resolve(id, -1); },
 
             resolve(id, resolution) {
-                axios.post(`/${this.type}/requests/${id}`, {
+                axios.post(`/${this.type}/${id}/resolveRequest`, {
                     resolution: resolution
                 })
                 .then(response => {
@@ -64,7 +64,7 @@
             },
 
             get() {
-                axios.get(`/${this.type}/requests/`)
+                axios.get(`/${this.type}/requests`)
                 .then(response => {
                     this.requests = response.data;
                 });

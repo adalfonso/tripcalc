@@ -66,7 +66,7 @@ methods: {
 	},
 
     update() {
-		this.form.patch(`/trips/${ this.trip_id }/posts/${ this.data.id }`)
+		this.form.patch(`/trip/${ this.trip_id }/post/${ this.data.id }`)
         .then(data => {
 			this.edit = false;
 			this.data.content = this.form.content;
@@ -75,8 +75,8 @@ methods: {
     },
 
 	deletePost() {
-        this.form.delete(`/trips/${ this.trip_id }/posts/${ this.data.id }`)
-        .then(data => { window.location = '/trips/' + this.trip_id })
+        this.form.delete(`/trip/${ this.trip_id }/post/${ this.data.id }`)
+        .then(data => { window.location = '/trip/' + this.trip_id })
         .catch(errors => {});
     }
 }

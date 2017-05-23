@@ -14,7 +14,7 @@ use Response;
 
 class TransactionController extends Controller {
 
-	public function byTrip(Trip $trip, Transaction $transaction) {
+	public function show(Trip $trip, Transaction $transaction) {
 		$travelers = DB::select('
 			SELECT * FROM (
 				SELECT u.id AS join_on, u.id AS id,

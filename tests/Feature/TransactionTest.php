@@ -29,7 +29,7 @@ class TransactionTest extends DuskTestCase {
     public function it_fetches_a_transaction() {
         $this->maker->login($this->user1);
         $response = $this
-            ->get('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id)
+            ->get('/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id)
             ->json();
 
         $this->assertEquals($this->trip->id, $response['transaction']['trip_id']);
@@ -49,7 +49,7 @@ class TransactionTest extends DuskTestCase {
         $this->maker->login($this->user1);
 
         $response = $this->get(
-            '/trips/' . $this->trip2->id . '/transactions/' . $this->transaction->id
+            '/trip/' . $this->trip2->id . '/transaction/' . $this->transaction->id
         );
 
         $response->assertStatus(404);
@@ -61,10 +61,10 @@ class TransactionTest extends DuskTestCase {
         $this->maker->login($this->user2);
 
         $response = $this->get(
-            '/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id
+            '/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id
         );
 
-        $response->assertRedirect('/trips/dashboard');
+        $response->assertRedirect('/trips');
     }
 
     /** @test */
@@ -77,7 +77,7 @@ class TransactionTest extends DuskTestCase {
         $this->maker->login($this->user1);
 
         $response = $this->get(
-            '/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id
+            '/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id
         )->json();
 
         $this->assertEquals(1, sizeof($response['travelers']));
@@ -93,7 +93,7 @@ class TransactionTest extends DuskTestCase {
         $this->maker->login($this->user1);
 
         $response = $this->get(
-            '/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id
+            '/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id
         )->json();
 
         $this->assertEquals(1, sizeof($response['travelers']));
@@ -105,7 +105,7 @@ class TransactionTest extends DuskTestCase {
         Session::start();
         $this->maker->login($this->user1);
 
-        $response = $this->post('/trips/' . $this->trip->id . '/transactions/', [
+        $response = $this->post('/trip/' . $this->trip->id . '/transactions', [
             '_token' => csrf_token(),
             'amount'   => 5,
             'date'     => '2010-1-1',
@@ -136,7 +136,7 @@ class TransactionTest extends DuskTestCase {
         Session::start();
         $this->maker->login($this->user1);
 
-        $transaction = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id, [
+        $transaction = $this->patch('/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id, [
             '_token' => csrf_token(),
             'amount'   => 666,
             'date'     => '2010-12-12',
@@ -157,7 +157,7 @@ class TransactionTest extends DuskTestCase {
         Session::start();
         $this->maker->login($this->user1);
 
-        $transaction = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id, [
+        $transaction = $this->patch('/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id, [
             '_token' => csrf_token(),
             'amount'   => 666,
             'date'     => '2010-12-12',
@@ -189,7 +189,7 @@ class TransactionTest extends DuskTestCase {
         $spenders = $this->transaction->fresh()->users;
         $this->assertEquals(1, $spenders->count());
 
-        $transaction = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id, [
+        $transaction = $this->patch('/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id, [
             '_token' => csrf_token(),
             'amount'   => 666,
             'date'     => '2010-12-12',
@@ -221,7 +221,7 @@ class TransactionTest extends DuskTestCase {
         $spenders = $this->transaction->fresh()->users;
         $this->assertEquals(1, $spenders->count());
 
-        $transaction = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id, [
+        $transaction = $this->patch('/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id, [
             '_token' => csrf_token(),
             'amount'   => 666,
             'date'     => '2010-12-12',
@@ -239,7 +239,7 @@ class TransactionTest extends DuskTestCase {
         Session::start();
         $this->maker->login($this->user1);
 
-        $transaction = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id, [
+        $transaction = $this->patch('/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id, [
             '_token' => csrf_token(),
             'amount'   => 666,
             'date'     => '2010-12-12',
@@ -262,7 +262,7 @@ class TransactionTest extends DuskTestCase {
         $hashtags = $this->transaction->fresh()->hashtags;
         $this->assertEquals(2, $hashtags->count());
 
-        $transaction = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id, [
+        $transaction = $this->patch('/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id, [
             '_token' => csrf_token(),
             'amount'   => 666,
             'date'     => '2010-12-12',
@@ -283,7 +283,7 @@ class TransactionTest extends DuskTestCase {
 
         $this->transaction->hashtags()->detach();
 
-        $transaction = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id, [
+        $transaction = $this->patch('/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id, [
             '_token' => csrf_token(),
             'amount'   => 666,
             'date'     => '2010-12-12',
@@ -300,15 +300,14 @@ class TransactionTest extends DuskTestCase {
         Session::start();
         $this->maker->login($this->user1);
 
-        $response = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id . '/delete' , [
+        $response = $this->delete('/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id, [
             '_token' => csrf_token(),
             'amount'   => 666,
             'date'     => '2010-12-12',
             'description' => 'hello',
             'hashtags' => [ 'items' => [] ],
             'split' => [ 'travelers' => [] ],
-            'delete' => true,
-            'delete_confirmation' => true,
+            'deletable' => true,
             'password' =>'password'
         ]);
 
@@ -322,15 +321,14 @@ class TransactionTest extends DuskTestCase {
         Session::start();
         $this->maker->login($this->user1);
 
-        $response = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id . '/delete' , [
+        $response = $this->delete('/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id, [
             '_token' => csrf_token(),
             'amount'   => 666,
             'date'     => '2010-12-12',
             'description' => 'hello',
             'hashtags' => [ 'items' => [] ],
             'split' => [ 'travelers' => [] ],
-            'delete' => true,
-            'delete_confirmation' => true,
+            'deletable' => true,
             'password' =>'wrongpassword'
         ]);
 
@@ -345,7 +343,7 @@ class TransactionTest extends DuskTestCase {
         $this->user2 = $this->maker->user();
         $this->maker->login($this->user2);
 
-        $response = $this->post('/trips/' . $this->trip->id . '/transactions/' . $this->transaction->id . '/delete' , [
+        $response = $this->delete('/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id, [
             '_token' => csrf_token(),
             'amount'   => 666,
             'date'     => '2010-12-12',
@@ -374,5 +372,5 @@ class TransactionTest extends DuskTestCase {
 
         $this->transaction->users()->attach($this->user2, ['split_ratio' => 1]);
         $this->assertEquals('custom', $this->transaction->fresh()->splitType);
-    }    
+    }
 }

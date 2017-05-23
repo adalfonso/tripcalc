@@ -40,20 +40,13 @@
         </textarea>
 
         <!-- Delete this trip -->
-        <div class="ui-checkbox" v-if="trip_id" @click="form.toggle('delete')">
+        <div class="ui-checkbox" v-if="trip_id" @click="form.toggle('deletable')">
             <!-- Fake fields to stop browser from trying to save password -->
             <input style="display:none" type="text">
             <input style="display:none" type="password">
             <div class="ui-input-btn no-hover" style="font-size: 2rem"
-                v-html="form.delete ? '&#9760;' : '' "></div>
+                v-html="form.deletable ? '&#9760;' : '' "></div>
             <p>Delete this trip</p>
-        </div>
-
-        <!-- Delete Confirmation -->
-        <div class="ui-checkbox" v-if="form.delete" @click="form.toggle('delete_confirmation')">
-            <div class="ui-input-btn no-hover"
-                v-html="form.delete_confirmation ? '&#10004;' : '' "></div>
-            <p>Are you really sure?</p>
         </div>
 
         <!-- Password To Delete -->
@@ -88,7 +81,7 @@ data() {
             budget: '',
             start_date: '', end_date: '',
             description: '',
-            delete: false, delete_confirmation: false,
+            deletable: false,
             password: null
         })
     };
@@ -99,14 +92,14 @@ created() {
         return;
     }
 
-    this.form.get(`/trips/${ this.trip_id }/data`)
+    this.form.get(`/trip/${ this.trip_id }/data`)
     .then(data => {
         this.form = new Form({
             name: data.name,
             start_date: '', end_date: '',
             budget: data.budget,
             description: data.description,
-            delete: false, delete_confirmation: false,
+            deletable: false,
             password: null
         });
 
@@ -157,22 +150,22 @@ methods: {
     create() {
         this.form.post('/trips')
         .then(data => {
-            window.location = '/trips/' + data.id
+            window.location = '/trip/' + data.id
         })
         .catch(errors => {});
     },
 
     update() {
-        this.form.post(`/trips/${ this.trip_id }`)
-        .then(data => { window.location = '/trips/' + data.id })
+        this.form.patch(`/trip/${ this.trip_id }`)
+        .then(data => { window.location = '/trip/' + data.id })
         .catch(errors => {});
     },
 
     delete() {
-        this.form.post(`/trips/${ this.trip_id }/delete`)
+        this.form.delete(`/trip/${ this.trip_id }`)
         .then(data => {
             if (data.success === true ) {
-                window.location = '/trips/dashboard';
+                window.location = '/trips';
             }
         }).catch(errors => {});
     },

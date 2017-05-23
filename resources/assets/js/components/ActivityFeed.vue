@@ -89,7 +89,7 @@ methods: {
     },
 
     growActivityFeed() {
-        axios.post(`/trips/${this.trip_id}/activities`, {
+        axios.post(`/trip/${this.trip_id}/activities`, {
             oldestDate: this.localFeed[this.localFeed.length - 1].created_at
 
         }).then(response => {

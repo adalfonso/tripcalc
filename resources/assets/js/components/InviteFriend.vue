@@ -143,7 +143,7 @@ export default {
                     return;
                 }
 
-                axios.post(`/trips/${this.trip_id}/searchEligibleFriends`, {
+                axios.post(`/trip/${this.trip_id}/eligibleFriends`, {
                     input: this.input,
                     trip_id : this.trip_id,
                     excluded: this.queue.userIds()
@@ -168,7 +168,7 @@ export default {
             this.startLoading();
 
             axios.post(
-                `/trips/${this.trip_id}/inviteFriends`, {
+                `/trip/${this.trip_id}/inviteFriends`, {
                     friends: this.queue.items,
                     trip_id: this.trip_id
                 }

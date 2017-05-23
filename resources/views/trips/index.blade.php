@@ -23,7 +23,7 @@
 
     @if (isset($trips))
         @foreach($trips as $trip)
-            <a href="/trips/{{ $trip->id }}">
+            <a href="/trip/{{ $trip->id }}">
             <div class="trip-tile">
                 <h3>{{ $trip->name }}</h3>
                 @if ($trip->budget)

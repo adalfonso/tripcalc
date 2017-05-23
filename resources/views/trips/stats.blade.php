@@ -67,7 +67,7 @@
 
 		<p class="item" @click="showReport('detailed')">Detailed</p>
 		<p class="item">
-			<a class="light" href="/trips/{{ $trip->id }}/report/extended">
+			<a class="light" href="/trip/{{ $trip->id }}/report/extended">
 				Detailed (Extended)
 			</a>
 		</p>

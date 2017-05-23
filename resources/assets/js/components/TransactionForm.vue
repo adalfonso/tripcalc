@@ -81,24 +81,14 @@
     <hr>
 
     <!-- Delete This Transaction -->
-
-    <div class="ui-checkbox" v-if="transaction_id" @click="form.toggle('delete')">
+    <div class="ui-checkbox" v-if="transaction_id" @click="form.toggle('deletable')">
         <!-- Fake fields to stop browser from trying to save password -->
         <input style="display:none" type="text">
         <input style="display:none" type="password">
         <div class="ui-input-btn no-hover" style="font-size: 2rem"
-            v-html="form.delete ? '&#9760;' : '' "></div>
+            v-html="form.deletable ? '&#9760;' : '' "></div>
         <p>Delete this transaction</p>
     </div>
-
-    <!-- Delete Confirmation -->
-    <div class="ui-checkbox" v-if="form.delete" @click="form.toggle('delete_confirmation')">
-        <div class="ui-input-btn no-hover" v-html="form.delete_confirmation ? '&#10004;' : '' "></div>
-        <p>Are you really sure?</p>
-    </div>
-    <p class="ui-error" v-if="form.errors.has('password') && form.delete &&
-        form.delete_confirmation" v-text="form.errors.get('password')">
-    </p>
 
     <hr v-if="transaction_id">
 
@@ -139,7 +129,7 @@ data() {
             amount: '',
             description: '',
             split:  new Split(),
-            delete: false, delete_confirmation: false,
+            deletable: false,
             password: null,
             hashtags: new Hashtags()
         }),
@@ -182,7 +172,7 @@ watch: {
 methods: {
 
     getTravelers() {
-        axios.get(`/trips/${ this.trip_id }/travelers`)
+        axios.get(`/trip/${ this.trip_id }/travelers`)
         .then(response => {
             this.form.split = new Split(
                 response.data.travelers,
@@ -192,7 +182,7 @@ methods: {
     },
 
     getTransactionData() {
-        axios.get(`/trips/${this.trip_id}/transactions/${this.transaction_id}`)
+        axios.get(`/trip/${this.trip_id}/transaction/${this.transaction_id}`)
         .then(response => {
             let transaction = response.data.transaction;
 
@@ -200,7 +190,7 @@ methods: {
                 date: '',
                 amount: transaction.amount,
                 description: transaction.description,
-                delete: false, delete_confirmation: false,
+                deletable: false,
                 password: null,
                 split: new Split(response.data.travelers, response.data.user),
                 hashtags: new Hashtags(response.data.hashtags)
@@ -225,24 +215,24 @@ methods: {
     },
 
     create() {
-        this.form.post(`/trips/${ this.trip_id }/transactions`)
+        this.form.post(`/trip/${ this.trip_id }/transactions`)
         .then(data => {
             location.reload();
         }).catch(errors => {});
     },
 
     update(){
-        this.form.post(`/trips/${ this.trip_id }/transactions/${ this.transaction_id }`)
+        this.form.patch(`/trip/${ this.trip_id }/transaction/${ this.transaction_id }`)
         .then(data => {
             location.reload();
         }).catch(errors => {});
     },
 
     delete() {
-        this.form.post(`/trips/${ this.trip_id }/transactions/${ this.transaction_id }/delete`)
+        this.form.delete(`/trip/${ this.trip_id }/transaction/${ this.transaction_id }`)
         .then(data => {
             if (data.success === true ) {
-                window.location = '/trips/' + this.trip_id;
+                window.location = '/trip/' + this.trip_id;
             }
         }).catch(errors => {});
     },

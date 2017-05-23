@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Http\Controllers\Auth;
+<?php namespace App\Http\Controllers\Auth;
 
 use App\ActivationService;
 use App\Http\Controllers\Controller;
@@ -10,8 +8,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class RegisterController extends Controller
-{
+class RegisterController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Register Controller
@@ -39,8 +36,7 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct(ActivationService $activationService)
-    {
+    public function __construct(ActivationService $activationService) {
         $this->middleware('guest');
         $this->activationService = $activationService;
     }
@@ -51,8 +47,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
-    {
+    protected function validator(array $data) {
         return Validator::make($data, [
             'first_name' => 'required|max:30',
             'last_name'  => 'required|max:30',
@@ -68,8 +63,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return User
      */
-    protected function create(array $data)
-    {
+    protected function create(array $data) {
         return User::create([
             'first_name' => $data['first_name'],
             'last_name'  => $data['last_name'],
@@ -80,8 +74,7 @@ class RegisterController extends Controller
     }
 
     // Override in order to send activation email
-    public function register(Request $request)
-    {
+    public function register(Request $request) {
         $this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
@@ -92,8 +85,7 @@ class RegisterController extends Controller
             ->with('status', 'We sent you an activation code. Please check your email.');
     }
 
-    public function registerForm()
-    {
+    public function registerForm() {
         return view('auth.signup');
     }
 }

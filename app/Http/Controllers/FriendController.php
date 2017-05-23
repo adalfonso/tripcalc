@@ -14,42 +14,6 @@ use Validator;
 
 class FriendController extends Controller {
 
-    public function searchEligibleFriends(Request $request, Trip $trip) {
-    	$string = $request->input;
-
-        $results = User
-
-        // Name match
-        ::where(function($query) use ($string) {
-            $query->where('first_name', 'LIKE', "%$string%")
-                ->orWhere('last_name', 'LIKE', "%$string%")
-                ->orWhere(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', "%$string%");
-        })
-
-        // Has friendship
-        ->where(function($query){
-            $query->whereHas('friendshipAsRequester', function($query){
-                $query->where('recipient_id', Auth::id());
-
-            })->orWhereHas('friendshipAsRecipient', function($query){
-                $query->where('requester_id', Auth::id());
-            });
-        })
-
-        // Not already in trip
-        ->whereDoesntHave('trips', function($query) use ($trip){
-            $query->where('id', $trip->id);
-        })
-
-        // Not already selected on invite friend form
-        ->whereNotIn('id', collect($request->excluded))
-
-        ->select('id', 'first_name', 'last_name')
-        ->get();
-
-    	return $results;
-    }
-
     public function inviteToTrip(Request $request, Trip $trip) {
         $this->trip = $trip;
 
@@ -160,7 +124,7 @@ class FriendController extends Controller {
     		->pluck('full_name', 'id');
     }
 
-    public function resolveFriendRequest(Request $request, $friend) {
+    public function resolveRequest(Request $request, $friend) {
         $this->validate($request, [
             'resolution' => 'required|regex:/^-?1$/'
         ]);

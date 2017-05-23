@@ -35,7 +35,7 @@ export default {
     },
 
 	created() {
-		axios.get(`/trips/${ this.trip_id }/report/topSpenders`)
+		axios.get(`/trip/${ this.trip_id }/report/topSpenders`)
         .then(response => {
            this.spenders = response.data.spend;
            this.max = response.data.max;

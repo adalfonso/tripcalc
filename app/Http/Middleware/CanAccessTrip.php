@@ -19,7 +19,7 @@ class CanAccessTrip {
             ->contains($request->trip->id);
 
         if (!$access) {
-            return redirect('/trips/dashboard');
+            return redirect('/trips');
         }
 
         return $next($request);

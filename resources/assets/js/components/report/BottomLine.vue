@@ -29,7 +29,7 @@ export default {
     },
 
 	created() {
-		axios.get(`/trips/${ this.trip_id }/report/bottomLine`)
+		axios.get(`/trip/${ this.trip_id }/report/bottomLine`)
         .then(response => {
            this.total = response.data;
            this.response = true;

@@ -43,7 +43,7 @@
                 clearTimeout(this.timeout);
 
                 this.timeout = setTimeout(function(){
-                    axios.post('/users/search', {'input': this.input})
+                    axios.post('/user/search', {'input': this.input})
                     .then(response => {
                         this.results = response.data;
                     })

@@ -56,7 +56,7 @@ export default {
     },
 
 	created() {
-		axios.get(`/trips/${ this.trip_id }/report/distribution`)
+		axios.get(`/trip/${ this.trip_id }/report/distribution`)
         .then(response => {
            this.spenders = response.data;
         });

@@ -9,7 +9,7 @@ use DB;
 use Hash;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-
+use Response;
 use Validator;
 
 class TripController extends Controller {
@@ -22,7 +22,7 @@ class TripController extends Controller {
             ]);
         })->get()->sortByDesc('start_date');
 
-    	return view('trips.dashboard', compact('trips'));
+    	return view('trips.index', compact('trips'));
     }
 
     public function store(Request $request) {
@@ -63,6 +63,7 @@ class TripController extends Controller {
     }
 
     public function destroy(Trip $trip, Request $request) {
+    
         if (Hash::check($request->password, Auth::user()->password)) {
             Trip::destroy($trip->id);
             return ['success' => true];
@@ -155,13 +156,49 @@ class TripController extends Controller {
         return $trip->makeHidden(['id', 'created_at', 'updated_at']);
     }
 
+    public function eligibleFriends(Request $request, Trip $trip) {
+    	$string = $request->input;
+
+        $results = User
+
+        // Name match
+        ::where(function($query) use ($string) {
+            $query->where('first_name', 'LIKE', "%$string%")
+                ->orWhere('last_name', 'LIKE', "%$string%")
+                ->orWhere(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', "%$string%");
+        })
+
+        // Has friendship
+        ->where(function($query){
+            $query->whereHas('friendshipAsRequester', function($query){
+                $query->where('recipient_id', Auth::id());
+
+            })->orWhereHas('friendshipAsRecipient', function($query){
+                $query->where('requester_id', Auth::id());
+            });
+        })
+
+        // Not already in trip
+        ->whereDoesntHave('trips', function($query) use ($trip){
+            $query->where('id', $trip->id);
+        })
+
+        // Not already selected on invite friend form
+        ->whereNotIn('id', collect($request->excluded))
+
+        ->select('id', 'first_name', 'last_name')
+        ->get();
+
+    	return $results;
+    }
+
     public function getPendingRequests() {
         return Auth::user()
             ->pendingTripRequests
             ->pluck('name', 'id');
     }
 
-    public function resolveTripRequest(Request $request, Trip $trip) {
+    public function resolveRequest(Request $request, Trip $trip) {
         $this->validate($request, [
             'resolution' => 'required|regex:/^-?1$/'
         ]);

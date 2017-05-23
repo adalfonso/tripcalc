@@ -5,7 +5,7 @@
 		<a href="/profile">My Profile</a>
 
 		@unless (isset($trips))
-			<a href="/trips/dashboard">My Trips</a>
+			<a href="/trips">My Trips</a>
 		@endif
 
 		@if (isset($friendsInvitable))

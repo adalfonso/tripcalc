@@ -44,8 +44,8 @@ methods: {
     },
 
     create() {
-        this.form.post(`/trips/${ this.trip_id }/posts`)
-        .then(data => { window.location = '/trips/' + this.trip_id })
+        this.form.post(`/trip/${ this.trip_id }/posts`)
+        .then(data => { window.location = '/trip/' + this.trip_id })
         .catch(errors => {});
     }
 }

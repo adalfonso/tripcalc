@@ -30,7 +30,7 @@ class Detailed extends DuskTestCase {
 
         $this->maker->login($this->user1);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
+        $response = $this->get('/trip/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
 
         $this->assertEquals(60, $response['amount']);
         $this->assertEquals(40, $response['net']);
@@ -49,7 +49,7 @@ class Detailed extends DuskTestCase {
 
         $this->maker->login($this->user1);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
+        $response = $this->get('/trip/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
 
         $this->assertEquals(60, $response['amount']);
         $this->assertEquals(39, $response['net']);
@@ -60,7 +60,7 @@ class Detailed extends DuskTestCase {
             $this->user3->id => ['split_ratio' => 5]
         ]);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
+        $response = $this->get('/trip/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
 
         $this->assertEquals(60, $response['amount']);
         $this->assertEquals(15, $response['net']);
@@ -78,7 +78,7 @@ class Detailed extends DuskTestCase {
 
         $this->maker->login($this->user1);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
+        $response = $this->get('/trip/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
 
         $this->assertEquals(60, $response['amount']);
         $this->assertEquals(0, $response['net']);
@@ -92,7 +92,7 @@ class Detailed extends DuskTestCase {
 
         $this->maker->login($this->user1);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
+        $response = $this->get('/trip/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
 
         $this->assertEquals(60, $response['amount']);
         $this->assertEquals(-20, $response['net']);
@@ -110,7 +110,7 @@ class Detailed extends DuskTestCase {
         $this->maker->attachTripUser($this->trip, $user3);
 
         $this->maker->login($this->user1);
-        $response = $this->get('/trips/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
+        $response = $this->get('/trip/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
 
         $this->assertEquals(60, $response['amount']);
         $this->assertEquals(-20, $response['net']);
@@ -128,7 +128,7 @@ class Detailed extends DuskTestCase {
 
         $this->maker->login($this->user1);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
+        $response = $this->get('/trip/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
 
         $this->assertEquals(60, $response['amount']);
         $this->assertEquals(-20, $response['net']);
@@ -148,7 +148,7 @@ class Detailed extends DuskTestCase {
 
         $this->maker->login($this->user1);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
+        $response = $this->get('/trip/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
 
         $this->assertEquals(60, $response['amount']);
         $this->assertEquals(-21, $response['net']);
@@ -159,7 +159,7 @@ class Detailed extends DuskTestCase {
             $this->user3->id => ['split_ratio' => 5]
         ]);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
+        $response = $this->get('/trip/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
 
         $this->assertEquals(60, $response['amount']);
         $this->assertEquals(-45, $response['net']);
@@ -177,7 +177,7 @@ class Detailed extends DuskTestCase {
 
         $this->maker->login($this->user1);
 
-        $response = $this->get('/trips/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
+        $response = $this->get('/trip/' . $this->trip->id . '/report/detailed')->json()['transactions'][0];
 
         $this->assertEquals(60, $response['amount']);
         $this->assertEquals(-60, $response['net']);
@@ -193,7 +193,7 @@ class Detailed extends DuskTestCase {
 
         $this->maker->login($user);
 
-        $response = $this->get('/trips/' . $trip->id . '/report/detailed')->json()['transactions'][0];
+        $response = $this->get('/trip/' . $trip->id . '/report/detailed')->json()['transactions'][0];
 
         $this->assertEquals(60, $response['amount']);
         $this->assertEquals(0, $response['net']);
@@ -213,7 +213,7 @@ class Detailed extends DuskTestCase {
 
         $this->maker->login($user);
 
-        $response = $this->get('/trips/' . $trip->id . '/report/detailed')->json()['transactions'][0];
+        $response = $this->get('/trip/' . $trip->id . '/report/detailed')->json()['transactions'][0];
 
         $this->assertEquals(60, $response['amount']);
         $this->assertEquals(0, $response['net']);
@@ -230,7 +230,7 @@ class Detailed extends DuskTestCase {
 
         $this->maker->login($user);
 
-        $response = $this->get('/trips/' . $trip->id . '/report/detailed')->json()['transactions'][0];
+        $response = $this->get('/trip/' . $trip->id . '/report/detailed')->json()['transactions'][0];
 
         $this->assertEquals(60, $response['amount']);
         $this->assertEquals(-60, $response['net']);
@@ -250,7 +250,7 @@ class Detailed extends DuskTestCase {
 
         $this->maker->login($user);
 
-        $response = $this->get('/trips/' . $trip->id . '/report/detailed')->json()['transactions'][0];
+        $response = $this->get('/trip/' . $trip->id . '/report/detailed')->json()['transactions'][0];
 
         $this->assertEquals(60, $response['amount']);
         $this->assertEquals(-60, $response['net']);

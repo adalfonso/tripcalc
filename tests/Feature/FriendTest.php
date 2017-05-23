@@ -20,7 +20,7 @@ class FriendTest extends DuskTestCase {
     /** @test */
     public function people_search_returns_max_of_5_results() {
         $this->withoutMiddleware();
-        $response = $this->post('/users/search', ['input' => 'h']);
+        $response = $this->post('/user/search', ['input' => 'h']);
 
         $count = sizeof($response->json());
 
@@ -30,7 +30,7 @@ class FriendTest extends DuskTestCase {
     /** @test */
     public function people_search_finds_a_specific_user() {
         $this->withoutMiddleware();
-        $response = $this->post('/users/search', ['input' => 'hershey']);
+        $response = $this->post('/user/search', ['input' => 'hershey']);
 
         $this->assertEquals('somethingcool1', $response->json()[0]['username']);
     }
@@ -46,7 +46,7 @@ class FriendTest extends DuskTestCase {
         $this->maker->login($user1);
 
         $response = $this->post(
-            "/trips/$trip->id/searchEligibleFriends",
+            "/trip/$trip->id/eligibleFriends",
             ['input' => $user2->first_name, 'trip_id' => $trip->id]
         );
 
@@ -63,7 +63,7 @@ class FriendTest extends DuskTestCase {
         $this->maker->login($user1);
 
         $response = $this->post(
-            "/trips/$trip->id/searchEligibleFriends",
+            "/trip/$trip->id/eligibleFriends",
             ['input' => $user2->first_name, 'trip_id' => $trip->id]
         );
 
@@ -83,7 +83,7 @@ class FriendTest extends DuskTestCase {
         $this->maker->login($user1);
 
         $response = $this->post(
-            "/trips/$trip->id/searchEligibleFriends",
+            "/trip/$trip->id/eligibleFriends",
             ['input' => $user2->first_name, 'trip_id' => $trip->id]
         );
 
@@ -102,7 +102,7 @@ class FriendTest extends DuskTestCase {
         $this->maker->login($user1);
 
         $response = $this->post(
-            "/trips/$trip->id/inviteFriends", [
+            "/trip/$trip->id/inviteFriends", [
                 '_token' => csrf_token(),
                 'friends' => [
                     [
@@ -144,7 +144,7 @@ class FriendTest extends DuskTestCase {
         $this->maker->login($user1);
 
         $response = $this->post(
-            "/trips/$trip->id/inviteFriends", [
+            "/trip/$trip->id/inviteFriends", [
                 '_token' => csrf_token(),
                 'friends' => [
                     [
@@ -184,7 +184,7 @@ class FriendTest extends DuskTestCase {
         $this->maker->login($user1);
 
         $response = $this->post(
-            "/trips/$trip->id/inviteFriends", [
+            "/trip/$trip->id/inviteFriends", [
                 '_token' => csrf_token(),
                 'friends' => [
                     [
@@ -214,7 +214,7 @@ class FriendTest extends DuskTestCase {
         $this->maker->login($user1);
 
         $response = $this->post(
-            "/trips/$trip->id/inviteFriends", [
+            "/trip/$trip->id/inviteFriends", [
                 '_token' => csrf_token(),
                 'friends' => [
                     [
@@ -238,7 +238,7 @@ class FriendTest extends DuskTestCase {
         $this->maker->login($user1);
 
         $response = $this->post(
-            "/trips/$trip->id/inviteFriends", [
+            "/trip/$trip->id/inviteFriends", [
                 '_token' => csrf_token(),
                 'friends' => [
                     [
@@ -264,7 +264,7 @@ class FriendTest extends DuskTestCase {
         $this->maker->login($user1);
 
         $response = $this->post(
-            "/trips/$trip->id/inviteFriends", [
+            "/trip/$trip->id/inviteFriends", [
                 '_token' => csrf_token(),
                 'friends' => [
                     [

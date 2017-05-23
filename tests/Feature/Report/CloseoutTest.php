@@ -70,7 +70,7 @@ class CloseoutTest extends DuskTestCase {
             $this->user5->id => ['split_ratio' => 9]
         ]);
 
-        $spenders = $this->get('/trips/' . $this->trip->id . '/report/closeout')->json()['spenders'];
+        $spenders = $this->get('/trip/' . $this->trip->id . '/report/closeout')->json()['spenders'];
 
 
         foreach ($spenders as $spender) {
@@ -103,7 +103,7 @@ class CloseoutTest extends DuskTestCase {
             $this->user5->id => ['split_ratio' => 25]
         ]);
 
-            $spenders = $this->get('/trips/' . $this->trip->id . '/report/closeout')->json()['spenders'];
+            $spenders = $this->get('/trip/' . $this->trip->id . '/report/closeout')->json()['spenders'];
         //dd($spenders);
 
         foreach ($spenders as $spender) {
@@ -137,7 +137,7 @@ class CloseoutTest extends DuskTestCase {
             $this->user4->id => ['split_ratio' => 25]
         ]);
 
-        $spenders = $this->get('/trips/' . $this->trip->id . '/report/closeout')->json()['spenders'];
+        $spenders = $this->get('/trip/' . $this->trip->id . '/report/closeout')->json()['spenders'];
 
         foreach ($spenders as $spender) {
             $error = sizeof($spender['credits']) > 0 && sizeof($spender['debits']) > 0;

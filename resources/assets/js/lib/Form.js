@@ -12,19 +12,20 @@ class Form {
         this.errors = new Errors();
     }
 
-    data() {
+    data(request = null) {
         let data = {};
 
         for (let property in this.originalData) {
             data[property] = this[property];
         }
 
-        return data;
+        return request === 'delete'
+            ? { data : data }
+            :   data;
     }
 
     isDeletable() {
-        return this.delete === true &&
-               this.delete_confirmation === true;
+        return this.deletable === true;
     }
 
     get (url) {
@@ -62,7 +63,7 @@ class Form {
 
     submit(requestType, url) {
         return new Promise((resolve, reject) => {
-            axios[requestType](url, this.data())
+            axios[requestType](url, this.data(requestType))
                 .then(response => {
                     this.onSuccess(response.data);
                     resolve(response.data);

@@ -44,7 +44,7 @@ export default {
     },
 
 	created() {
-		axios.get(`/trips/${ this.trip_id }/report/detailed`)
+		axios.get(`/trip/${ this.trip_id }/report/detailed`)
         .then(response => {
            this.transactions = response.data.transactions;
            this.multiUser = response.data.multiUser;

@@ -29,7 +29,7 @@ class TripTest extends DuskTestCase {
             $this->trip, $this->user
         );
 
-        $response = $this->get('/trips/' . $this->trip->id);
+        $response = $this->get('/trip/' . $this->trip->id);
 
         $response->assertStatus(200);
     }
@@ -42,7 +42,7 @@ class TripTest extends DuskTestCase {
             $this->trip, $this->user
         );
 
-        $response = $this->get('/trips/' . $this->trip->id);
+        $response = $this->get('/trip/' . $this->trip->id);
 
         $response->assertStatus(200);
     }
@@ -51,7 +51,7 @@ class TripTest extends DuskTestCase {
     public function it_doesnt_blow_up_when_there_are_no_activities() {
         $this->maker->login($this->user);
 
-        $response = $this->get('/trips/' . $this->trip->id);
+        $response = $this->get('/trip/' . $this->trip->id);
 
         $response->assertStatus(200);
     }
