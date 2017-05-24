@@ -1,15 +1,13 @@
 <?php namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-use \App\User;
-use \App\Friend;
-
-use \Auth;
-use \DB;
+use App\User;
+use App\Friend;
+use Auth;
+use DB;
 
 class ProfileController extends Controller {
-	
+
     public function personal() {
     	$profile = Auth::user();
     	$user_id = $profile->id;
@@ -23,8 +21,8 @@ class ProfileController extends Controller {
 
     	$friends = $user->friends;
 
-    	return view("profile/personal", compact(
-    		"friendRequests", "tripRequests", "friends", "profile"
+    	return view('profile/personal', compact(
+    		'friendRequests', 'tripRequests', 'friends', 'profile'
     	));
     }
 
@@ -35,8 +33,8 @@ class ProfileController extends Controller {
     		return $this->personal();
     	}
 
-    	$profile = User::select("id", "username", "first_name", "last_name")
-    		->where("username", $username)
+    	$profile = User::select('id', 'username', 'first_name', 'last_name')
+    		->where('username', $username)
     		->first();
 
     	$friendship = Friend::where([
@@ -45,7 +43,9 @@ class ProfileController extends Controller {
     		'recipient_id' => $user->id, 'requester_id' => $profile->id
     	])->first();
 
-    	return view("profile/show", compact("profile", "friendship"));
+		$friends = $profile->friends;
+
+    	return view('profile/show', compact('profile', 'friendship', 'friends'));
 
     }
 }

@@ -68,7 +68,7 @@ class TransactionController extends Controller {
 			$transaction->users()->sync($spenders);
 
 			foreach ($request->hashtags['items'] as $hashtag) {
-				$hashtag = Hashtag::firstOrCreate([ 'tag' => $hashtag ]);
+				$hashtag = Hashtag::firstOrCreate(['tag' => $hashtag]);
 				$hashtag->transactions()->attach($transaction->id);
 			}
 

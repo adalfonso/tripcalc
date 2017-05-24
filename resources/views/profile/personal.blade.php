@@ -2,6 +2,11 @@
 
 @section('personal')
 
+	<profile-info-form v-if="profileInfoForm.visible"
+		@hide="profileInfoForm.visible = false">
+    </profile-info-form>
+
+
 	@if($friendRequests > 0)
 		<request-popup :type="'friend'" >
     	</request-popup>
@@ -12,18 +17,18 @@
     	</request-popup>
 	@endif
 
-	@if(sizeof($friends) > 0)
-		<div id="profile-friends">
-			<h5>Friends</h5>
-			<ul class="friendList clearfix">
-				@foreach ($friends as $friend)
-					<a href="/profile/{{ $friend->username }}">
-					<li>
-						{{ $friend->first_name }} {{ $friend->last_name }}
-					</li>
-					</a>
-				@endforeach
-			</ul>
-		</div>
-	@endif
 @stop
+
+@section('vue')
+	<script>
+		new Vue({
+		    el: '#app',
+
+		    data: {
+		        profileInfoForm: { visible: false }
+		    },
+
+		    methods: { }
+		});
+	</script>
+@overwrite
