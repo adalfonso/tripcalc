@@ -15,9 +15,10 @@
 			<p v-show="!edit">{{ data.content }}</p>
 
 			<form @submit.prevent="update">
-
-				<textarea v-if="edit" name="description" type="text" maxlength="255"
-					class="plain placeholder-dark" placeholder="Enter a message..." v-model="form.content">
+				<p class="ui-error" v-if="form.errors.has('content')"
+					v-text="form.errors.get('content')"></p>
+				<textarea v-if="edit" maxlength="255" class="plain placeholder-dark"
+					placeholder="Enter a message..." v-model="form.content">
 				</textarea>
 
 				<div class="floatable-left clearfix">
@@ -70,6 +71,7 @@ methods: {
         .then(data => {
 			this.edit = false;
 			this.data.content = this.form.content;
+			this.form.errors.clear();
 		})
         .catch(errors => {});
     },

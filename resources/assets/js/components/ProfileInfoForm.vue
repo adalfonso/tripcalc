@@ -14,8 +14,10 @@
         <input type="text" name="last_name" placeholder="*Last Name" maxlength="50"
             v-model="form.last_name" required>
 
-        <textarea type="text" name="about_me" placeholder="About Me" maxlength="500"
-            v-model="form.about_me"></textarea>
+        <p class="ui-error" v-if="form.errors.has('about')"
+            v-text="form.errors.get('about')"></p>
+        <textarea placeholder="About Me" maxlength="128" v-model="form.about">
+        </textarea>
 
         <button class="btn-full form-button" type="submit">Update Info</button>
     </form>
@@ -33,7 +35,8 @@ export default {
             end_date: new DatePicker(),
             form: new Form({
                first_name : null,
-               last_name : null
+               last_name : null,
+               about: null
             })
         };
     },
@@ -44,7 +47,8 @@ export default {
         .then(data => {
             this.form = new Form({
                 'first_name': data.first_name,
-                'last_name': data.last_name
+                'last_name': data.last_name,
+                'about': data.about
             });
         })
 

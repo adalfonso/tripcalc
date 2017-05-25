@@ -9,7 +9,7 @@ class PostController extends Controller {
 
     public function store(Trip $trip, Request $request) {
 
-        $this->validate(request(), [ 'content' => 'required' ]);
+        $this->validate(request(), [ 'content' => 'required|max:255' ]);
 
         $post = new Post($request->all());
         $post->trip_id = $trip->id;
@@ -19,7 +19,7 @@ class PostController extends Controller {
 
 	public function update(Trip $trip, Post $post, Request $request) {
 
-        $this->validate(request(), [ 'content' => 'required' ]);
+        $this->validate(request(), [ 'content' => 'required|max:255' ]);
 
         $post->content = $request->content;
         $post->save();

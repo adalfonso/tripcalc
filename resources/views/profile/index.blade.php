@@ -13,6 +13,10 @@
 
 		<h4 id="profile-username">{{ $profile->username }}</h4>
 
+		@if($profile->about)
+			<p>{{ $profile->about}}</p>
+		@endif
+
 		@if(Auth::user()->activated)
 			@yield('friendship')
 		@endif

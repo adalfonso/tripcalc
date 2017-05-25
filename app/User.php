@@ -13,11 +13,12 @@ class User extends Authenticatable {
     use Notifiable;
 
     protected $fillable = [
-        'first_name', 'last_name', 'username', 'email', 'password',
+        'first_name', 'last_name',
+        'username', 'email',
+        'about', 'password',
     ];
 
     protected $hidden = ['password', 'remember_token'];
-
 
     // Relationships
     public function friendshipAsRequester() {
@@ -59,7 +60,6 @@ class User extends Authenticatable {
     public function pendingTripRequests() {
         return $this->trips()->wherePivot('active', false);
     }
-
 
     // Accessors
     public function getFriendsAttribute() {

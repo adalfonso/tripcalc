@@ -8,7 +8,8 @@
     <form @submit.prevent="create" class="post-form">
 
         <!-- Content -->
-        <textarea name="description" type="text" maxlength="255" v-model="form.content"
+        <p class="ui-error" v-if="form.errors.has('content')" v-text="form.errors.get('content')"></p>
+        <textarea maxlength="255" v-model="form.content"
             class="plain placeholder-dark" placeholder="Enter a message...">
         </textarea>
 

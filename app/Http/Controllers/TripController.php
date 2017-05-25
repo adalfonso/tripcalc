@@ -63,7 +63,7 @@ class TripController extends Controller {
     }
 
     public function destroy(Trip $trip, Request $request) {
-    
+
         if (Hash::check($request->password, Auth::user()->password)) {
             Trip::destroy($trip->id);
             return ['success' => true];
@@ -101,6 +101,7 @@ class TripController extends Controller {
                 ['created_at', $dateRange, $oldestDate]
             ])
             ->with('creator', 'updater')
+            ->orderBy('created_at', 'DESC')
             ->limit(15)->get()
             ->map(function($item) {
                 return (object) [
@@ -117,7 +118,6 @@ class TripController extends Controller {
                     'hashtags' => $item->hashtags->pluck('tag')->toArray()
 				];
             });
-
 
 		$posts = Post::where([
                 'trip_id' => $trip->id,
@@ -220,7 +220,8 @@ class TripController extends Controller {
             'name' => 'required',
             'start_date' => 'required|date_format:Y-n-j',
             'end_date' => 'required|date_format:Y-n-j|after_or_equal:start_date',
-            'budget' => 'nullable|regex:/^\d*(\.\d{1,2})?$/'
+            'budget' => 'nullable|regex:/^\d*(\.\d{1,2})?$/',
+            'description' => 'max:500'
         ], $messages);
     }
 

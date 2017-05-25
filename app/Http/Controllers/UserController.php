@@ -11,14 +11,16 @@ class UserController extends Controller {
 
 
 	public function info() {
+		$user = Auth::user();
+
         return collect([
-        	'first_name' => Auth::user()->first_name,
-        	'last_name' => Auth::user()->last_name
+        	'first_name' => $user->first_name,
+        	'last_name' => $user->last_name,
+			'about' => $user->about
         ]);
     }
 
     public function update(Request $request) {
-
     	$validator = $this->validator($request->all());
 
     	if ($validator->fails()) {
@@ -29,7 +31,8 @@ class UserController extends Controller {
 
     	$user->update([
     		'first_name' => $request->first_name,
-        	'last_name' => $request->last_name
+        	'last_name' => $request->last_name,
+			'about' => $request->about
     	]);
     }
 
@@ -62,7 +65,8 @@ class UserController extends Controller {
     protected function validator(array $data) {
         return Validator::make($data, [
             'first_name' => 'required|max:30',
-            'last_name'  => 'required|max:30'
+            'last_name'  => 'required|max:30',
+			'about' => 'max:128'
         ]);
     }
 }

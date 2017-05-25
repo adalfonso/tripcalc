@@ -52,7 +52,7 @@ class Maker {
             'trip_id' => $trip->id,
             'amount' => $amount != null ? $amount : $this->faker->numberBetween(0, 1000),
             'date' => $this->faker->dateTime(),
-            'description' => $this->faker->sentence()
+            'description' => $this->faker->word
         ]);
 
         $transaction->created_by = $user->id;
