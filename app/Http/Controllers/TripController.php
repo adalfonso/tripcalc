@@ -63,7 +63,7 @@ class TripController extends Controller {
     }
 
     public function destroy(Trip $trip, Request $request) {
-    
+
         if (Hash::check($request->password, Auth::user()->password)) {
             Trip::destroy($trip->id);
             return ['success' => true];
@@ -101,6 +101,7 @@ class TripController extends Controller {
                 ['created_at', $dateRange, $oldestDate]
             ])
             ->with('creator', 'updater')
+            ->orderBy('created_at', 'DESC')
             ->limit(15)->get()
             ->map(function($item) {
                 return (object) [
