@@ -61,6 +61,10 @@ class User extends Authenticatable {
         return $this->trips()->wherePivot('active', false);
     }
 
+    public function profilePosts() {
+		return $this->morphMany('App\Post', 'postable');
+	}
+
     // Accessors
     public function getFriendsAttribute() {
         $this->setRelation('friends', $this->mergeFriends());

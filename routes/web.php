@@ -25,7 +25,6 @@ Route::group(['middleware' => 'auth'], function() {
 });
 
 Route::group(['middleware' => 'activeAccount'], function() {
-
 	Route::get('/profile', 'ProfileController@personal');
 	Route::get('/trip/requests', 'TripController@getPendingRequests');
 	Route::post('/trip/{trip}/resolveRequest', 'TripController@resolveRequest');
@@ -46,7 +45,6 @@ Route::group(['middleware' => 'activeAccount'], function() {
 		Route::get('/trip/{trip}/data', 'TripController@data');
 		Route::post('/trip/{trip}/eligibleFriends', 'TripController@eligibleFriends');
 		Route::post('/trip/{trip}/inviteFriends', 'FriendController@inviteToTrip');
-		Route::post('/trip/{trip}/posts', 'PostController@storeForTrip');
 		Route::post('/trip/{trip}/transactions', 'TransactionController@store');
 		Route::get('/trip/{trip}/travelers', 'TripController@travelers');
 		Route::get('/trip/{trip}/report/bottomLine', 'ReportController@bottomLine');
@@ -55,10 +53,25 @@ Route::group(['middleware' => 'activeAccount'], function() {
 		Route::get('/trip/{trip}/report/extended', 'ReportController@extended');
 		Route::get('/trip/{trip}/report/distribution', 'ReportController@distribution');
 		Route::get('/trip/{trip}/report/topSpenders', 'ReportController@topSpenders');
+	});
+
+	// Trip Posts
+	Route::group(['middleware' => 'canAccessTrip'], function() {
+		Route::post('/trip/{trip}/posts', 'PostController@storeForTrip');
 
 		Route::group(['middleware' => 'ownsPost'], function() {
 			Route::patch('/trip/{trip}/post/{post}', 'PostController@updateForTrip');
 			Route::delete('/trip/{trip}/post/{post}', 'PostController@destroyForTrip');
+		});
+	});
+
+	// Profile Posts
+	Route::group(['middleware' => 'hasActiveFriendshipWith'], function() {
+		Route::post('/profile/{user}/posts', 'PostController@storeForProfile');
+
+		Route::group(['middleware' => 'ownsPost'], function() {
+			Route::patch('/profile/{user}/post/{post}', 'PostController@updateForProfile');
+			Route::delete('/profile/{user}/post/{post}', 'PostController@destroyForProfile');
 		});
 	});
 
@@ -69,7 +82,7 @@ Route::group(['middleware' => 'activeAccount'], function() {
 	});
 });
 
-// Placed at bottom. Conflicts with user/activation/pending and resent
+// Placed at bottom. Conflicts with user/activation/pending and resend
 Route::get('/user/activation/{token}', 'ActivationController@activateUser')->name('user.activate');
 
 Route::group(['middleware' => 'isAdmin'], function() {

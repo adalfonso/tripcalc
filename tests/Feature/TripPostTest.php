@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Post;
 use Session;
 
-class PostTest extends DuskTestCase {
+class TripPostTest extends DuskTestCase {
 
     use DatabaseTransactions;
 
@@ -59,7 +59,7 @@ class PostTest extends DuskTestCase {
     }
 
     /** @test */
-    public function it_deletes_a_trip() {
+    public function it_deletes_a_trip_post() {
         Session::start();
         $this->maker->login($this->user);
 

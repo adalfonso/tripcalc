@@ -59,6 +59,7 @@ class Kernel extends HttpKernel
 
         'activeAccount' => \App\Http\Middleware\ActiveAccount::class,
         'canAccessTrip' => \App\Http\Middleware\CanAccessTrip::class,
+        'hasActiveFriendshipWith' => \App\Http\Middleware\HasActiveFriendshipWith::class,
         'ownsPost' => \App\Http\Middleware\OwnsPost::class,
         'tripHasTransaction' => \App\Http\Middleware\TripHasTransaction::class,
 
