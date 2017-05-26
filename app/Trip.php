@@ -13,18 +13,20 @@ class Trip extends Model {
 	    'description'
 	];
 
+	public function posts() {
+		return $this->morphMany('App\Post', 'postable');
+	}
+
 	public function transactions() {
         return $this->hasMany('\App\Transaction');
     }
 
 	public function users() {
 		return $this->belongsToMany('\App\User', 'trip_user')
-
-					// Activated Account
-					->where('activated', true)
-
-					// Active On Trip
-					->where('active', true);
+			// Activated Account
+			->where('activated', true)
+			// Active On Trip
+			->where('active', true);
 	}
 
 	public function getDateRangeAttribute() {

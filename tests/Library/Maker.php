@@ -34,13 +34,14 @@ class Maker {
         return $user;
     }
 
-    public function post($trip, $user) {
+    public function post($postable, $type, $user) {
         $post = new Post([
             'date' => $this->faker->dateTime(),
             'content' => $this->faker->sentence()
         ]);
 
-        $post->trip_id =  $trip->id;
+        $post->postable_id =  $postable->id;
+        $post->postable_type = 'App\\' . ucfirst($type);
         $post->created_by = $user->id;
         $post->save();
 

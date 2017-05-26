@@ -26,7 +26,7 @@ class TripTest extends DuskTestCase {
         $this->maker->login($this->user);
 
         $this->post = $this->maker->post(
-            $this->trip, $this->user
+            $this->trip, 'trip', $this->user
         );
 
         $response = $this->get('/trip/' . $this->trip->id);

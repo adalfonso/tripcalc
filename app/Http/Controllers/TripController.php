@@ -96,13 +96,9 @@ class TripController extends Controller {
             $dateRange = "<=";
         }
 
-        $transactions = Transaction::where([
-                'trip_id' => $trip->id,
-                ['created_at', $dateRange, $oldestDate]
-            ])
-            ->with('creator', 'updater')
-            ->orderBy('created_at', 'DESC')
-            ->limit(15)->get()
+        $transactions = $trip->transactions
+            ->where('created_at', $dateRange, $oldestDate)
+            ->sortByDesc('created_at')->take(15)
             ->map(function($item) {
                 return (object) [
                     'type' => 'transaction',
@@ -119,13 +115,9 @@ class TripController extends Controller {
 				];
             });
 
-		$posts = Post::where([
-                'trip_id' => $trip->id,
-                ['created_at', $dateRange, $oldestDate]
-            ])
-			->with('user')
-            ->orderBy('created_at', 'DESC')
-            ->limit(15)->get()
+		$posts = $trip->posts
+            ->where('created_at', $dateRange, $oldestDate)
+            ->sortByDesc('created_at')->take(15)
 			->map(function($item) {
 				return (object) [
                     'type' => 'post',
