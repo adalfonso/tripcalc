@@ -46,7 +46,7 @@ Route::group(['middleware' => 'activeAccount'], function() {
 		Route::get('/trip/{trip}/data', 'TripController@data');
 		Route::post('/trip/{trip}/eligibleFriends', 'TripController@eligibleFriends');
 		Route::post('/trip/{trip}/inviteFriends', 'FriendController@inviteToTrip');
-		Route::post('/trip/{trip}/posts', 'PostController@store');
+		Route::post('/trip/{trip}/posts', 'PostController@storeForTrip');
 		Route::post('/trip/{trip}/transactions', 'TransactionController@store');
 		Route::get('/trip/{trip}/travelers', 'TripController@travelers');
 		Route::get('/trip/{trip}/report/bottomLine', 'ReportController@bottomLine');
@@ -57,8 +57,8 @@ Route::group(['middleware' => 'activeAccount'], function() {
 		Route::get('/trip/{trip}/report/topSpenders', 'ReportController@topSpenders');
 
 		Route::group(['middleware' => 'ownsPost'], function() {
-			Route::patch('/trip/{trip}/post/{post}', 'PostController@update');
-			Route::delete('/trip/{trip}/post/{post}', 'PostController@destroy');
+			Route::patch('/trip/{trip}/post/{post}', 'PostController@updateForTrip');
+			Route::delete('/trip/{trip}/post/{post}', 'PostController@destroyForTrip');
 		});
 	});
 

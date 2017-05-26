@@ -7,25 +7,17 @@ use Auth;
 
 class PostController extends Controller {
 
-    public function store(Trip $trip, Request $request) {
-
+    public function storeForTrip(Trip $trip, Request $request) {
         $this->validate(request(), [ 'content' => 'required|max:255' ]);
-
-        $post = new Post($request->all());
-        $post->trip_id = $trip->id;
-        $post->created_by = Auth::id();
-        $post->save();
+        $post = $trip->posts()->create($request->all());
     }
 
-	public function update(Trip $trip, Post $post, Request $request) {
-
+	public function updateForTrip(Trip $trip, Post $post, Request $request) {
         $this->validate(request(), [ 'content' => 'required|max:255' ]);
-
-        $post->content = $request->content;
-        $post->save();
+        $post->update($request->all());
     }
 
-    public function destroy(Trip $trip, Post $post) {
+    public function destroyForTrip(Trip $trip, Post $post) {
         $post->delete();
     }
 }

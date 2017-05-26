@@ -2,10 +2,19 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Auth;
 
 class Post extends Model {
 
     protected $fillable = ['content'];
+
+    public static function boot() {
+        parent::boot();
+
+        static::saving(function($table) {
+            $table->created_by = Auth::id();
+        });
+    }
 
     public function postable() {
         return $this->morphTo();
