@@ -46,7 +46,8 @@ export default {
 
 props: {
 	data: {},
-	trip_id: null
+	id: null,
+	type: null
 },
 
 data() {
@@ -67,7 +68,7 @@ methods: {
 	},
 
     update() {
-		this.form.patch(`/trip/${ this.trip_id }/post/${ this.data.id }`)
+		this.form.patch(`/${ this.type }/${ this.id }/post/${ this.data.id }`)
         .then(data => {
 			this.edit = false;
 			this.data.content = this.form.content;
@@ -77,8 +78,8 @@ methods: {
     },
 
 	deletePost() {
-        this.form.delete(`/trip/${ this.trip_id }/post/${ this.data.id }`)
-        .then(data => { window.location = '/trip/' + this.trip_id })
+        this.form.delete(`/${ this.type }/${ this.id }/post/${ this.data.id }`)
+        .then(data => { window.location = window.location.href })
         .catch(errors => {});
     }
 }

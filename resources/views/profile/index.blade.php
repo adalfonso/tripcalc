@@ -33,6 +33,11 @@
 		<p>{{ $profile->first_name }} did something.</p>
 		<p>{{ $profile->first_name }} did something else.</p>
 		<p>{{ $profile->first_name }} did something else... again.</p>
+
+		<post-form ref="post" :id="{{$profile->id}}" :type="'profile'"></post-form>
+
+		<profile-feed :id="{{$profile->id}}" :feed="{{json_encode($posts)}}"></profile-feed>
+
 	</div>
 </div>
 @stop

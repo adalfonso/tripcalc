@@ -15,11 +15,13 @@ class HasActiveFriendshipWith {
      * @return mixed
      */
     public function handle($request, Closure $next) {
-        $access = Auth::user()->friends
+        $hasFriendship = Auth::user()->friends
             ->contains($request->user->id);
 
-        if (!$access) {
-            return abort(401);
+        $isUsersProfile = Auth::id() === $request->user->id;
+
+        if (!($hasFriendship || $isUsersProfile)) {
+            return abort(403);
         }
 
         return $next($request);

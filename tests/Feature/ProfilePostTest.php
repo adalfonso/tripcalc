@@ -37,6 +37,10 @@ class ProfilePostTest extends DuskTestCase {
             'postable_type' => 'App\User',
             'content' => 'hey best but, here i a a post'
         ]);
+
+        $post = \App\Post::where('content', 'hey best but, here i a a post')->get();
+
+        $this->assertEquals(1, $post->count());
     }
 
     /** @test */
@@ -51,7 +55,7 @@ class ProfilePostTest extends DuskTestCase {
             'content' => 'hey best but, here i a a post'
         ]);
 
-        $response->assertStatus(401);
+        $response->assertStatus(403);
     }
 
     /** @test */

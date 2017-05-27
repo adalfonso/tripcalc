@@ -1,10 +1,10 @@
 <?php namespace App;
 
-use Illuminate\Notifications\Notifiable;
+use App\Mail\PasswordReset;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
-use App\Mail\PasswordReset;
+use Illuminate\Notifications\Notifiable;
 use Mail;
 
 class User extends Authenticatable {
@@ -64,6 +64,25 @@ class User extends Authenticatable {
     public function profilePosts() {
 		return $this->morphMany('App\Post', 'postable');
 	}
+
+    public function recentProfilePosts($date = null) {
+        $comparison = is_null($date) ? '<=' : '<';
+        $date = is_null($date) ? Carbon::now() : Carbon::parse($date);
+
+        return $this->profilePosts->where('created_at', $comparison, $date)
+            ->sortByDesc('created_at')->take(15)
+            ->map(function($item) {
+                return (object) [
+                    'type' => 'post',
+                    'id' => $item->id,
+                    'poster' => $item->user->fullname,
+                    'created_at' => $item->created_at,
+                    'editable' => $item->created_by === \Auth::id(),
+                    'content' => $item->content,
+                    'dateForHumans' => $item->created_at->diffForHumans()
+                ];
+            })->values();
+    }
 
     // Accessors
     public function getFriendsAttribute() {

@@ -1,5 +1,5 @@
 <div class="right-col clearfix">
-    <post-form ref="post" :trip_id="{{$trip->id}}"></post-form>
+    <post-form ref="post" :id="{{$trip->id}}" :type="'trip'"></post-form>
 
     <div class="ui-input-duo-mobile clearfix" style="margin-bottom: .6rem">
         <button @click="showTransactionForm">+ New Transaction</button>

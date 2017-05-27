@@ -19,10 +19,12 @@ class ProfileController extends Controller {
     	$friendRequests = Auth::user()->pendingFriendRequests->count();
     	$tripRequests = Auth::user()->pendingTripRequests->count();
 
+        $posts = $this->posts($profile);
+
     	$friends = $user->friends;
 
     	return view('profile/personal', compact(
-    		'friendRequests', 'tripRequests', 'friends', 'profile'
+    		'friendRequests', 'tripRequests', 'friends', 'profile', 'posts'
     	));
     }
 
@@ -43,9 +45,23 @@ class ProfileController extends Controller {
     		'recipient_id' => $user->id, 'requester_id' => $profile->id
     	])->first();
 
+        $posts = is_null($friendship) ? null : $this->posts($profile);
 		$friends = $profile->friends;
 
-    	return view('profile/show', compact('profile', 'friendship', 'friends'));
+    	return view('profile/show', compact('profile', 'friendship', 'friends', 'posts'));
 
+    }
+
+    public function fetchMorePosts(User $user, Request $request) {
+        if (!$request->has('oldestDate')) {
+            return abort(400);
+
+        }
+
+        return $this->posts($user, $request->oldestDate);
+    }
+
+    public function posts(User $user, $date = null) {
+        return $user->recentProfilePosts($date);
     }
 }

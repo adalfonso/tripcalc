@@ -67,6 +67,7 @@ Route::group(['middleware' => 'activeAccount'], function() {
 
 	// Profile Posts
 	Route::group(['middleware' => 'hasActiveFriendshipWith'], function() {
+		Route::post('/profile/{user}/posts/fetch', 'ProfileController@fetchMorePosts');
 		Route::post('/profile/{user}/posts', 'PostController@storeForProfile');
 
 		Route::group(['middleware' => 'ownsPost'], function() {

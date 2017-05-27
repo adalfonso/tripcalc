@@ -13,6 +13,8 @@
             class="plain placeholder-dark" placeholder="Enter a message...">
         </textarea>
 
+         <button v-if="includeButton" @click.prevent="create" type="submit">Post</button>
+
     </form>
 </template>
 
@@ -23,7 +25,8 @@ import DatePicker from '../lib/DatePicker.js';
 export default {
 
 props: {
-    trip_id: { default: null }
+    id: { default: null },
+    type: { default: null }
 },
 
 created() {
@@ -38,6 +41,12 @@ data() {
     };
 },
 
+computed: {
+    includeButton() {
+        return this.type === 'profile';
+    }
+},
+
 methods: {
 
     isUpdatable() {
@@ -45,8 +54,10 @@ methods: {
     },
 
     create() {
-        this.form.post(`/trip/${ this.trip_id }/posts`)
-        .then(data => { window.location = '/trip/' + this.trip_id })
+        this.form.post(`/${ this.type }/${ this.id }/posts`)
+        .then(data => {
+             window.location = window.location.href;
+        })
         .catch(errors => {});
     }
 }
