@@ -80,11 +80,43 @@ class ProfilePostTest extends DuskTestCase {
     }
 
     /** @test */
+    public function it_doesnt_update_a_profile_post_on_your_profile_made_by_another_user() {
+        $this->maker->login($this->user1);
+        $post = $this->maker->post($this->user2, 'user', $this->user1);
+
+        Session::start();
+        $this->maker->login($this->user2);
+
+        $response = $this->patch('/profile/' . $this->user2->id . '/post/' . $post->id, [
+            '_token' => csrf_token()
+        ]);
+
+        $response->assertStatus(403);
+    }
+
+    /** @test */
     public function it_deletes_a_profile_post() {
         Session::start();
         $this->maker->login($this->user1);
 
         $post = $this->maker->post($this->user2, 'user', $this->user1);
+
+        $response = $this->delete('/profile/' . $this->user2->id . '/post/' . $post->id, [
+            '_token' => csrf_token()
+        ]);
+
+        $response->assertStatus(200);
+
+        $this->assertEquals(null, Post::find($post->id));
+    }
+
+    /** @test */
+    public function it_deletes_a_profile_post_on_your_profile_made_by_another_user() {
+        $this->maker->login($this->user1);
+        $post = $this->maker->post($this->user2, 'user', $this->user1);
+
+        Session::start();
+        $this->maker->login($this->user2);
 
         $response = $this->delete('/profile/' . $this->user2->id . '/post/' . $post->id, [
             '_token' => csrf_token()

@@ -25,8 +25,8 @@ import DatePicker from '../lib/DatePicker.js';
 export default {
 
 props: {
-    id: { default: null },
-    type: { default: null }
+    id: { required: true },
+    type: { required: true }
 },
 
 created() {

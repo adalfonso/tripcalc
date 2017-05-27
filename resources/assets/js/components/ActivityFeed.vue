@@ -27,8 +27,8 @@
 export default {
 
 props: {
-    feed: {},
-    trip_id: null
+    feed: { default: {} },
+    trip_id: { required: true }
 },
 
 data() {

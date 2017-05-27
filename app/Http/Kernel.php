@@ -61,6 +61,7 @@ class Kernel extends HttpKernel
         'canAccessTrip' => \App\Http\Middleware\CanAccessTrip::class,
         'hasActiveFriendshipWith' => \App\Http\Middleware\HasActiveFriendshipWith::class,
         'ownsPost' => \App\Http\Middleware\OwnsPost::class,
+        'canDeleteProfilePost' => \App\Http\Middleware\CanDeleteProfilePost::class,
         'tripHasTransaction' => \App\Http\Middleware\TripHasTransaction::class,
 
         'isAdmin' => \App\Http\Middleware\IsAdmin::class

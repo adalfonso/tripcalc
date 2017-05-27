@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-for="item in localFeed" class="activity-item clearfix">
-    		<post :data="item" :id="id" :type="'profile'"></post>
+    		<post :data="item" :id="id" :type="'profile'" :is-owner="isOwner"></post>
     	</div>
     </div>
 </template>
@@ -11,8 +11,9 @@
 export default {
 
 props: {
-    feed: {},
-    id: null
+    feed: { default: {} },
+    id: { required: true },
+    isOwner : { default: 0 }
 },
 
 data() {

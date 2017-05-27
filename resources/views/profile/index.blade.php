@@ -36,7 +36,9 @@
 
 		<post-form ref="post" :id="{{$profile->id}}" :type="'profile'"></post-form>
 
-		<profile-feed :id="{{$profile->id}}" :feed="{{json_encode($posts)}}"></profile-feed>
+		<profile-feed :id="{{$profile->id}}" :feed="{{json_encode($posts)}}"
+			:is-owner="{{ $profile->id === Auth::id() ? 1 : 0 }}">
+		</profile-feed>
 
 	</div>
 </div>

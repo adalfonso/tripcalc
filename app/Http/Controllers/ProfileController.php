@@ -55,7 +55,6 @@ class ProfileController extends Controller {
     public function fetchMorePosts(User $user, Request $request) {
         if (!$request->has('oldestDate')) {
             return abort(400);
-
         }
 
         return $this->posts($user, $request->oldestDate);

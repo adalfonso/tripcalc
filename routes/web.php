@@ -72,6 +72,9 @@ Route::group(['middleware' => 'activeAccount'], function() {
 
 		Route::group(['middleware' => 'ownsPost'], function() {
 			Route::patch('/profile/{user}/post/{post}', 'PostController@updateForProfile');
+		});
+
+		Route::group(['middleware' => 'canDeleteProfilePost'], function() {
 			Route::delete('/profile/{user}/post/{post}', 'PostController@destroyForProfile');
 		});
 	});

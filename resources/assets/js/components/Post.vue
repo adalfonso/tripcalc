@@ -8,7 +8,7 @@
 			<p>
 				<strong>{{ data.dateForHumans }}</strong>
 				| {{ data.poster }}
-				<img style="float: right;" class="btn-edit" v-if="data.editable"
+				<img style="float: right;" class="btn-edit" v-if="data.editable || isOwner"
 					src="/img/icon/edit.png" @click="editPost()">
 			</p>
 
@@ -22,7 +22,7 @@
 				</textarea>
 
 				<div class="floatable-left clearfix">
-					<button class="btn" v-if="edit">Update</button>
+					<button class="btn" v-if="edit && data.editable">Update</button>
 					<div class="btn" v-if="edit" @click="deletable = true">Delete</div>
 					<div class="btn" v-if="deletable" @click="deletePost">Are you sure?</div>
 				</div>
@@ -45,9 +45,10 @@ import DatePicker from '../lib/DatePicker.js';
 export default {
 
 props: {
-	data: {},
-	id: null,
-	type: null
+	data: { default: {} },
+	id: { required: true },
+	type: { required: true },
+	isOwner: { default: 0 }
 },
 
 data() {

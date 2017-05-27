@@ -24,7 +24,7 @@
 export default {
 
     props: {
-        trip_id: { default: null }
+        trip_id: { required: true }
     },
 
     data() {

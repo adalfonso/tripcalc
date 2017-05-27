@@ -115,7 +115,7 @@ props: {
         type: Boolean,
         default: false
     },
-    trip_id: { default: null },
+    trip_id: { required: true },
     transaction_id: { default: null }
 },
 
