@@ -217,18 +217,63 @@ ul {
 }
 
 // Profile
-.friendList li {
-	border: 1px solid $midnight;
-	border-radius: .1rem;
-	float: left;
-    font-weight: normal;
-	font-size: .86rem;
-	height: 6em; width: 31.33%;
-	line-height: 1.2em;
-	margin: 1%; padding: .5em;
-	transition: .2s;
+.friendList {
 
-    &:hover { background: $paleSmoke; }
+	.tile {
+		background:white;
+		border: 1px solid $midnight;
+		border-radius: .1rem;
+		float: left;
+		height: 6em; width: 31.33%;
+		margin: 1%;
+		overflow: hidden;
+		position: relative;
+
+		img { position: absolute; }
+
+		p {
+			bottom: 0;
+			color: white;
+			font-size: .86rem;
+			font-weight: normal;
+			line-height: 1.2em;
+			margin: .2rem;
+			position: absolute;
+			text-shadow: #001 1px 1px 1px;
+		}
+	}
+}
+
+.photo-container {
+	border:1px solid $midnight;
+	border-radius: .2rem;
+	display: inline-flex;
+	max-height: 152px; max-width: 152px;
+	overflow: hidden;
+	position: relative;
+}
+
+.photo-thumb {
+	max-height:150px;
+	max-width:150px;
+}
+
+.photo-container:hover .photo-new {
+	bottom: 0;
+	opacity: .8;
+}
+
+.photo-new {
+	background-color: $smoke;
+	color: white;
+	font-size: .8rem;
+	height: 3rem; width: 100%;
+	opacity: 0;
+	padding: .5rem;
+	position: absolute;
+	left: 0; bottom: -3rem;
+	text-align: center;
+	transition: .1s;
 }
 
 // Trip List

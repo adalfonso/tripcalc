@@ -26,9 +26,7 @@
 
 		    data: {
 		        profileInfoForm: { visible: false }
-		    },
-
-		    methods: { }
+		    }
 		});
 	</script>
 @overwrite

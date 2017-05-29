@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Mail;
+use Auth;
 
 class User extends Authenticatable {
 
@@ -65,6 +66,10 @@ class User extends Authenticatable {
 		return $this->morphMany('App\Post', 'postable');
 	}
 
+    public function isCurrentUser() {
+        return $this->id === Auth::id();
+    }
+
     public function recentProfilePosts($date = null) {
         $comparison = is_null($date) ? '<=' : '<';
         $date = is_null($date) ? Carbon::now() : Carbon::parse($date);
@@ -85,6 +90,12 @@ class User extends Authenticatable {
     }
 
     // Accessors
+    public function getCurrentPhotoAttribute() {
+		return $this->morphMany('App\Photo', 'related')
+            ->orderBy('created_at', 'desc')
+            ->first();
+	}
+
     public function getFriendsAttribute() {
         $this->setRelation('friends', $this->mergeFriends());
 

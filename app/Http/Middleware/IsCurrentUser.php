@@ -3,7 +3,7 @@
 use Closure;
 use Auth;
 
-class CanDeleteProfilePost {
+class IsCurrentUser {
 
     /**
      * Handle an incoming request.
@@ -14,13 +14,7 @@ class CanDeleteProfilePost {
      */
     public function handle($request, Closure $next)  {
 
-        $createdByUser = $request->post->created_by === Auth::id();
-
-        $profileBelongsToUser =
-            $request->post->postable_id === Auth::id() &&
-            $request->post->postable_type === 'App\User';
-
-        if (!($createdByUser || $profileBelongsToUser)) {
+        if ($request->user->id !== Auth::id()) {
             abort(403, 'Access denied');
         }
 

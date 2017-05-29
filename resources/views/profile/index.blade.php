@@ -11,6 +11,14 @@
 			@endif
 		</h2>
 
+		@php
+			$path = $profile->currentPhoto->thumbnailPath ?? null;
+		@endphp
+
+		<profile-photo :path="'{{ $path }}'" :id="{{ $profile->id }}"
+			:uploadable="{{ (integer) $profile->isCurrentUser() }}">
+		</profile-photo>
+
 		<h4 id="profile-username">{{ $profile->username }}</h4>
 
 		@if($profile->about)
@@ -42,4 +50,5 @@
 
 	</div>
 </div>
+
 @stop

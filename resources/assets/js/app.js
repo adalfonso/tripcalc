@@ -23,8 +23,10 @@ Vue.component('search-people', require('./components/SearchPeople.vue'));
 Vue.component('trip-form', require('./components/TripForm.vue'));
 
 // Profile
+Vue.component('photo-upload-form', require('./components/PhotoUploadForm.vue'));
 Vue.component('profile-feed', require('./components/ProfileFeed.vue'));
 Vue.component('profile-info-form', require('./components/ProfileInfoForm.vue'));
+Vue.component('profile-photo', require('./components/ProfilePhoto.vue'));
 
 // Activity Feed
 Vue.component('activity-feed', require('./components/ActivityFeed.vue'));

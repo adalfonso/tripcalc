@@ -18,7 +18,7 @@
     <div class="ui-input-btn">
         <img src="/img/icon/calendar-white-256x256.png" @click="date.show()">
     </div>
-    <input class="hasBtn "type="text" placeholder="*Transaction Date"
+    <input class="hasBtn" type="text" placeholder="*Transaction Date"
         maxlength="50" v-model="datePretty" required>
 
     <!-- Amount -->

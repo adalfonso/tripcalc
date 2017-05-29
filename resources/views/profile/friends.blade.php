@@ -5,13 +5,16 @@
 			({{ $friends->count() }})
 		</small>
 	</h5>
-	<ul class="friendList clearfix">
+	<div class="friendList clearfix">
 		@foreach ($friends->shuffle()->take(6) as $friend)
 			<a href="/profile/{{ $friend->username }}">
-			<li>
-				{{ $friend->first_name }} {{ $friend->last_name }}
-			</li>
+
+			<div class="tile">
+				<img src="{{ $friend->currentPhoto->thumbnailPath or '' }}">
+				<p>{{ $friend->first_name }} {{ $friend->last_name }}</p>
+			</div>
+
 			</a>
 		@endforeach
-	</ul>
+	</div>
 </div>

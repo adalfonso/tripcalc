@@ -1,14 +1,15 @@
 <?php namespace App\Http\Controllers;
 
+use App\Photo;
 use App\User;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
 use Response;
 use Validator;
+use Image;
 
 class UserController extends Controller {
-
 
 	public function info() {
 		$user = Auth::user();
@@ -61,6 +62,30 @@ class UserController extends Controller {
 
     	return $results;
     }
+
+	public function uploadPhoto(User $user, Request $request) {
+
+		$file = $request->file('photo')->store('photo');
+
+		// Get file name to construct thumbnail path
+		preg_match('/^[\w:\-\/]*\/([\w-]*)\.(\w{1,5})$/', $file, $matches);
+
+		// Create thumbnail
+		$image = Image::make('storage/' . $file)
+			->resize(150, 150, function ($constraint) {
+			    $constraint->aspectRatio();
+			})
+			->save('storage/photo/' . $matches[1] . '-thumb.' . $matches[2]);
+
+		// Save photo path for user
+		Photo::create([
+			'path' => $file,
+			'related_id' => Auth::id(),
+			'related_type' => 'App\User'
+		]);
+
+		return back();
+	}
 
     protected function validator(array $data) {
         return Validator::make($data, [

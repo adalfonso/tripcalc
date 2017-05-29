@@ -77,6 +77,10 @@ Route::group(['middleware' => 'activeAccount'], function() {
 		Route::group(['middleware' => 'canDeleteProfilePost'], function() {
 			Route::delete('/profile/{user}/post/{post}', 'PostController@destroyForProfile');
 		});
+
+		Route::group(['middleware' => 'isCurrentUser'], function() {
+			Route::post('/user/{user}/photos/upload', 'UserController@uploadPhoto');
+		});
 	});
 
 	Route::group(['middleware' => ['canAccessTrip', 'tripHasTransaction']], function() {
