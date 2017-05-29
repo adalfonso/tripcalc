@@ -46,9 +46,13 @@
 
 		a.menu { display: none; }
 
-		.logout, #nav .login {
+		.logout, .login, .settings {
 			float: right;
 			margin: 0;
+		}
+
+		.logout {
+			margin: 0 0 0 1rem;
 		}
 	}
 }

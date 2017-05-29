@@ -35,6 +35,7 @@ Route::group(['middleware' => 'activeAccount'], function() {
 	Route::post('/user/search', 'UserController@search');
 	Route::get('/friend/requests', 'FriendController@getPendingRequests');
 	Route::post('/friend/{friend}/request', 'FriendController@sendRequest');
+	Route::delete('/friend/{friend}/unfriend', 'FriendController@unfriend');
 	Route::post('/friend/{friend}/resolveRequest', 'FriendController@resolveRequest');
 
 	Route::group(['middleware' => 'canAccessTrip'], function() {

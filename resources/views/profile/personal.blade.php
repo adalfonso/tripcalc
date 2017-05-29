@@ -6,7 +6,6 @@
 		@hide="profileInfoForm.visible = false">
     </profile-info-form>
 
-
 	@if($friendRequests > 0)
 		<request-popup :type="'friend'" >
     	</request-popup>
@@ -18,15 +17,3 @@
 	@endif
 
 @stop
-
-@section('vue')
-	<script>
-		new Vue({
-		    el: '#app',
-
-		    data: {
-		        profileInfoForm: { visible: false }
-		    }
-		});
-	</script>
-@overwrite

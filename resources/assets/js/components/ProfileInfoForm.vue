@@ -1,4 +1,5 @@
 <template>
+<div class="popup-wrap" @click.self="hide">
     <form id="tripForm" class="dialogue popup" @submit.prevent="onSubmit">
         <div class="popup-close" @click="hide">&times;</div>
         <h4 class="centered">Basic Info</h4>
@@ -21,6 +22,7 @@
 
         <button class="btn-full form-button" type="submit">Update Info</button>
     </form>
+</div>
 </template>
 
 <script>

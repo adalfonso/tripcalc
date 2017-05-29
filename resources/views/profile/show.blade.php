@@ -2,48 +2,26 @@
 
 @section('friendship')
 	@if (! empty($friendship))
-		@if ($friendship->confirmed == 1)
-			<p><em>You are friends with {{ $profile->first_name }}</em></p>
-		@elseif($friendship->confirmed == 0)
+
+		@if ($friendship->confirmed == 0)
 			@if($friendship->requester_id == $profile->id)
-				<h6>{{ $profile->first_name }} has requested to be your friend</h6>
-				<div class="btn" @click="resolveRequest(1)">Accept</div>
-				<div class="btn" @click="resolveRequest(-1)">Decline</div>
+				<div class="centered">
+					<h6>
+						<em>{{ $profile->first_name }}
+							has requested to be your friend
+						</em>
+					</h6>
+					<div class="btn" @click="resolveRequest(1)">Accept</div>
+					<div class="btn" @click="resolveRequest(-1)">Decline</div>
+				</div>
 			@else
-				<p><em>Friend request pending</em></p>
+				<p class="centered"><em>Friend request pending</em></p>
 			@endif
 		@endif
+
 	@else
-		<div id="addFriend" class="btn" @click="addFriend">
+		<div class="btn friend-add" @click="addFriend">
 			+ Add Friend
 		</div>
 	@endif
 @stop
-
-@section('vue')
-    <script>
-        new Vue({
-        	el: '#app',
-
-        	methods: {
-        		resolveRequest(resolution) {
-        			axios.post(`/friend/{{ $profile->id }}/resolveRequest`, {
-        				resolution: resolution
-	                })
-	                .then(response => {
-	                	location.reload();
-	                });
-        		},
-
-        		addFriend() {
-        			axios.post(`/friend/{{ $profile->id }}/request`, {
-
-	                })
-	                .then(response => {
-	                	location.reload();
-	                });
-        		}
-        	}
-         });
-    </script>
-@overwrite
