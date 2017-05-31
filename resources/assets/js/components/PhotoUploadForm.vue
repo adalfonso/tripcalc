@@ -1,7 +1,7 @@
 <template>
 
 <div class="popup-wrap" @click.self="hide">
-    <div class="popup report detailedReport">
+    <div class="popup">
         <div class="popup-close" @click="hide">&times;</div>
         <h4 class="centered">Upload a photo</h4>
         <form method="POST" :ref="'submit'" :action="endpoint" enctype="multipart/form-data">

@@ -11,6 +11,14 @@
 		@if (! empty($friendship) && $friendship->confirmed == 1)
 			<friend-preferences :id="{{ $profile->id }}"></friend-preferences>
 		@endif
+
+		@if($profile->isCurrentUser())
+			<friend-manager v-if="friendManager.visible" @hide="hideAll">
+			</friend-manager>
+			<a class="friend-manage" @click="showFriendManager" >
+				[Manage]
+			</a>
+		@endif
 	</div>
 
 	<div class="friendList clearfix">
@@ -18,7 +26,7 @@
 			<a href="/profile/{{ $friend->username }}">
 				<div class="tile">
 					<img src="{{ $friend->currentPhoto->thumbnailPath or '' }}">
-					<p>{{ $friend->first_name }} {{ $friend->last_name }}</p>
+					<p class="friend-name">{{ $friend->first_name }} {{ $friend->last_name }}</p>
 				</div>
 			</a>
 		@endforeach

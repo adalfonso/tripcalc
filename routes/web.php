@@ -33,6 +33,7 @@ Route::group(['middleware' => 'activeAccount'], function() {
 	Route::get('/user', 'UserController@info');
 	Route::patch('/user', 'UserController@update');
 	Route::post('/user/search', 'UserController@search');
+	Route::get('/friends', 'FriendController@friends');
 	Route::get('/friend/requests', 'FriendController@getPendingRequests');
 	Route::post('/friend/{friend}/request', 'FriendController@sendRequest');
 	Route::delete('/friend/{friend}/unfriend', 'FriendController@unfriend');

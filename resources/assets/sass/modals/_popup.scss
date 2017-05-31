@@ -52,4 +52,9 @@
 		top: 1rem;
 		width: 400px;
 	}
+
+	.popup-wide {
+		width: 900px;
+		left: calc(50% - 450px);
+	}
 }

@@ -24,6 +24,7 @@ Vue.component('trip-form', require('./components/TripForm.vue'));
 
 // Profile
 Vue.component('friend-preferences', require('./components/FriendPreferences.vue'));
+Vue.component('friend-manager', require('./components/FriendManager.vue'));
 Vue.component('photo-upload-form', require('./components/PhotoUploadForm.vue'));
 Vue.component('profile-feed', require('./components/ProfileFeed.vue'));
 Vue.component('profile-info-form', require('./components/ProfileInfoForm.vue'));

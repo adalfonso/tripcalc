@@ -153,4 +153,18 @@ class FriendController extends Controller {
         ])
         ->delete();
     }
+
+    public function friends() {
+        $friends = Auth::user()->friends->map(function($friend) {
+            $path = $friend->currentPhoto->path ?? null;
+
+            return (object) [
+                'fullname' => $friend->fullname,
+                'id' => $friend->id,
+                'path' => $path ? asset('storage/' . $path) : null
+            ];
+        })->values();
+
+        return $friends;
+    }
 }

@@ -53,6 +53,7 @@
         	el: '#app',
 
 			data: {
+				friendManager: { visible: false },
 		        profileInfoForm: { visible: false }
 		    },
 
@@ -72,6 +73,14 @@
 	                	location.reload();
 	                });
         		},
+
+				hideAll() {
+					this.friendManager.visible = false;
+				},
+
+				showFriendManager() {
+					this.friendManager.visible = true;
+				},
 
 				showProfileInfoForm() {
 					this.profileInfoForm.visible = true;
