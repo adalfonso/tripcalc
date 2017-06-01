@@ -173,6 +173,7 @@
 		margin: .9rem 0 0 0;
 		height: auto;
 		padding: .4rem;
+		overflow: visible;
 		width: 100%;
 
 		&:first-of-type {
@@ -184,6 +185,8 @@
 		background-position: center center;
 		background-size: cover;
 		border: 1px solid $midnight;
+		color: $midnight;
+		font-size: .6rem;
 		height: 4rem; width: 4rem;
 		padding: .4rem;
 		margin-right: .4rem;
@@ -193,6 +196,12 @@
 	p { margin-top: 0; }
 
 	.left { float: left; }
+
+	.friend-preferences {
+		display: inline-block;
+
+		.status { float: none; }
+	}
 }
 
 @media (min-width: 768px) {

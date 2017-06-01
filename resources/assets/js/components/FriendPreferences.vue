@@ -18,14 +18,19 @@
     export default {
 
         props: {
-            id: { required: true }
+            id: { required: true },
+            refresh: { default: false }
         },
 
         methods: {
             unfriend() {
                 axios.delete(`/friend/${this.id}/unfriend`)
                 .then( response => {
-                    window.location = window.location.href;
+                    if (this.refresh) {
+                        return window.location = window.location.href;
+                    }
+
+                    this.$emit('unfriend');
                 });
             }
         }

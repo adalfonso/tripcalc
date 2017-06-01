@@ -9,13 +9,14 @@
 		</h5>
 
 		@if (! empty($friendship) && $friendship->confirmed == 1)
-			<friend-preferences :id="{{ $profile->id }}"></friend-preferences>
+			<friend-preferences :id="{{ $profile->id }}" :refresh="true">
+			</friend-preferences>
 		@endif
 
 		@if($profile->isCurrentUser())
 			<friend-manager v-if="friendManager.visible" @hide="hideAll">
 			</friend-manager>
-			<a class="friend-manage" @click="showFriendManager" >
+			<a class="friend-manage" @click="showFriendManager">
 				[Manage]
 			</a>
 		@endif
