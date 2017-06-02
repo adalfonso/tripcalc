@@ -1,0 +1,225 @@
+.friend-add {
+	display: table;
+	margin: .6rem auto;
+}
+
+.friend-header {
+	margin: .8rem 0 .4rem 0;
+	min-height: 20px;
+	position: relative;
+
+	h5 {
+		float: left;
+		margin: 0;
+		position: absolute;
+		left: 0; bottom: 0;
+	}
+
+	.friend-manage {
+		float: right;
+		margin: 0;
+	}
+
+	.friend-preferences {
+		position: relative;
+
+		.status {
+			border: 1px solid $midnight;
+			float: right;
+
+			&:hover  + .options {
+				visibility: visible;
+				opacity: 1;
+			}
+
+			p {
+				margin: 0;
+				line-height: 1rem;
+				padding: .4rem .4rem .2rem .4rem;
+
+				.caret {
+					font-size: .8rem;
+					margin-left: 1rem;
+				}
+			}
+		}
+
+		.options {
+			background: $paleBlue;
+			border: 1px solid $midnight;
+			box-shadow: black 1px 1px 2px;
+			visibility: hidden;
+			opacity: 0;
+			padding: .4rem;
+			position: absolute;
+			right: 0; top: calc(100% + .8rem);
+			transition: visibility 0s, opacity 0.1s linear;
+			transition-delay: .2s;
+			z-index: 2;
+
+			&:hover {
+				visibility: visible;
+				opacity: 1;
+			}
+
+			p {
+				height: 1.4rem;
+				line-height: 1rem;
+				padding: .2rem;
+				margin: 0;
+				transition: .2s;
+			}
+
+			.arw-up {
+		    	border: .8em solid transparent;
+		    	border-bottom: .8em solid $midnight;
+		    	content: " ";
+		    	height: 0;
+		    	right: 0;
+		    	position: absolute;
+		    	bottom: 100%;
+		    }
+
+			.invis {
+		    	height: 1rem;
+				width: 100%;
+		    	right: 0;
+		    	position: absolute;
+		    	bottom: 100%;
+			}
+		}
+	}
+}
+
+.friendList {
+
+	a:nth-of-type(3n) .tile {
+		margin-left: 2%;
+	}
+
+	a:nth-of-type(3n - 2) .tile {
+		margin-right: 2%;
+	}
+
+	.tile {
+		background:white;
+		border: 1px solid $midnight;
+		border-radius: .1rem;
+		float: left;
+		height: 6em; width: 32%;
+		margin-bottom: 2%;
+		overflow: hidden;
+		position: relative;
+
+
+		img { position: absolute; }
+
+		p.friend-name {
+			bottom: 0;
+			color: white;
+			font-size: .86rem;
+			font-weight: normal;
+			line-height: 1.2em;
+			margin: .2rem;
+			position: absolute;
+			text-shadow: #001 1px 1px 1px;
+		}
+	}
+}
+
+.profile-info {
+	text-align: center;
+
+	h3, h5 { margin: .2em; }
+
+	p { text-align: left; }
+}
+
+.photo-container {
+	border:1px solid $midnight;
+	border-radius: .2rem;
+	display: inline-flex;
+	max-height: 152px; max-width: 152px;
+	overflow: hidden;
+	position: relative;
+}
+
+.photo-thumb {
+	max-height:150px;
+	max-width:150px;
+}
+
+.photo-container:hover .photo-new {
+	bottom: 0;
+	opacity: .8;
+}
+
+.photo-new {
+	background-color: $smoke;
+	color: white;
+	font-size: .8rem;
+	height: 3rem; width: 100%;
+	opacity: 0;
+	padding: .5rem;
+	position: absolute;
+	left: 0; bottom: -3rem;
+	text-align: center;
+	transition: .1s;
+}
+
+#friend-manager  {
+	.tile {
+		background: transparent;
+		margin: .9rem 0 0 0;
+		height: auto;
+		padding: .4rem;
+		overflow: visible;
+		width: 100%;
+
+		&:first-of-type {
+			margin-top: 0;
+		}
+	}
+
+	div.img {
+		background-position: center center;
+		background-size: cover;
+		border: 1px solid $midnight;
+		color: $midnight;
+		font-size: .6rem;
+		height: 4rem; width: 4rem;
+		padding: .4rem;
+		margin-right: .4rem;
+		text-align: center;
+	}
+
+	p { margin-top: 0; }
+
+	.left { float: left; }
+
+	.friend-preferences {
+		display: inline-block;
+
+		.status { float: none; }
+	}
+}
+
+@media (min-width: 768px) {
+	#friend-manager  {
+		.tile {
+			width: calc(100% / 3 - .6rem);
+
+			&:nth-of-type(1), &:nth-of-type(2),	&:nth-of-type(3) {
+				margin-top: 0
+			}
+
+			&:nth-of-type(3n) {
+				margin-left: .9rem;
+			}
+
+			&:nth-of-type(3n - 2) {
+				margin-right: .9rem;
+			}
+		}
+	}
+}

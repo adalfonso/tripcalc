@@ -36,6 +36,110 @@ class FriendTest extends DuskTestCase {
     }
 
     /** @test */
+    public function a_user_can_add_a_friend() {
+        Session::start();
+        $user1 = $this->maker->user();
+        $user2 = $this->maker->user();
+        $this->maker->login($user1);
+
+        $response = $this->post('/friend/' . $user2->id . '/request', [
+            '_token' => csrf_token()
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('friends', [
+            'requester_id' => $user1->id,
+            'recipient_id' => $user2->id,
+            'confirmed'    => 0
+        ]);
+    }
+
+    /** @test */
+    public function a_user_can_accept_a_friend_request() {
+        Session::start();
+        $user1 = $this->maker->user();
+        $user2 = $this->maker->user();
+
+        $this->maker->login($user1);
+        $response = $this->post('/friend/' . $user2->id . '/request', [
+            '_token' => csrf_token()
+        ]);
+        $response->assertStatus(200);
+
+        $this->maker->login($user2);
+
+        $response = $this->post('/friend/' . $user1->id . '/resolveRequest', [
+            '_token' => csrf_token(),
+            'resolution' => 1
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('friends', [
+            'requester_id' => $user1->id,
+            'recipient_id' => $user2->id,
+            'confirmed'    => 1
+        ]);
+    }
+
+    /** @test */
+    public function a_user_can_reject_a_friend_request() {
+        Session::start();
+        $user1 = $this->maker->user();
+        $user2 = $this->maker->user();
+
+        $this->maker->login($user1);
+        $response = $this->post('/friend/' . $user2->id . '/request', [
+            '_token' => csrf_token()
+        ]);
+        $response->assertStatus(200);
+
+        $this->maker->login($user2);
+
+        $response = $this->post('/friend/' . $user1->id . '/resolveRequest', [
+            '_token' => csrf_token(),
+            'resolution' => -1
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('friends', [
+            'requester_id' => $user1->id,
+            'recipient_id' => $user2->id,
+            'confirmed'    => -1
+        ]);
+    }
+
+    /** @test */
+    public function a_user_can_unfriend_a_friend() {
+        Session::start();
+        $user1 = $this->maker->user();
+        $user2 = $this->maker->user();
+        $this->maker->activeFriendship($user1, $user2);
+
+        $friendship = \App\Friend::where([
+            'requester_id' => $user1->id,
+            'recipient_id' => $user2->id,
+            'confirmed'    => 1
+        ])->get();
+
+        $this->assertEquals(1, $friendship->count());
+
+        $this->maker->login($user1);
+        $response = $this->delete('/friend/' . $user2->id . '/unfriend', [
+            '_token' => csrf_token()
+        ]);
+
+        $response->assertStatus(200);
+
+        $friendship = \App\Friend::where([
+            'requester_id' => $user1->id,
+            'recipient_id' => $user2->id,
+            'confirmed'    => 1
+        ])->get();
+
+        $this->assertEquals(0, $friendship->count());
+    }
+
+    /** @test */
     public function a_user_can_search_an_eligible_friend_for_their_trip() {
         $this->withoutMiddleware();
         $user1 = $this->maker->user();

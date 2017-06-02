@@ -11,8 +11,8 @@
 export default {
 
     props: {
-        spender: {},
-        range: 0
+        spender: { required: true },
+        range: { default: 0 }
     },
 
     computed: {

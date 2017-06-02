@@ -22,7 +22,12 @@ button, .btn {
     &:hover { background: $smoke; }
 }
 
-.input-fake, input, textarea {
+.input-fake,
+input[type="number"],
+input[type="password"],
+input[type="email"],
+input[type="text"],
+textarea {
 	background: $smoke;
 	border-radius: .2rem;
 	border: transparent;
@@ -32,7 +37,7 @@ button, .btn {
 	display: inline-block;
 	font: inherit;
 	height: 2.6rem;
-	line-height:     1.6rem;;
+	line-height: 1.6rem;
 	margin-bottom: .6rem;
 	opacity: .9;
 	padding: .5rem;

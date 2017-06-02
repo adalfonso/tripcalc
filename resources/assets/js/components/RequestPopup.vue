@@ -25,7 +25,9 @@
 <script>
     export default {
 
-        props: ['type'],
+        props: {
+            type: { required: true }
+        },
 
         data() {
             return {

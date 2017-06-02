@@ -25,15 +25,18 @@ Route::group(['middleware' => 'auth'], function() {
 });
 
 Route::group(['middleware' => 'activeAccount'], function() {
-
 	Route::get('/profile', 'ProfileController@personal');
 	Route::get('/trip/requests', 'TripController@getPendingRequests');
 	Route::post('/trip/{trip}/resolveRequest', 'TripController@resolveRequest');
 	Route::get('/trips', 'TripController@index');
 	Route::post('/trips', 'TripController@store');
+	Route::get('/user', 'UserController@info');
+	Route::patch('/user', 'UserController@update');
 	Route::post('/user/search', 'UserController@search');
+	Route::get('/friends', 'FriendController@friends');
 	Route::get('/friend/requests', 'FriendController@getPendingRequests');
 	Route::post('/friend/{friend}/request', 'FriendController@sendRequest');
+	Route::delete('/friend/{friend}/unfriend', 'FriendController@unfriend');
 	Route::post('/friend/{friend}/resolveRequest', 'FriendController@resolveRequest');
 
 	Route::group(['middleware' => 'canAccessTrip'], function() {
@@ -44,7 +47,6 @@ Route::group(['middleware' => 'activeAccount'], function() {
 		Route::get('/trip/{trip}/data', 'TripController@data');
 		Route::post('/trip/{trip}/eligibleFriends', 'TripController@eligibleFriends');
 		Route::post('/trip/{trip}/inviteFriends', 'FriendController@inviteToTrip');
-		Route::post('/trip/{trip}/posts', 'PostController@store');
 		Route::post('/trip/{trip}/transactions', 'TransactionController@store');
 		Route::get('/trip/{trip}/travelers', 'TripController@travelers');
 		Route::get('/trip/{trip}/report/bottomLine', 'ReportController@bottomLine');
@@ -53,10 +55,33 @@ Route::group(['middleware' => 'activeAccount'], function() {
 		Route::get('/trip/{trip}/report/extended', 'ReportController@extended');
 		Route::get('/trip/{trip}/report/distribution', 'ReportController@distribution');
 		Route::get('/trip/{trip}/report/topSpenders', 'ReportController@topSpenders');
+	});
+
+	// Trip Posts
+	Route::group(['middleware' => 'canAccessTrip'], function() {
+		Route::post('/trip/{trip}/posts', 'PostController@storeForTrip');
 
 		Route::group(['middleware' => 'ownsPost'], function() {
-			Route::patch('/trip/{trip}/post/{post}', 'PostController@update');
-			Route::delete('/trip/{trip}/post/{post}', 'PostController@destroy');
+			Route::patch('/trip/{trip}/post/{post}', 'PostController@updateForTrip');
+			Route::delete('/trip/{trip}/post/{post}', 'PostController@destroyForTrip');
+		});
+	});
+
+	// Profile Posts
+	Route::group(['middleware' => 'hasActiveFriendshipWith'], function() {
+		Route::post('/profile/{user}/posts/fetch', 'ProfileController@fetchMorePosts');
+		Route::post('/profile/{user}/posts', 'PostController@storeForProfile');
+
+		Route::group(['middleware' => 'ownsPost'], function() {
+			Route::patch('/profile/{user}/post/{post}', 'PostController@updateForProfile');
+		});
+
+		Route::group(['middleware' => 'canDeleteProfilePost'], function() {
+			Route::delete('/profile/{user}/post/{post}', 'PostController@destroyForProfile');
+		});
+
+		Route::group(['middleware' => 'isCurrentUser'], function() {
+			Route::post('/user/{user}/photos/upload', 'UserController@uploadPhoto');
 		});
 	});
 
@@ -67,7 +92,7 @@ Route::group(['middleware' => 'activeAccount'], function() {
 	});
 });
 
-// Placed at bottom. Conflicts with user/activation/pending and resent
+// Placed at bottom. Conflicts with user/activation/pending and resend
 Route::get('/user/activation/{token}', 'ActivationController@activateUser')->name('user.activate');
 
 Route::group(['middleware' => 'isAdmin'], function() {

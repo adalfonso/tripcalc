@@ -18,17 +18,17 @@
     <div class="ui-input-btn">
         <img src="/img/icon/calendar-white-256x256.png" @click="date.show()">
     </div>
-    <input class="hasBtn "type="text" placeholder="*Transaction Date"
+    <input class="hasBtn" type="text" placeholder="*Transaction Date"
         maxlength="50" v-model="datePretty" required>
 
     <!-- Amount -->
     <p class="ui-error" v-text="form.errors.get('amount')"></p>
     <div class="ui-input-btn">$</div>
-    <input type="text" class="hasBtn" placeholder="*Transaction Amount" maxlength="50"
+    <input type="number" class="hasBtn" placeholder="*Transaction Amount" maxlength="50"
         v-model="form.amount" required>
 
     <!-- Description -->
-    <input type="text" placeholder="Description" maxlength="32"
+    <input type="text" placeholder="Description" maxlength="50"
         v-model="form.description">
 
     <!-- Hashtags -->
@@ -115,7 +115,7 @@ props: {
         type: Boolean,
         default: false
     },
-    trip_id: { default: null },
+    trip_id: { required: true },
     transaction_id: { default: null }
 },
 

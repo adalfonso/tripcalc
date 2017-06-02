@@ -8,20 +8,21 @@
 			<p>
 				<strong>{{ data.dateForHumans }}</strong>
 				| {{ data.poster }}
-				<img style="float: right;" class="btn-edit" v-if="data.editable"
+				<img style="float: right;" class="btn-edit" v-if="data.editable || isOwner"
 					src="/img/icon/edit.png" @click="editPost()">
 			</p>
 
 			<p v-show="!edit">{{ data.content }}</p>
 
 			<form @submit.prevent="update">
-
-				<textarea v-if="edit" name="description" type="text" maxlength="255"
-					class="plain placeholder-dark" placeholder="Enter a message..." v-model="form.content">
+				<p class="ui-error" v-if="form.errors.has('content')"
+					v-text="form.errors.get('content')"></p>
+				<textarea v-if="edit" maxlength="255" class="plain placeholder-dark"
+					placeholder="Enter a message..." v-model="form.content">
 				</textarea>
 
 				<div class="floatable-left clearfix">
-					<button class="btn" v-if="edit">Update</button>
+					<button class="btn" v-if="edit && data.editable">Update</button>
 					<div class="btn" v-if="edit" @click="deletable = true">Delete</div>
 					<div class="btn" v-if="deletable" @click="deletePost">Are you sure?</div>
 				</div>
@@ -44,8 +45,10 @@ import DatePicker from '../lib/DatePicker.js';
 export default {
 
 props: {
-	data: {},
-	trip_id: null
+	data: { default: {} },
+	id: { required: true },
+	type: { required: true },
+	isOwner: { default: 0 }
 },
 
 data() {
@@ -66,17 +69,18 @@ methods: {
 	},
 
     update() {
-		this.form.patch(`/trip/${ this.trip_id }/post/${ this.data.id }`)
+		this.form.patch(`/${ this.type }/${ this.id }/post/${ this.data.id }`)
         .then(data => {
 			this.edit = false;
 			this.data.content = this.form.content;
+			this.form.errors.clear();
 		})
         .catch(errors => {});
     },
 
 	deletePost() {
-        this.form.delete(`/trip/${ this.trip_id }/post/${ this.data.id }`)
-        .then(data => { window.location = '/trip/' + this.trip_id })
+        this.form.delete(`/${ this.type }/${ this.id }/post/${ this.data.id }`)
+        .then(data => { window.location = window.location.href })
         .catch(errors => {});
     }
 }

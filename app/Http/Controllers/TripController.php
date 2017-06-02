@@ -15,49 +15,24 @@ use Validator;
 class TripController extends Controller {
 
     public function index () {
-    	$trips = Trip::whereHas('users', function($query) {
-            $query->where([
-                'user_id' => Auth::user()->id,
-                'active' => true
-            ]);
-        })->get()->sortByDesc('start_date');
-
+    	$trips = Auth::user()->activeTrips->sortByDesc('start_date');
     	return view('trips.index', compact('trips'));
     }
 
     public function store(Request $request) {
         $this->validateTripData();
 
-        $trip = DB::transaction(function(){
-            $trip = Trip::create([
-                'name' => request('name'),
-                'start_date' => request('start_date'),
-                'end_date' => request('end_date'),
-                'budget' => request('budget'),
-                'description' => request('description')
-            ]);
-
-            $trip->users()->attach(
-                Auth::user()->id,
-                ['active' => 1]
-            );
+        return DB::transaction(function() use ($request) {
+            $trip = Trip::create($request->all());
+            $trip->users()->attach(Auth::user()->id, ['active' => 1]);
 
             return $trip;
         });
-
-        return $trip;
     }
 
     public function update(Trip $trip, Request $request) {
         $this->validateTripData();
-
-        $trip->update([
-            'name' => request('name'),
-            'start_date' => request('start_date'),
-            'end_date' => request('end_date'),
-            'budget' => request('budget'),
-            'description' => request('description')
-        ]);
+        $trip->update($request->all());
 
         return $trip;
     }
@@ -65,7 +40,10 @@ class TripController extends Controller {
     public function destroy(Trip $trip, Request $request) {
 
         if (Hash::check($request->password, Auth::user()->password)) {
-            Trip::destroy($trip->id);
+
+            $trip->delete();
+            $trip->posts()->delete();
+
             return ['success' => true];
         }
 
@@ -96,13 +74,9 @@ class TripController extends Controller {
             $dateRange = "<=";
         }
 
-        $transactions = Transaction::where([
-                'trip_id' => $trip->id,
-                ['created_at', $dateRange, $oldestDate]
-            ])
-            ->with('creator', 'updater')
-            ->orderBy('created_at', 'DESC')
-            ->limit(15)->get()
+        $transactions = $trip->transactions
+            ->where('created_at', $dateRange, $oldestDate)
+            ->sortByDesc('created_at')->take(15)
             ->map(function($item) {
                 return (object) [
                     'type' => 'transaction',
@@ -119,14 +93,9 @@ class TripController extends Controller {
 				];
             });
 
-
-		$posts = Post::where([
-                'trip_id' => $trip->id,
-                ['created_at', $dateRange, $oldestDate]
-            ])
-			->with('user')
-            ->orderBy('created_at', 'DESC')
-            ->limit(15)->get()
+		$posts = $trip->posts
+            ->where('created_at', $dateRange, $oldestDate)
+            ->sortByDesc('created_at')->take(15)
 			->map(function($item) {
 				return (object) [
                     'type' => 'post',
@@ -221,7 +190,8 @@ class TripController extends Controller {
             'name' => 'required',
             'start_date' => 'required|date_format:Y-n-j',
             'end_date' => 'required|date_format:Y-n-j|after_or_equal:start_date',
-            'budget' => 'nullable|regex:/^\d*(\.\d{1,2})?$/'
+            'budget' => 'nullable|regex:/^\d*(\.\d{1,2})?$/',
+            'description' => 'max:500'
         ], $messages);
     }
 

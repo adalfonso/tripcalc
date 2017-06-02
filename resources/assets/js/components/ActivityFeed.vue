@@ -15,7 +15,7 @@
 
             <!-- Post -->
             <div v-else>
-        		<post :data="item" :trip_id="trip_id"></post>
+        		<post :data="item" :id="trip_id" :type="'trip'"></post>
             </div>
 
     	</div>
@@ -27,8 +27,8 @@
 export default {
 
 props: {
-    feed: {},
-    trip_id: null
+    feed: { default: {} },
+    trip_id: { required: true }
 },
 
 data() {

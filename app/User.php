@@ -1,11 +1,12 @@
 <?php namespace App;
 
-use Illuminate\Notifications\Notifiable;
+use App\Mail\PasswordReset;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
-use App\Mail\PasswordReset;
+use Illuminate\Notifications\Notifiable;
 use Mail;
+use Auth;
 
 class User extends Authenticatable {
 
@@ -13,11 +14,12 @@ class User extends Authenticatable {
     use Notifiable;
 
     protected $fillable = [
-        'first_name', 'last_name', 'username', 'email', 'password',
+        'first_name', 'last_name',
+        'username', 'email',
+        'about', 'password',
     ];
 
     protected $hidden = ['password', 'remember_token'];
-
 
     // Relationships
     public function friendshipAsRequester() {
@@ -60,8 +62,40 @@ class User extends Authenticatable {
         return $this->trips()->wherePivot('active', false);
     }
 
+    public function profilePosts() {
+		return $this->morphMany('App\Post', 'postable');
+	}
+
+    public function isCurrentUser() {
+        return $this->id === Auth::id();
+    }
+
+    public function recentProfilePosts($date = null) {
+        $comparison = is_null($date) ? '<=' : '<';
+        $date = is_null($date) ? Carbon::now() : Carbon::parse($date);
+
+        return $this->profilePosts->where('created_at', $comparison, $date)
+            ->sortByDesc('created_at')->take(15)
+            ->map(function($item) {
+                return (object) [
+                    'type' => 'post',
+                    'id' => $item->id,
+                    'poster' => $item->user->fullname,
+                    'created_at' => $item->created_at,
+                    'editable' => $item->created_by === \Auth::id(),
+                    'content' => $item->content,
+                    'dateForHumans' => $item->created_at->diffForHumans()
+                ];
+            })->values();
+    }
 
     // Accessors
+    public function getCurrentPhotoAttribute() {
+		return $this->morphMany('App\Photo', 'related')
+            ->orderBy('created_at', 'desc')
+            ->first();
+	}
+
     public function getFriendsAttribute() {
         $this->setRelation('friends', $this->mergeFriends());
 

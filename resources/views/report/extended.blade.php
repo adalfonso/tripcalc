@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<div class="report detailedReport">
+<div class="report detailedReport extendedReport">
 	<h4 class="centered">Detailed Report</h4>
 	<hr>
 	<table>

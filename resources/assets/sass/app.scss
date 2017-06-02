@@ -5,6 +5,9 @@
 @import "formDefault";
 @import "formExtended";
 
+// Pages
+@import "profile";
+
 // Modal Styles
 @import "modals/activity";
 @import "modals/carousel";
@@ -214,21 +217,6 @@ ul {
         margin-left: .4rem;
         transition: .2s;
     }
-}
-
-// Profile
-.friendList li {
-	border: 1px solid $midnight;
-	border-radius: .1rem;
-	float: left;
-    font-weight: normal;
-	font-size: .86rem;
-	height: 6em; width: 31.33%;
-	line-height: 1.2em;
-	margin: 1%; padding: .5em;
-	transition: .2s;
-
-    &:hover { background: $paleSmoke; }
 }
 
 // Trip List

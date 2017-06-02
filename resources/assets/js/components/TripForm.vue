@@ -6,13 +6,15 @@
         <hr>
 
         <!-- Trip Name -->
-        <p class="ui-error" v-if="form.errors.has('name')" v-text="form.errors.get('name')"></p>
+        <p class="ui-error" v-if="form.errors.has('name')"
+            v-text="form.errors.get('name')"></p>
         <input type="text" name="name" placeholder="*Trip Name" maxlength="50"
             v-model="form.name" required>
 
         <!-- Start Date -->
         <date-picker v-if="start_date.visible" :date="start_date"></date-picker>
-        <p class="ui-error" v-text="form.errors.get('start_date')"></p>
+        <p class="ui-error" v-if="form.errors.has('start_date')"
+            v-text="form.errors.get('start_date')"></p>
         <div class="ui-input-btn">
             <img src="/img/icon/calendar-white-256x256.png" @click="start_date.show()">
         </div>
@@ -21,7 +23,8 @@
 
         <!-- End Date -->
         <date-picker v-if="end_date.visible" :date="end_date"></date-picker>
-        <p class="ui-error" v-text="form.errors.get('end_date')"></p>
+        <p class="ui-error" v-if="form.errors.has('end_date')"
+            v-text="form.errors.get('end_date')"></p>
         <div class="ui-input-btn">
             <img src="/img/icon/calendar-white-256x256.png" @click="end_date.show()">
         </div>
@@ -29,12 +32,15 @@
             v-model="endDatePretty" @blur="" required>
 
         <!-- Budget -->
-        <p class="ui-error" v-text="form.errors.get('budget')"></p>
+        <p class="ui-error" v-if="form.errors.has('budget')"
+            v-text="form.errors.get('budget')"></p>
         <div class="ui-input-btn">$</div>
         <input type="number" class="hasBtn" min="0" name="budget" placeholder="Budget"
             v-model="form.budget">
 
         <!-- Description -->
+        <p class="ui-error" v-if="form.errors.has('description')"
+            v-text="form.errors.get('description')"></p>
         <textarea type="text" name="description" placeholder="Description" maxlength="500"
             v-model="form.description">
         </textarea>

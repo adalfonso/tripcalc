@@ -14,6 +14,10 @@
 
 		<logout></logout>
 
-		<search-people></search-people>
+		@if (isset($profile) && $profile->isCurrentUser())
+			<a @click="showProfileInfoForm" class="settings">Settings</a>
+		@endif
+
+		<search-people></search-people>		
 	</nav>
 @stop

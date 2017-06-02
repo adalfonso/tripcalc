@@ -131,7 +131,7 @@ class FriendController extends Controller {
 
         Friend::where([
             'requester_id' => $friend,
-            'recipient_id' => Auth::user()->id,
+            'recipient_id' => Auth::id(),
             'confirmed'    => 0
         ])->update(['confirmed' => $request->resolution]);
 
@@ -140,5 +140,31 @@ class FriendController extends Controller {
 
     public function sendInvitationEmail($user) {
         Mail::to($user)->send(new AccountInvitation);
+    }
+
+    public function unfriend ($friend) {
+        Friend::where([
+            'requester_id' => $friend,
+            'recipient_id' => Auth::id()
+        ])
+        ->orWhere([
+            'requester_id' => Auth::id(),
+            'recipient_id' => $friend
+        ])
+        ->delete();
+    }
+
+    public function friends() {
+        $friends = Auth::user()->friends->map(function($friend) {
+            $path = $friend->currentPhoto->path ?? null;
+
+            return (object) [
+                'fullname' => $friend->fullname,
+                'id' => $friend->id,
+                'path' => $path ? asset('storage/' . $path) : null
+            ];
+        })->values();
+
+        return $friends;
     }
 }

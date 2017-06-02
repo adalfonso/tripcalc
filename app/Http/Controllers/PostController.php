@@ -3,29 +3,37 @@
 use Illuminate\Http\Request;
 use App\Post;
 use App\Trip;
+use App\User;
 use Auth;
 
 class PostController extends Controller {
 
-    public function store(Trip $trip, Request $request) {
-
-        $this->validate(request(), [ 'content' => 'required' ]);
-
-        $post = new Post($request->all());
-        $post->trip_id = $trip->id;
-        $post->created_by = Auth::id();
-        $post->save();
+    public function storeForTrip(Trip $trip, Request $request) {
+        $this->validate(request(), [ 'content' => 'required|max:255' ]);
+        $post = $trip->posts()->create($request->all());
     }
 
-	public function update(Trip $trip, Post $post, Request $request) {
-
-        $this->validate(request(), [ 'content' => 'required' ]);
-
-        $post->content = $request->content;
-        $post->save();
+	public function updateForTrip(Trip $trip, Post $post, Request $request) {
+        $this->validate(request(), [ 'content' => 'required|max:255' ]);
+        $post->update($request->all());
     }
 
-    public function destroy(Trip $trip, Post $post) {
+    public function destroyForTrip(Trip $trip, Post $post) {
         $post->delete();
     }
+
+    public function storeForProfile(User $user, Request $request) {
+        $this->validate(request(), [ 'content' => 'required|max:255' ]);
+        $post = $user->profilePosts()->create($request->all());
+    }
+
+    public function updateForProfile(User $user, Post $post, Request $request) {
+        $this->validate(request(), [ 'content' => 'required|max:255' ]);
+        $post->update($request->all());
+    }
+
+    public function destroyForProfile(User $user, Post $post) {
+        $post->delete();
+    }
+
 }
