@@ -40,7 +40,10 @@ class TripController extends Controller {
     public function destroy(Trip $trip, Request $request) {
 
         if (Hash::check($request->password, Auth::user()->password)) {
-            Trip::destroy($trip->id);
+
+            $trip->delete();
+            $trip->posts()->delete();
+
             return ['success' => true];
         }
 

@@ -69,14 +69,19 @@ class TripTest extends DuskTestCase {
         Session::start();
         $this->maker->login($this->user);
 
+        $post = $this->maker->post($this->trip, 'trip', $this->user);
+        $this->assertDatabaseHas('posts', [
+            'id' => $post->id
+        ]);
+
         $response = $this->delete('/trip/' . $this->trip->id, [
             '_token' => csrf_token(),
             'password' => 'password'
         ]);
 
         $response->assertStatus(200);
-
         $this->assertEquals(null, Trip::find($this->trip->id));
+        $this->assertEquals(true, $this->trip->posts->isEmpty());
     }
 
     /** @test */
