@@ -5,7 +5,8 @@
 @stop
 
 @section('nav-right')
-	<a @click="showTripForm" class="settings">Settings</a>
+	<a @click="showTripForm">Settings</a>
+	<a >Advanced</a>	
 @stop
 
 @section('content')

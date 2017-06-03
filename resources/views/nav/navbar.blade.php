@@ -2,18 +2,20 @@
 	<nav id="nav" class="clearfix">
 		<hamburger></hamburger>
 
-		<a href="/profile">My Profile</a>
+		<div id="nav-left">
+			<a href="/profile">My Profile</a>
 
-		@unless (isset($trips))
-			<a href="/trips">My Trips</a>
-		@endif
+			@unless (isset($trips))
+				<a href="/trips">My Trips</a>
+			@endif
 
-		@yield('nav-left')
+			@yield('nav-left')
+		</div>
 
-		<logout></logout>		
+		<div id="nav-right">
+			@yield('nav-right')
+			<logout></logout><search-people></search-people>
+		</div>
 
-		@yield('nav-right')
-
-		<search-people></search-people>
 	</nav>
 @stop

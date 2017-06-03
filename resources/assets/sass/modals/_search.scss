@@ -67,14 +67,13 @@
 		border: none;
 		box-shadow: none;
 		display: block;
-		float: right;
+		float: left;
 		padding: 0;
 	}
 
 	#searchFriends {
 		display: block;
 		font-size: 1rem;
-		margin: 0 1rem 0 0;
 		width: 16rem;
 
 		input { font-size: inherit; }

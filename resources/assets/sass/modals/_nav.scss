@@ -3,7 +3,7 @@
 	position: fixed;
 	z-index: 1;
 
-    > a {
+    a {
     	border-bottom: 1px solid $midnight;
     	background: $paleBlue;
     	display: none;
@@ -34,7 +34,7 @@
 		padding: .8em 1.4rem;
 		position: relative;
 
-		> a {
+		a {
 			background: transparent;
 			border: none;
 			display: block;
@@ -46,13 +46,10 @@
 
 		a.menu { display: none; }
 
-		.logout, .login, .settings {
+		#nav-right {
 			float: right;
-			margin: 0;
-		}
 
-		.logout {
-			margin: 0 0 0 1rem;
+			> * { margin: 0 0 0 1rem; }
 		}
 	}
 }
