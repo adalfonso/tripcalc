@@ -8,16 +8,12 @@
 			<a href="/trips">My Trips</a>
 		@endif
 
-		@if (isset($friendsInvitable))
-			<a @click="showInviteFriendsForm">Invite Friends</a>
-		@endif
+		@yield('nav-left')
 
-		<logout></logout>
+		<logout></logout>		
 
-		@if (isset($profile) && $profile->isCurrentUser())
-			<a @click="showProfileInfoForm" class="settings">Settings</a>
-		@endif
+		@yield('nav-right')
 
-		<search-people></search-people>		
+		<search-people></search-people>
 	</nav>
 @stop

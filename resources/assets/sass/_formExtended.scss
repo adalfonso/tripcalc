@@ -3,6 +3,7 @@
 	position: relative;
     top: .1em;
     transition: .2s;
+	user-select: none;
     z-index: 0;
 
     &:hover { opacity: .5; }

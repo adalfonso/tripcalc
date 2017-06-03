@@ -55,12 +55,10 @@ class TripController extends Controller {
     public function show(Trip $trip) {
 
         $activities = $this->activities($trip);
-		$friendsInvitable = true;
+
 		$sum = $trip->transactions->sum('amount');
 
-    	return view('trips.show', compact(
-			'activities', 'trip', 'sum', 'friendsInvitable'
-		));
+    	return view('trips.show', compact('activities', 'trip', 'sum'));
     }
 
     public function activities(Trip $trip, Request $request = null) {

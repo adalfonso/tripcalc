@@ -1,5 +1,13 @@
 @extends('layout')
 
+@section('nav-left')
+	<a @click="showInviteFriendsForm">Invite Friends</a>
+@stop
+
+@section('nav-right')
+	<a @click="showTripForm" class="settings">Settings</a>
+@stop
+
 @section('content')
 <div id="trip">
 	<trip-form v-if="tripForm.visible" :trip_id="{{$trip->id}}"
@@ -11,11 +19,7 @@
     </invite-friend>
 
 	<div class="trip-header clearfix">
-		<h3 id="name">
-		{{ $trip->name }}
-			<img trip class="btn-edit" src="/img/icon/edit.png"
-				@click="showTripForm">
-		</h3>
+		<h3 id="name">{{ $trip->name }}</h3>
 
 		@if ($trip->start_date != "00/00/0000")
 			<h6 id="dateRange">

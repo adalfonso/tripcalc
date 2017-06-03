@@ -1,5 +1,11 @@
 @extends('layout')
 
+@section('nav-right')
+	@if ($profile->isCurrentUser())
+		<a @click="showProfileInfoForm" class="settings">Settings</a>
+	@endif
+@stop
+
 @section('content')
 <div id="profile">
 	<div id="profile-info" class="left-col section">
