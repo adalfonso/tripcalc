@@ -6,7 +6,7 @@
 
 @section('nav-right')
 	<a @click="showTripForm">Settings</a>
-	<a >Advanced</a>	
+	<a @click="showAdvancedSettings">Advanced</a>
 @stop
 
 @section('content')
@@ -14,6 +14,10 @@
 	<trip-form v-if="tripForm.visible" :trip_id="{{$trip->id}}"
 		@hide="hideAll">
     </trip-form>
+
+	<advanced-trip-settings v-if="advancedSettings.visible" :trip_id="{{$trip->id}}"
+		@hide="hideAll">
+    </advanced-trip-settings>
 
     <invite-friend v-if="inviteFriend.visible" :trip_id="{{$trip->id}}"
     	@hide="hideAll">
@@ -43,6 +47,8 @@
 
 		    data: {
 
+				advancedSettings: { visible: false },
+
 		        tripForm: { visible: false },
 
 		        inviteFriend: { visible: false },
@@ -60,6 +66,7 @@
 		    methods: {
 
 				hideAll() {
+					this.advancedSettings.visible = false;
 					this.tripForm.visible = false;
 					this.inviteFriend.visible = false;
 					this.report.visible = false;
@@ -67,6 +74,11 @@
 
 				createPost() {
 					bus.$emit('submit');
+				},
+
+				showAdvancedSettings() {
+					bus.$emit('closeModals');
+					this.advancedSettings.visible = true;
 				},
 
 				showTripForm() {

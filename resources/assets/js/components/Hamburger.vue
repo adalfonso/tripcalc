@@ -23,7 +23,7 @@ export default {
     methods: {
         toggleMobileMenu() {
             let links = document.querySelectorAll(
-                '#nav-left > *, #nav-right > *'
+                '#nav-search > *, #nav-left > *, #nav-right > *'
             );
 
             links.forEach( link => {
