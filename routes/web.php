@@ -42,8 +42,10 @@ Route::group(['middleware' => 'activeAccount'], function() {
 	Route::group(['middleware' => 'canAccessTrip'], function() {
 		Route::get('/trip/{trip}', 'TripController@show');
 		Route::patch('/trip/{trip}', 'TripController@update');
+		Route::delete('/trip/{trip}', 'TripController@destroy');
 		Route::post('/trip/{trip}/activities', 'TripController@activities');
-	    Route::delete('/trip/{trip}', 'TripController@destroy');
+		Route::get('/trip/{trip}/advancedSettings', 'TripController@getAdvancedSettings');
+		Route::patch('/trip/{trip}/advancedSettings', 'TripController@updateAdvancedSettings');
 		Route::get('/trip/{trip}/data', 'TripController@data');
 		Route::post('/trip/{trip}/eligibleFriends', 'TripController@eligibleFriends');
 		Route::post('/trip/{trip}/inviteFriends', 'FriendController@inviteToTrip');

@@ -11,7 +11,15 @@
     	margin: 0;
     	padding: .6rem;
     	width: 100%;
+
+		img {
+			height: 1.2rem;
+			transition: .2rem;
+		}
+
+		img:hover { opacity: .8; }
     }
+
 
     .menu {
         display: block;
@@ -27,6 +35,15 @@
             &:last-child  { margin-bottom: 0; }
         }
     }
+
+	.link-enhanced {
+		> * { float: left; }
+
+		p {
+			line-height: 1.2rem;
+			margin: 0 0 0 .5rem;
+		}
+	}
 
 	#nav-search {
 		float: none;
@@ -63,9 +80,18 @@
 			margin: 0 1rem 0 0;
 			padding: 0;
 			width: auto;
+
+			img { height: 2rem; }
 		}
 
 		a.menu { display: none; }
+
+		.link-enhanced {
+			> * { float: none; }
+
+			p { display: none; }
+		}
+
 
 		#nav-search {
 			float: left;

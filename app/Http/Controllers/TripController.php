@@ -2,8 +2,10 @@
 
 use App\Transaction;
 use App\Trip;
+use App\TripUserSetting;
 use App\User;
 use App\Post;
+use App\Library\Trip\ActivityFeed;
 use Auth;
 use DB;
 use Hash;
@@ -25,6 +27,13 @@ class TripController extends Controller {
         return DB::transaction(function() use ($request) {
             $trip = Trip::create($request->all());
             $trip->users()->attach(Auth::user()->id, ['active' => 1]);
+
+            $settings = TripUserSetting::firstOrNew([
+                'trip_id' => $trip->id,
+                'user_id' => Auth::id()
+            ]);
+
+            $settings->save();
 
             return $trip;
         });
@@ -54,70 +63,40 @@ class TripController extends Controller {
 
     public function show(Trip $trip) {
 
-        $activities = $this->activities($trip);
+        $activities = (new ActivityFeed($trip))->take(15);
 
 		$sum = $trip->transactions->sum('amount');
 
     	return view('trips.show', compact('activities', 'trip', 'sum'));
     }
 
-    public function activities(Trip $trip, Request $request = null) {
+    public function activities(Trip $trip, Request $request) {
+        return (new ActivityFeed($trip))->after(
+            Carbon::parse($request->oldestDate['date'])
+        )->take(15);
+    }
 
-        if ($request !== null && $request->has('oldestDate')) {
-            $oldestDate = Carbon::parse($request->oldestDate['date']);
-            $dateRange = "<";
+    public function getAdvancedSettings(Trip $trip) {
+        $settings = TripUserSetting::where([
+             'trip_id' => $trip->id,
+             'user_id' => Auth::id()
+        ])
+        ->select('private_transactions', 'editable_transactions')
+        ->first();
 
-        } else {
-            $oldestDate = Carbon::now();
-            $dateRange = "<=";
-        }
+        return $settings;
+    }
 
-        $transactions = $trip->transactions
-            ->where('created_at', $dateRange, $oldestDate)
-            ->sortByDesc('created_at')->take(15)
-            ->map(function($item) {
-                return (object) [
-                    'type' => 'transaction',
-					'id' => $item->id,
-                    'creator' => $item->creator->fullname,
-                    'updater' => $item->updater->fullname,
-                    'created_at' => $item->created_at,
-                    'date' => $item->dateFormat,
-                    'dateForHumans' => $item->created_at->diffForHumans(),
-                    'updatedDateForHumans' => $item->updated_at->diffForHumans(),
-					'description' => $item->description,
-					'amount' => $item->amount,
-                    'hashtags' => $item->hashtags->pluck('tag')->toArray()
-				];
-            });
+    public function updateAdvancedSettings(Request $request, Trip $trip) {
+        $settings = TripUserSetting::where([
+             'trip_id' => $trip->id,
+             'user_id' => Auth::id()
+        ])->first();
 
-		$posts = $trip->posts
-            ->where('created_at', $dateRange, $oldestDate)
-            ->sortByDesc('created_at')->take(15)
-			->map(function($item) {
-				return (object) [
-                    'type' => 'post',
-					'id' => $item->id,
-					'poster' => $item->user->fullname,
-                    'created_at' => $item->created_at,
-					'editable' => $item->created_by === Auth::id(),
-					'content' => $item->content,
-					'dateForHumans' => $item->created_at->diffForHumans()
-				];
-			});
-
-        // Cannot merge into empty collection
-        if ($transactions->isEmpty()) {
-            $activities = $posts;
-
-        } else {
-            $activities = $transactions->merge($posts);
-        }
-
-        return $activities = $activities
-            ->sortByDesc('created_at')
-            ->take(15)
-            ->values();
+        $settings->update([
+            'private_transactions' => $request->private_transactions,
+            'editable_transactions' => $request->editable_transactions
+        ]);
     }
 
     public function data(Trip $trip) {
@@ -175,6 +154,13 @@ class TripController extends Controller {
             ->syncWithoutDetaching(
                 [$trip->id => ['active' => $request->resolution]]
             );
+
+        if ($request->resolution) {
+            $settings = TripUserSetting::firstOrCreate([
+                'trip_id' => $trip->id,
+                'user_id' => Auth::id()
+            ]);
+        }
 
         return $this->getPendingRequests();
     }

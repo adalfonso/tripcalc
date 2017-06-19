@@ -6,11 +6,11 @@
         <hr>
 
         <!-- Private transactions -->
-        <div class="ui-checkbox" @click="form.toggle('privateTransactions')">
-            <input type="hidden" v-model="form.transactionPrivate">
+        <div class="ui-checkbox" @click="form.toggle('private_transactions')">
+            <input type="hidden" v-model="form.private_transactions">
             <div class="ui-input-btn no-hover"
-                v-html="form.privateTransactions ? '&#10004;' : '' "></div>
-            <p>Make personal transactions private</p>
+                v-html="form.private_transactions ? '&#10004;' : '' "></div>
+            <p>Hide personal transactions from global feed</p>
         </div>
 
         <!-- Private transactions -->
@@ -44,7 +44,8 @@ props: {
 data() {
     return {
         form: new Form ({
-            privateTransactions: false,
+            private_transactions: false,
+            editable_transactions: false,
             placeholderUsers: false,
             easyTransactions: false
         })
@@ -52,13 +53,13 @@ data() {
 },
 
 created() {
-
+    axios.get(`/trip/${this.trip_id}/advancedSettings`)
+    .then(response => {
+        this.form.private_transactions = response.data.private_transactions;
+        this.form.editable_transactions = response.data.editable_transactions;
+    })
+    .catch();
 },
-
-computed: {
-
-},
-
 
 methods: {
 
@@ -67,7 +68,11 @@ methods: {
     },
 
     onSubmit() {
-
+        this.form.patch(`/trip/${this.trip_id}/advancedSettings`)
+        .then( response => {
+            this.hide();
+        })
+        .catch();
     }
 }
 

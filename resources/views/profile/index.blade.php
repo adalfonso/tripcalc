@@ -1,8 +1,11 @@
 @extends('layout')
 
-@section('nav-right')
+@section('nav-settings')
 	@if ($profile->isCurrentUser())
-		<a @click="showProfileInfoForm" class="settings">Settings</a>
+		<a @click="showProfileInfoForm" class="link-enhanced clearfix settings">
+			<img src="/img/icon/gear-64x64.png">
+			<p class="fake-link">Settings</p>
+		</a>
 	@endif
 @stop
 

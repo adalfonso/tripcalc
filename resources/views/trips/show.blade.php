@@ -5,8 +5,14 @@
 @stop
 
 @section('nav-right')
-	<a @click="showTripForm">Settings</a>
 	<a @click="showAdvancedSettings">Advanced</a>
+@stop
+
+@section('nav-settings')
+	<a @click="showTripForm" class="link-enhanced clearfix">
+		<img src="/img/icon/gear-64x64.png">
+		<p class="fake-link">Settings</p>
+	</a>
 @stop
 
 @section('content')
