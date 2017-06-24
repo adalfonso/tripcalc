@@ -10,7 +10,7 @@
             <input type="hidden" v-model="form.private_transactions">
             <div class="ui-input-btn no-hover"
                 v-html="form.private_transactions ? '&#10004;' : '' "></div>
-            <p>Hide personal transactions from others</p>
+            <p>Mask personal transactions</p>
         </div>
 
         <!-- Virtual users -->

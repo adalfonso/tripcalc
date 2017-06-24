@@ -6,7 +6,9 @@
         <ul class="body">
             <div class="arw-up"></div>
             <div class="invis"></div>
-            <li v-for="item in items">{{ item.display }}</li>
+            <li v-for="item in items" @click="handle(item)">
+                {{ item.display }}
+            </li>
         </ul>
     </div>
 </template>
@@ -18,20 +20,16 @@ export default {
         items: { required: true }
     },
 
-    data() {
-        return {};
-    },
-
-    created() {
-
-    },
-
-    computed: {
-
-    },
-
     methods: {
+        handle(item) {
+            if (item.hasOwnProperty('emit')) {
+                return this.$emit(item.emit);
+            }
 
+            if (item.hasOwnProperty('href')) {
+                return window.location = item.href;
+            }
+        }
     }
 }
 </script>

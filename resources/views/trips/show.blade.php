@@ -1,12 +1,10 @@
 @extends('layout')
 
-@section('nav-left')
-	<a @click="showInviteFriendsForm">Invite Friends</a>
-@stop
-
 @section('nav-right')
-	<context-menu :items="menuItems"></context-menu>
-	<a @click="showAdvancedSettings">Advanced</a>
+	<context-menu :items="menuItems"
+		@advanced="showAdvancedSettings"
+		@invite="showInviteFriendsForm">
+	</context-menu>
 @stop
 
 @section('nav-settings')
@@ -56,19 +54,22 @@
 
 				advancedSettings: { visible: false },
 
-		        tripForm: { visible: false },
-
-		        inviteFriend: { visible: false },
+				inviteFriend: { visible: false },
 
 				menuItems: [
-					{ display: 'Advanced', modal: '' },
-					{ display: 'Manage Virtual Users' }
+					{ display: 'Invite Friends', emit: 'invite' },
+					{ display: 'Manage Virtual Users', emit: 'virtual' },
+					{ display: 'Advanced', emit: 'advanced' }
 				],
 
 				report: {
 					visible: false,
 					type: null
-				}
+				},
+
+				tripForm: { visible: false },
+
+				virtualUsers: { visible: false }
 		    },
 
 			created() {
@@ -79,9 +80,10 @@
 
 				hideAll() {
 					this.advancedSettings.visible = false;
-					this.tripForm.visible = false;
 					this.inviteFriend.visible = false;
 					this.report.visible = false;
+					this.tripForm.visible = false;
+					this.virtualUsers.visible = false;
 				},
 
 				createPost() {
