@@ -10,7 +10,8 @@ class Trip extends Model {
 		'start_date',
 		'end_date',
 	    'budget',
-	    'description'
+	    'description',
+		'virtual_users'
 	];
 
 	public function posts() {
@@ -27,6 +28,15 @@ class Trip extends Model {
 			->where('activated', true)
 			// Active On Trip
 			->where('active', true);
+	}
+
+	public function userSettings() {
+		return $this->hasOne('App\TripUserSetting')
+			->where('user_id', \Auth::id());
+	}
+
+	public function virtualUsers() {
+		return $this->hasMany('\App\VirtualUser');
 	}
 
 	public function getDateRangeAttribute() {

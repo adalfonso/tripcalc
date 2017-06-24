@@ -10,24 +10,27 @@
             <input type="hidden" v-model="form.private_transactions">
             <div class="ui-input-btn no-hover"
                 v-html="form.private_transactions ? '&#10004;' : '' "></div>
-            <p>Hide personal transactions from global feed</p>
+            <p>Hide personal transactions from others</p>
         </div>
 
-        <!-- Private transactions -->
-        <div class="ui-checkbox" @click="form.toggle('placeholderUsers')">
-            <input type="hidden" v-model="form.placeholderUsers">
+        <!-- Virtual users -->
+        <p class="ui-error" v-if="form.errors.has('virtual_users')"
+            v-text="form.errors.get('virtual_users')"></p>
+        <div class="ui-checkbox" @click="form.toggle('virtual_users')">
+            <input type="hidden" v-model="form.virtual_users">
             <div class="ui-input-btn no-hover"
-                v-html="form.placeholderUsers ? '&#10004;' : '' "></div>
-            <p>Enable placeholder users</p>
+                v-html="form.virtual_users ? '&#10004;' : '' "></div>
+            <p>Enable virtual users</p>
         </div>
 
-        <!-- Private transactions -->
-        <div class="ui-checkbox" @click="form.toggle('easyTransactions')">
+        <!-- Easy transactions -->
+        <!-- <div class="ui-checkbox" @click="form.toggle('easyTransactions')">
             <input type="hidden" v-model="form.easyTransactions">
             <div class="ui-input-btn no-hover"
                 v-html="form.easyTransactions ? '&#10004;' : '' "></div>
             <p>Enable easy transactions</p>
-        </div>
+        </div> -->
+
         <button class="btn-full form-button" type="submit">Apply</button>
     </form>
     </div>
@@ -46,8 +49,8 @@ data() {
         form: new Form ({
             private_transactions: false,
             editable_transactions: false,
-            placeholderUsers: false,
-            easyTransactions: false
+            virtual_users: false
+            //easyTransactions: false
         })
     };
 },
@@ -55,8 +58,7 @@ data() {
 created() {
     axios.get(`/trip/${this.trip_id}/advancedSettings`)
     .then(response => {
-        this.form.private_transactions = response.data.private_transactions;
-        this.form.editable_transactions = response.data.editable_transactions;
+        this.form = new Form(response.data);
     })
     .catch();
 },

@@ -62,7 +62,6 @@ class TripController extends Controller {
     }
 
     public function show(Trip $trip) {
-
         $activities = (new ActivityFeed($trip))->take(15);
 
 		$sum = $trip->transactions->sum('amount');
@@ -77,26 +76,27 @@ class TripController extends Controller {
     }
 
     public function getAdvancedSettings(Trip $trip) {
-        $settings = TripUserSetting::where([
-             'trip_id' => $trip->id,
-             'user_id' => Auth::id()
-        ])
-        ->select('private_transactions', 'editable_transactions')
-        ->first();
-
-        return $settings;
+        return [
+            'private_transactions' => $trip->userSettings->private_transactions,
+            'editable_transactions' => $trip->userSettings->editable_transactions,
+            'virtual_users' => $trip->virtual_users
+        ];
     }
 
     public function updateAdvancedSettings(Request $request, Trip $trip) {
-        $settings = TripUserSetting::where([
-             'trip_id' => $trip->id,
-             'user_id' => Auth::id()
-        ])->first();
-
-        $settings->update([
+        $trip->userSettings->update([
             'private_transactions' => $request->private_transactions,
             'editable_transactions' => $request->editable_transactions
         ]);
+
+        // Cannot disable virtual users when they already exist
+        if (!$request->virtual_users && $trip->virtualUsers->count() > 0) {
+            return Response::json([
+                'virtual_users' => ['Remove all virtual users to disable this setting.']
+            ], 422);
+        }
+
+        $trip->update(['virtual_users' => $request->virtual_users]);
     }
 
     public function data(Trip $trip) {
