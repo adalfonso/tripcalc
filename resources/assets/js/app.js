@@ -16,6 +16,7 @@ Vue.component('date-picker', require('./components/DatePicker.vue'));
 Vue.component('hamburger', require('./components/Hamburger.vue'));
 Vue.component('loading', require('./components/Loading.vue'));
 Vue.component('logout', require('./components/Logout.vue'));
+Vue.component('context-menu', require('./components/ContextMenu.vue'));
 Vue.component('post', require('./components/Post.vue'));
 Vue.component('request-popup', require('./components/RequestPopup.vue'));
 Vue.component('search-people', require('./components/SearchPeople.vue'));

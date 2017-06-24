@@ -1,5 +1,5 @@
 <template>
-    <a class="menu" @click="toggleMobileMenu">
+    <a class="hamburger" @click="toggleMobileMenu">
         <div></div>
         <div></div>
         <div></div>

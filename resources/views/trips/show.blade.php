@@ -5,6 +5,7 @@
 @stop
 
 @section('nav-right')
+	<context-menu :items="menuItems"></context-menu>
 	<a @click="showAdvancedSettings">Advanced</a>
 @stop
 
@@ -58,6 +59,11 @@
 		        tripForm: { visible: false },
 
 		        inviteFriend: { visible: false },
+
+				menuItems: [
+					{ display: 'Advanced', modal: '' },
+					{ display: 'Manage Virtual Users' }
+				],
 
 				report: {
 					visible: false,

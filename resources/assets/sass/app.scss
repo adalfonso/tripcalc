@@ -11,6 +11,7 @@
 // Modal Styles
 @import "modals/activity";
 @import "modals/carousel";
+@import "modals/contextMenu";
 @import "modals/datePicker";
 @import "modals/nav";
 @import "modals/popup";
@@ -117,6 +118,7 @@ ul {
 }
 
 .align-right, .align-right > * { text-align: right; }
+.float-left,
 .floatable-left > *            { float: left; }
 .hidden, .delay-visible        { display: none; }
 .hovertext:hover               { opacity: .5; }
