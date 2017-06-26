@@ -3,7 +3,8 @@
 @section('nav-right')
 	<context-menu :items="menuItems"
 		@advanced="showAdvancedSettings"
-		@invite="showInviteFriendsForm">
+		@invite="showInviteFriendsForm"
+		@virtual="showVirtualUsersForm">
 	</context-menu>
 @stop
 
@@ -27,6 +28,10 @@
     <invite-friend v-if="inviteFriend.visible" :trip_id="{{$trip->id}}"
     	@hide="hideAll">
     </invite-friend>
+
+	<virtual-user-manager v-if="virtualUsers.visible" :trip_id="{{$trip->id}}"
+		@hide="hideAll">
+	</virtual-user-manager>
 
 	<div class="trip-header clearfix">
 		<h3 id="name">{{ $trip->name }}</h3>
@@ -58,7 +63,9 @@
 
 				menuItems: [
 					{ display: 'Invite Friends', emit: 'invite' },
+				@if ($trip->virtual_users)
 					{ display: 'Manage Virtual Users', emit: 'virtual' },
+				@endif
 					{ display: 'Advanced', emit: 'advanced' }
 				],
 
@@ -109,6 +116,11 @@
 				showTransactionForm() {
 			    	bus.$emit('showTransactionForm');
 			    },
+
+				showVirtualUsersForm() {
+					bus.$emit('closeModals');
+					this.virtualUsers.visible = true;
+				},
 
 				showReport(type) {
 					if (!type) {

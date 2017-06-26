@@ -47,3 +47,4 @@ Vue.component('report-top-spenders', require('./components/report/TopSpenders.vu
 Vue.component('advanced-trip-settings', require('./components/AdvancedTripSettings.vue'));
 Vue.component('invite-friend', require('./components/InviteFriend.vue'));
 Vue.component('trip-form', require('./components/TripForm.vue'));
+Vue.component('virtual-user-manager', require('./components/VirtualUserManager.vue'));
