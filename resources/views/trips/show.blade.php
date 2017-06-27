@@ -62,11 +62,21 @@
 				inviteFriend: { visible: false },
 
 				menuItems: [
-					{ display: 'Invite Friends', emit: 'invite' },
-				@if ($trip->virtual_users)
-					{ display: 'Manage Virtual Users', emit: 'virtual' },
-				@endif
-					{ display: 'Advanced', emit: 'advanced' }
+					{
+						display: 'Invite Friends',
+						active: true,
+						emit: 'invite'
+					},
+					{
+						display: 'Manage Virtual Users',
+						active: {{ json_encode($trip->virtual_users) }},
+						emit: 'virtual'
+					},
+					{
+						display: 'Advanced',
+						active: true,
+						emit: 'advanced'
+					}
 				],
 
 				report: {

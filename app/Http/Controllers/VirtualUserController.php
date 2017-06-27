@@ -34,6 +34,19 @@ class VirtualUserController extends Controller {
         return $this->index($trip);
     }
 
+    public function update(Request $request, Trip $trip, VirtualUser $virtualUser) {
+        $names = $trip->virtualUsers->pluck('name')->implode(',');
+
+        $this->validate($request, [
+            'name' => 'required|max:63|notIn:' . $names
+        ]);
+
+        $virtualUser->name = $request->name;
+        $virtualUser->save();
+
+        return $this->index($trip);
+    }
+
     public function destroy(Trip $trip, VirtualUser $virtualUser) {
         if ($virtualUser->transactions->count() > 0) {
             return;

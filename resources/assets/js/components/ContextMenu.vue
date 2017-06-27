@@ -6,7 +6,8 @@
         <ul class="body">
             <div class="arw-up"></div>
             <div class="invis"></div>
-            <li v-for="item in items" @click="handle(item)">
+            <li v-for="item in localItems.where('active', true).data"
+            @click="handle(item)">
                 {{ item.display }}
             </li>
         </ul>
@@ -14,12 +15,21 @@
 </template>
 
 <script>
+
+import Collection from '../lib/Collection.js';
+
 export default {
 
     props: {
         items: { required: true }
     },
 
+    data() {
+        return {
+            localItems: new Collection(this.items)
+        };
+    },
+    
     methods: {
         handle(item) {
             if (item.hasOwnProperty('emit')) {

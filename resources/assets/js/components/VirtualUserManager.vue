@@ -1,53 +1,76 @@
 <template>
-    <div class="popup-wrap" @click.self="hide">
-        <div class="popup">
-            <div class="popup-close" @click="hide">&times;</div>
+<div class="popup-wrap" @click.self="hide">
+<div class="popup">
+    <div class="popup-close" @click="hide">&times;</div>
 
-            <h4 class="centered">Virtual Users</h4>
+    <h4 class="centered">Virtual Users</h4>
 
-            <hr>
+    <hr>
 
-            <table class="table-full font-dark">
-                <tr v-for="user in users">
-                    <td>{{ user.name }}</td>
-                    <td class="align-right">
-                        <div class="btn btn-extra-thin">
-                            Edit
-                        </div>
-                    </td>
-                    <td class="align-right">
-                        <div class="btn btn-extra-thin" v-if="user.deleteable"
-                            @click="removeUser(user)">
-                            Delete
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3"><hr></td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="centered">
-                        <div @click="addable = !addable">
-                            [<span v-html=" addable? '&minus;' : '&plus;'"></span>]
-                        </div>
-                    </td>
-                </tr>
-                <tr v-if="addable">
-                    <td colspan="2">
-                        <p class="ui-error" v-if="newUser.errors.has('name')"
-                            v-text="newUser.errors.get('name')"></p>
-                        <input class="plain thin marginless" type="text" v-model="newUser.name"
-                            maxlength="63">
-                    </td>
-                    <td class="align-right">
-                        <div class="btn btn-extra-thin" @click="addNewUser">
-                            Add New
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
+    <table class="table-full font-dark">
+
+        <!-- Username Row -->
+        <template v-for="user in users">
+            <tr v-if="edit.id === user.id && edit.errors.has('name')">
+                <td colspan="3">
+                    <p class="ui-error centered" v-text="edit.errors.get('name')"></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div v-if="edit.id === user.id">
+                        <input class="plain thin marginless" type="text"
+                            v-model="edit.name">
+                    </div>
+                    <div v-else>{{ user.name }}</div>
+                </td>
+                <td class="align-right" style="width:90px">
+                    <div class="btn btn-extra-thin" @click="startEditing(user)"
+                        v-html="edit.id === user.id ? 'Update' : 'Edit' ">
+                    </div>
+                </td>
+                <td class="align-right" style="width:90px">
+                    <div class="btn btn-extra-thin" v-if="user.deleteable"
+                        @click="removeUser(user)">
+                        Delete
+                    </div>
+                </td>
+            </tr>
+        </template>
+
+        <tr v-if="users.length > 0">
+            <td colspan="3"><hr></td>
+        </tr>
+
+        <tr>
+            <td colspan="3" class="centered">
+                <div @click="addable = !addable" class="btn-count">
+                    [<span v-html=" addable? '&minus;' : '&plus;'"></span>]
+                </div>
+            </td>
+        </tr>
+    </table>
+    <table class="table-full font-dark" v-if="addable">
+        <tr>
+            <td colspan="3">
+                <p class="ui-error centered" v-if="newUser.errors.has('name')"
+                    v-text="newUser.errors.get('name')"></p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input class="plain thin marginless" type="text"
+                    v-model="newUser.name" maxlength="63">
+            </td>
+            <td class="align-right">
+                <div class="btn btn-extra-thin" @click="addNewUser">
+                    Add New
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+</div>
 </template>
 
 <script>
@@ -63,7 +86,8 @@ export default {
         return {
             addable: false,
             newUser: new Form({ name: ''}),
-            users: []
+            users: [],
+            edit: new Form({name: '', id: null})
         };
     },
 
@@ -85,9 +109,7 @@ export default {
                 this.newUser.name = '';
                 this.users = data;
             })
-            .catch(error => {
-
-            });
+            .catch(error => {});
         },
 
         removeUser(user) {
@@ -95,6 +117,34 @@ export default {
             .then(response => {
                 this.users = response.data;
             });
+        },
+
+        updateUser(user) {
+            if (user.name === this.edit.name) {
+                return this.stopEditing();
+            }
+
+            this.edit.patch(`/trip/${this.trip_id}/virtualUser/${user.id}`)
+            .then(response => {
+                this.users = response;
+                this.stopEditing();
+            })
+            .catch(error => {});
+        },
+
+        startEditing(user) {
+            if (this.edit.id === user.id) {
+                return this.updateUser(user);
+            }
+
+            this.edit.errors.clear();
+            this.edit.name = user.name;
+            this.edit.id = user.id;
+        },
+
+        stopEditing() {
+            this.edit.name = '';
+            this.edit.id = null;
         }
     }
 }

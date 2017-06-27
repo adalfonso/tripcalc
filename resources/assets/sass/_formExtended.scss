@@ -9,6 +9,15 @@
     &:hover { opacity: .5; }
 }
 
+// Not a standard button
+.btn-count {
+	font-size: 20px;
+    letter-spacing: .2rem;
+	user-select: none;
+
+	&:hover { font-weight: 700; }
+}
+
 .btn-full {
 	font-size: 1.6rem;
 	width: 100%;
@@ -20,9 +29,9 @@
 }
 
 .btn-extra-thin {
-	height: auto;
+	height: 1.8rem;
 	line-height: 1em;
-	padding: .2em .8em;
+	padding: .4em .8em;
 }
 
 .form-transparent {

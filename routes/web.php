@@ -53,6 +53,7 @@ Route::group(['middleware' => 'activeAccount'], function() {
 		Route::get('/trip/{trip}/travelers', 'TripController@travelers');
 		Route::get('/trip/{trip}/virtualUsers', 'VirtualUserController@index');
 		Route::post('/trip/{trip}/virtualUsers', 'VirtualUserController@store');
+		Route::patch('/trip/{trip}/virtualUser/{virtualUser}', 'VirtualUserController@update');
 		Route::delete('/trip/{trip}/virtualUser/{virtualUser}', 'VirtualUserController@destroy');
 		Route::get('/trip/{trip}/report/bottomLine', 'ReportController@bottomLine');
 		Route::get('/trip/{trip}/report/closeout', 'ReportController@closeout');
