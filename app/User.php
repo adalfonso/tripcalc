@@ -112,6 +112,10 @@ class User extends Authenticatable {
             ->merge($this->friendshipAsRecipient);
     }
 
+    public function getTypeAttribute() {
+        return 'regular';
+    }
+
     /**
      * Send the password reset notification.
      *

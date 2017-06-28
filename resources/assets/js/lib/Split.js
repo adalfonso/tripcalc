@@ -1,8 +1,10 @@
+import Collection from './Collection.js';
+
 class Split {
 
     constructor(travelers = {}, user = null, type = '') {
         this.options = { even: {}, personal: {}, custom: {} };
-        this.travelers = travelers;
+        this.travelers = new Collection(travelers);
         this.user = user;
         this.type = type;
     }
@@ -13,8 +15,9 @@ class Split {
 
     personal() {
         this.reset('personal');
-        this.travelers[this.user].is_spender = true;
-        this.travelers[this.user].split_ratio = 1;
+
+        this.getUser().is_spender = true;
+        this.getUser().split_ratio = 1;
     }
 
     custom() {
@@ -26,19 +29,14 @@ class Split {
     }
 
     interpret() {
-        let isSpender = this.travelers[this.user].is_spender;
-        let spenders  = [];
+        let isSpender = this.getUser().is_spender;
 
-        for (let id in this.travelers) {
-            if (this.travelers[id].is_spender) {
-                spenders.push(id);
-            }
-        }
+        let spenders  = this.travelers.where('is_spender', true);
 
-        if (spenders.length === 0) {
+        if (spenders.isEmpty()) {
             return this.type = 'even';
 
-        } else if (spenders.length === 1 && isSpender) {
+        } else if (spenders.count() === 1 && isSpender) {
             return this.type = 'personal';
         }
 
@@ -46,16 +44,20 @@ class Split {
     }
 
     toggle(index) {
-        this.travelers[index].is_spender = !this.travelers[index].is_spender;
+        this.travelers.data[index].is_spender = !this.travelers.data[index].is_spender;
+    }
+
+    getUser() {
+        return this.travelers.find(this.user);
     }
 
     reset(type) {
         this.type = type;
 
-        for (let traveler in this.travelers) {
-            this.travelers[traveler].is_spender = false;
-            this.travelers[traveler].split_ratio = null;
-        }
+        this.travelers.each(user => {
+            user.is_spender = false;
+            user.split_ratio = null;
+        });
     }
 }
 

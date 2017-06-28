@@ -62,18 +62,22 @@
     <!-- Travelers - Custom Split -->
     <div style="margin: .6rem 0">
         <div v-show="form.split.type === 'custom'"
-            v-for="(traveler, index) in form.split.travelers">
+            v-for="(traveler, index) in form.split.travelers.data">
             <p class="ui-error"
                 v-if="form.errors.has('travelers.' + index + '.split_ratio')">
                 *Invalid Split Ratio for {{ traveler.full_name }}
             </p>
-            <div class="ui-checkbox" @click="form.split.toggle(traveler.id)">
+            <div class="ui-checkbox" @click="form.split.toggle(index)">
                 <div class="ui-input-btn no-hover"
                     v-html="traveler.is_spender ? '&#10004;' : '' "></div>
-                <p>{{ traveler.full_name }}</p>
+                <p>
+                    <strong class="font-dark"
+                        v-if="traveler.type === 'virtual'">[V]</strong>
+                    {{ traveler.full_name }}
+                </p>
                 <input type="text" placeholder="Split Ratio" maxlength="5"
                     class="splitRatio" v-model="traveler.split_ratio"
-                    @click.stop="selectTraveler(traveler.id)">
+                    @click.stop="selectTraveler(index)">
             </div>
         </div>
     </div>
@@ -210,8 +214,8 @@ methods: {
         return this.transaction_id !== null;
     },
 
-    selectTraveler(traveler) {
-        this.form.split.travelers[traveler].is_spender = 1;
+    selectTraveler(index) {
+        this.form.split.travelers.data[index].is_spender = 1;
     },
 
     create() {

@@ -7,7 +7,7 @@
 
 class Collection {
 
-    
+
     /**
      * Create a new Collection
      * @param mixed - array, Resources\Assets\Js\Lib\Collection
@@ -136,7 +136,7 @@ class Collection {
     }
 
 	find(id) {
-		return this.where('id', id);
+		return this.where('id', id).first();
 	}
 
 	isEmpty() {

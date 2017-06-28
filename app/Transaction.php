@@ -21,6 +21,11 @@ class Transaction extends Model {
             ->withPivot('split_ratio');
     }
 
+    public function virtualUsers() {
+        return $this->belongsToMany('App\VirtualUser', 'transaction_virtual_user')
+            ->withPivot('split_ratio');
+    }
+
     public function creator() {
         return $this->belongsTo('App\User', 'created_by');
     }
@@ -52,6 +57,15 @@ class Transaction extends Model {
 	public function isPersonal() {
 		return $this->users->count() === 1
 			&& $this->users->first()->id === \Auth::id();
+	}
+
+    public function getAllUsersAttribute() {
+		return $this->users->merge($this->virtualUsers)
+			->each(function($user) {
+				$user->type = get_class($user) === 'App\VirtualUser'
+				? 'virtual'
+				: 'regular';
+			});
 	}
 
     public function getDateFormatAttribute() {

@@ -15,34 +15,35 @@ use Response;
 class TransactionController extends Controller {
 
 	public function show(Trip $trip, Transaction $transaction) {
-		$travelers = DB::select('
-			SELECT * FROM (
-				SELECT u.id AS join_on, u.id AS id,
-					CONCAT(u.first_name, " ", u.last_name) AS full_name
-				FROM users u
-				JOIN trip_user tu ON u.id = tu.user_id
-				JOIN trips t      ON tu.trip_id = t.id
-				WHERE t.id = :trip_id
-				AND u.activated = true
-				AND tu.active = true
+			$spenders = $transaction->allUsers;
 
-			) tb1
-			LEFT JOIN (
-				SELECT user_id AS join_on, split_ratio, count(*) AS is_spender
-				FROM transaction_user
-				WHERE transaction_id = :transaction_id
-				GROUP BY user_id, split_ratio
-			) tb2
-			ON tb1.join_on = tb2.join_on
-			', [
-				'trip_id'        => $trip->id,
-				'transaction_id' => $transaction->id
-			]);
+			$travelers = $trip->allUsers
+				->map(function($user) use ($spenders) {
+					$spender = $spenders
+						->where('type', $user->type)
+						->where('id', $user->id);
+
+					$split_ratio = $spender->isEmpty()
+						? null
+						: $spender->first()->pivot->split_ratio;
+
+					$name = $user->type === 'virtual'
+						? $user->name
+						: $user->full_name;
+
+					return [
+						'id' => $user->id,
+		                'type' => $user->type,
+		                'full_name'   => $name,
+		                'is_spender'  => $split_ratio !== null,
+		                'split_ratio' => $split_ratio
+					];
+				});
 
 		return [
 			'transaction' => $transaction,
 			'hashtags'    => $transaction->hashtags->pluck('tag'),
-			'travelers'   => collect($travelers)->keyBy('id'),
+			'travelers'   => $travelers,
 			'creator'     => $transaction->creator->fullname,
 			'user'        => Auth::id()
 		];

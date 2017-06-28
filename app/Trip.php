@@ -55,4 +55,13 @@ class Trip extends Model {
 
 		return $start->format('F j, Y') . ' - ' . $end->format('F j, Y');
 	}
+
+	public function getAllUsersAttribute() {
+		return $this->users->merge($this->virtualUsers)
+			->each(function($user) {
+				$user->type = get_class($user) === 'App\VirtualUser'
+				? 'virtual'
+				: 'regular';
+			});
+	}
 }

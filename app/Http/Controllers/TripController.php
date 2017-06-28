@@ -180,16 +180,29 @@ class TripController extends Controller {
     }
 
     public function travelers(Trip $trip) {
-        $travelers = $trip->users->mapWithKeys(function($item) {
+        $regularTravelers = $trip->users->map(function($item) {
             return [
-				$item->id => [
-                    'id' => $item->id,
-                    'full_name'   => $item->full_name,
-                    'is_spender'  => false,
-                    'split_ratio' => null
-                ]
+                'id' => $item->id,
+                'type' => 'regular',
+                'full_name'   => $item->full_name,
+                'is_spender'  => false,
+                'split_ratio' => null
             ];
         });
+
+        $virtualTravelers = $trip->virtualUsers->map(function($item) {
+            return [
+                'id' => $item->id,
+                'type' => 'virtual',
+                'full_name'   => $item->name,
+                'is_spender'  => false,
+                'split_ratio' => null
+            ];
+        });
+
+        $travelers = $regularTravelers->merge($virtualTravelers)
+            ->sortBy('full_name')
+            ->values();
 
 		return [
 			'travelers' => $travelers,

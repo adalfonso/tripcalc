@@ -19,4 +19,8 @@ class VirtualUser extends Model {
     public function transactions() {
         return $this->belongsToMany('App\Transaction');
     }
+
+    public function getTypeAttribute() {
+        return 'virtual';
+    }
 }
