@@ -104,7 +104,6 @@ class CloseoutTest extends DuskTestCase {
         ]);
 
             $spenders = $this->get('/trip/' . $this->trip->id . '/report/closeout')->json()['spenders'];
-        //dd($spenders);
 
         foreach ($spenders as $spender) {
             $error = sizeof($spender['credits']) > 0 && sizeof($spender['debits']) > 0;

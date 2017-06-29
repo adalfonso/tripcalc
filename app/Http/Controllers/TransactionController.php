@@ -38,7 +38,9 @@ class TransactionController extends Controller {
 		                'is_spender'  => $split_ratio !== null,
 		                'split_ratio' => $split_ratio
 					];
-				});
+				})
+				->sortBy('full_name')
+				->values();
 
 		return [
 			'transaction' => $transaction,
@@ -52,54 +54,41 @@ class TransactionController extends Controller {
 	public function store(Request $request, Trip $trip) {
 		$this->validateTransaction();
 
-		return $transaction = DB::transaction(function() use ($request, $trip) {
-
-			$transaction = new Transaction([
+		return DB::transaction(function() use ($request, $trip) {
+			$this->transaction = new Transaction([
 				'amount'      => request('amount'),
 				'date'        => request('date'),
 				'description' => request('description')
 			]);
 
-			$transaction->trip_id = $trip->id;
-			$transaction->created_by = Auth::user()->id;
-			$transaction->updated_by = Auth::user()->id;
-			$transaction->save();
+			$this->transaction->trip_id = $trip->id;
+			$this->transaction->created_by = Auth::user()->id;
+			$this->transaction->updated_by = Auth::user()->id;
+			$this->transaction->save();
 
-			$spenders = $this->parseSpenders($request->split['travelers']);
-			$transaction->users()->sync($spenders);
+			$this->syncSpenders(collect($request->split));
+			$this->syncHashtags(collect($request->hashtags));
 
-			foreach ($request->hashtags['items'] as $hashtag) {
-				$hashtag = Hashtag::firstOrCreate(['tag' => $hashtag]);
-				$hashtag->transactions()->attach($transaction->id);
-			}
-
-			return $transaction;
+			return $this->transaction;
 		});
 	}
 
 	public function update(Request $request, Trip $trip, Transaction $transaction) {
 		$this->validateTransaction();
+		$this->transaction = $transaction;
 
-		return DB::transaction(function() use ($request, $transaction) {
+		DB::transaction(function() use ($request) {
+			$this->transaction->date = request('date');
+			$this->transaction->amount = request('amount');
+			$this->transaction->description = request('description');
+			$this->transaction->updated_by = Auth::user()->id;
+			$this->transaction->save();
 
-			$transaction->date = request('date');
-			$transaction->amount = request('amount');
-			$transaction->description = request('description');
-			$transaction->updated_by = Auth::user()->id;
-			$transaction->save();
-
-			$transaction->users()->sync(
-				$this->parseSpenders($request->split['travelers'])
-			);
-
-			$hashtags = collect($request->hashtags['items'])->map(function($hashtag) {
-				return Hashtag::firstOrCreate([ 'tag' => $hashtag ])->id;
-			});
-
-			$transaction->hashtags()->sync($hashtags);
-
-			return $transaction;
+			$this->syncSpenders(collect($request->split));
+			$this->syncHashtags(collect($request->hashtags));
 		});
+
+		return $this->transaction;
 	}
 
 	public function destroy(Request $request, Trip $trip, Transaction $transaction) {
@@ -121,28 +110,38 @@ class TransactionController extends Controller {
 			'date' => 'required|date_format:Y-n-j',
 			'amount' => 'required|regex:/^\d+(\.\d{1,2})?$/',
 			'description' => 'max:50',
-			'hashtags.items.*' => 'regex:/^[^,#\s]{1,32}$/',
-			'split.travelers.*.split_ratio' => [
+			'hashtags.*' => 'regex:/^[^,#\s]{1,32}$/',
+			'split.*.split_ratio' => [
 				'nullable', 'regex:/(^\d*\.?\d+$)|(^\d+\.?\d*$)/'
 			]
 		]);
 	}
 
-	protected function parseSpenders($travelers) {
-		return collect($travelers)
+	protected function syncHashtags($hashtags) {
+		$hashtags = $hashtags->map(function($hashtag) {
+			return Hashtag::firstOrCreate([ 'tag' => $hashtag ])->id;
+		});
 
-		->filter(function($spender) {
-			return $this->isSpender($spender);
+		$this->transaction->hashtags()->sync($hashtags);
+	}
+
+	protected function syncSpenders($users) {
+		$regularSpenders = $this->parseSpenders($users->where('type', 'regular'));
+		$this->transaction->users()->sync($regularSpenders);
+
+		$virtualSpenders = $this->parseSpenders($users->where('type', 'virtual'));
+		$this->transaction->virtualUsers()->sync($virtualSpenders);
+	}
+
+	protected function parseSpenders($spenders) {
+		return $spenders ->filter(function($user) {
+			return $user['is_spender'] && !empty($user['split_ratio']);
 		})
 
 		->keyBy('id')
 
-		->map(function($spender){
+		->map(function($spender) {
 			return ['split_ratio' => $spender['split_ratio']];
 		});
-	}
-
-	protected function isSpender($spender) {
-		return $spender['is_spender'] && !empty($spender['split_ratio']);
 	}
 }

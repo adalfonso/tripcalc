@@ -142,7 +142,7 @@ data() {
 
 created() {
     if (this.isUpdatable()) {
-       return this.getTransactionData();
+        return this.getTransactionData();
     }
 
     this.getTravelers();
@@ -182,6 +182,7 @@ methods: {
                 response.data.travelers,
                 response.data.user
             );
+            this.setOverrides();
         });
     },
 
@@ -203,6 +204,7 @@ methods: {
             this.creator = response.data.creator;
             this.form.split.interpret();
             this.date.parse(transaction.date);
+            this.setOverrides();
         });
     },
 
@@ -216,6 +218,13 @@ methods: {
 
     selectTraveler(index) {
         this.form.split.travelers.data[index].is_spender = 1;
+    },
+
+    setOverrides() {
+        this.form.override({
+            split: function() { return this.split.travelers.data; },
+            hashtags: function() { return this.hashtags.items; }
+        });
     },
 
     create() {

@@ -4,6 +4,7 @@ class Form {
 
     constructor(data) {
         this.originalData = data;
+        this.overrides = {};
 
         for (let field in data) {
             this[field] = data[field];
@@ -16,7 +17,10 @@ class Form {
         let data = {};
 
         for (let property in this.originalData) {
-            data[property] = this[property];
+
+            data[property] = this.shouldOverride(property)
+            ? this.overrides[property].apply(this)
+            : data[property] = this[property];
         }
 
         return request === 'delete'
@@ -54,6 +58,16 @@ class Form {
         }
 
         this.errors.clear();
+    }
+
+    override(rules) {
+        for (let rule in rules) {
+            this.overrides[rule] = rules[rule];
+        }
+    }
+
+    shouldOverride(property) {
+        return this.overrides.hasOwnProperty(property);
     }
 
     setPasswordNull() {
