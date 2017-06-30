@@ -37,7 +37,7 @@ class ReportController extends Controller {
         $transactions = DetailedReport::make($trip);
 
         $multiUser = $transactions->unique('creatorId')->count() > 1
-            || $trip->users->count() > 1;
+            || $trip->allUsers->count() > 1;
 
         return [
             'transactions' => $transactions,
@@ -49,7 +49,7 @@ class ReportController extends Controller {
         $transactions = DetailedReport::make($trip);
 
         $total = $transactions->where('isCreator', true)->sum('amount');
-        $netTotal = $transactions->sum('net');        
+        $netTotal = $transactions->sum('net');
 
         return view('report.extended', compact('transactions', 'total', 'netTotal'));
     }

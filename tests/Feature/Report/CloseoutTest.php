@@ -79,14 +79,14 @@ class CloseoutTest extends DuskTestCase {
             $this->assertEquals(0, $spender['total']);
         }
 
-        $this->assertEquals(47, $spenders[0]['debits'][$this->user3->id]);
-        $this->assertEquals(36, $spenders[0]['debits'][$this->user4->id]);
-        $this->assertEquals(4, $spenders[1]['debits'][$this->user4->id]);
-        $this->assertEquals(25, $spenders[1]['debits'][$this->user2->id]);
-        $this->assertEquals(25, $spenders[2]['credits'][$this->user5->id]);
-        $this->assertEquals(36, $spenders[3]['credits'][$this->user1->id]);
-        $this->assertEquals(4, $spenders[3]['credits'][$this->user5->id]);
-        $this->assertEquals(47, $spenders[4]['credits'][$this->user1->id]);
+        $this->assertEquals(47, $spenders[0]['debits'][$this->user3->type . '_' . $this->user3->id]);
+        $this->assertEquals(36, $spenders[0]['debits'][$this->user4->type . '_' . $this->user4->id]);
+        $this->assertEquals(4, $spenders[1]['debits'][$this->user4->type . '_' . $this->user4->id]);
+        $this->assertEquals(25, $spenders[1]['debits'][$this->user2->type . '_' . $this->user2->id]);
+        $this->assertEquals(25, $spenders[2]['credits'][$this->user5->type . '_' . $this->user5->id]);
+        $this->assertEquals(36, $spenders[3]['credits'][$this->user1->type . '_' . $this->user1->id]);
+        $this->assertEquals(4, $spenders[3]['credits'][$this->user5->type . '_' . $this->user5->id]);
+        $this->assertEquals(47, $spenders[4]['credits'][$this->user1->type . '_' . $this->user1->id]);
     }
 
     /** @test */

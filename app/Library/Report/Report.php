@@ -30,13 +30,16 @@ abstract class Report {
 	}
 
 	/**
-	 * Determine if a user_id is a spender on a transaction
-	 * @param  integer
+	 * Determine if a user is a spender on a transaction
+	 * @param  object - must contain id and user type
 	 * @param  App\Transaction
 	 * @return boolean
 	 */
-	public function isSpender($id, $transaction) {
-		return $transaction->users->where('id', $id)->count() > 0;
+	public function isSpender($user, $transaction) {
+		return $transaction->allUsers
+			->where('id', $user->id)
+			->where('type', $user->type)
+			->count() > 0;
 	}
 
 	/**
@@ -62,7 +65,7 @@ abstract class Report {
 	 */
 	public function netIfPaidByUser($transaction) {
 		if ($transaction->isEvenSplit()) {
-			$users = $transaction->trip->users->count();
+			$users = $transaction->trip->allUsers->count();
 
 			return $transaction->amount * ($users - 1) / $users;
 
@@ -80,7 +83,7 @@ abstract class Report {
 	 */
 	public function netIfPaidByOther($transaction) {
 		if ($transaction->isEvenSplit()) {
-			$users = $transaction->trip->users->count();
+			$users = $transaction->trip->allUsers->count();
 			return - $transaction->amount * (1 / $users);
 
 		} elseif ($transaction->isPersonal()) {
@@ -96,31 +99,37 @@ abstract class Report {
 	 * @return number
 	 */
 	public function oweForUnevenSplit($transaction) {
-		$user = $transaction->users->where('id', Auth::id());
+		$user = $transaction->allUsers
+			->where('id', Auth::id())
+			->where('type', 'regular');
 
 		if ($user->isNotEmpty()) {
 			return $transaction->amount
 				* $user->first()->pivot->split_ratio
-				/ $transaction->users->sum('pivot.split_ratio');
+				/ $transaction->allUsers->sum('pivot.split_ratio');
 		}
 
 		return 0;
 	}
 
 	/**
-	 * Get the split ratio for a user_id on a transaction
-	 * @param  integer
+	 * Get the split ratio for a user on a transaction
+	 * @param  object - must contain id and user type
 	 * @param  App\Transaction
 	 * @return number
 	 */
-	public function splitRatio($id, $transaction) {
-		if (! $this->isSpender($id, $transaction)) {
+	public function splitRatio($user, $transaction) {
+
+		if (! $this->isSpender($user, $transaction)) {
 			return 0;
 		}
 
-		return $transaction->users
-			->where('id', $id)->first()
-			->pivot->split_ratio;
+		return $transaction->allUsers
+			->where('id', $user->id)
+			->where('type', $user->type)
+			->first()
+			->pivot
+			->split_ratio;
 	}
 
 	/**

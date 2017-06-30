@@ -47,7 +47,7 @@ class Transaction extends Model {
 	 * @return boolean
 	 */
     public function isEvenSplit() {
-        return $this->users->isEmpty();
+        return $this->allUsers->isEmpty();
     }
 
     /**
@@ -55,7 +55,7 @@ class Transaction extends Model {
 	 * @return boolean
 	 */
 	public function isPersonal() {
-		return $this->users->count() === 1
+		return $this->allUsers->count() === 1
 			&& $this->users->first()->id === \Auth::id();
 	}
 
@@ -99,6 +99,6 @@ class Transaction extends Model {
 	 * @return number
 	 */
 	public function getSplitTotalAttribute() {
-		return $this->users->sum('pivot.split_ratio');
+		return $this->allUsers->sum('pivot.split_ratio');
 	}
 }

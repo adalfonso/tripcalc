@@ -9,16 +9,7 @@ class CloseoutReport extends Report {
 	public function __construct(\App\Trip $trip) {
 		parent::__construct($trip);
 
-		$this->report = $this->allUsers()->map(function($user) {
-			return (object) [
-				'id'         => $user->id,
-				'first_name' => $user->first_name,
-				'last_name'  => $user->last_name,
-				'total'      => 0,
-				'credits'   => collect([]),
-				'debits'   => collect([])
-			];
-		});
+		$this->report = $this->allUsersMap();
 	}
 
 	/**
@@ -31,7 +22,18 @@ class CloseoutReport extends Report {
 
 		return [
 			'spenders' => $this->balance()->values(),
-			'allUsers' => $this->allUsers()->pluck('full_name', 'id')
+			'allUsers' => $this->allUsers()->mapWithKeys(function($user) {
+				$name = $user->type === 'virtual'
+					? $user->name
+					: $user->full_name;
+
+				return [
+					$user->type . '_' . $user->id => [
+						'name' => $name,
+						'type' => $user->type
+					]
+				];
+			})
 		];
 	}
 	/**
@@ -98,8 +100,8 @@ class CloseoutReport extends Report {
 	 * @return boolean || void
 	 */
 	public function creditSpenderFull($debtor, $spender) {
-		$debtor->debits->put($spender->id, abs($spender->total));
-		$spender->credits->put($debtor->id, abs($spender->total));
+		$debtor->debits->put($this->userKey($spender), abs($spender->total));
+		$spender->credits->put($this->userKey($debtor), abs($spender->total));
 		$debtor->total = bcadd($debtor->total, $spender->total, 2);
 		$spender->total = 0;
 
@@ -115,12 +117,21 @@ class CloseoutReport extends Report {
 	 */
 	public function creditSpenderPartial($debtor, $spender) {
 
-		$debtor->debits->put($spender->id, abs($debtor->total));
-		$spender->credits->put($debtor->id, abs($debtor->total));
+		$debtor->debits->put($this->userKey($spender), abs($debtor->total));
+		$spender->credits->put($this->userKey($debtor), abs($debtor->total));
 		$spender->total = bcadd($spender->total, $debtor->total, 2);
 		$debtor->total = 0;
 
 		// Break out of each method early when debtor has paid in full
 		return false;
+	}
+
+	/**
+	 * Determine the key based on user type and id. e.g. virtual_23
+	 * @param object
+	 * @return string
+	 */
+	protected function userKey ($user) {
+		return $user->type . '_' . $user->id;
 	}
 }

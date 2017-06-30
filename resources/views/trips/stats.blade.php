@@ -59,7 +59,7 @@
 			:trip_id="{{$trip->id}}" @hide="hideAll">
 		</report-closeout>
 
-		@if ($trip->users->count() > 1)
+		@if ($trip->allUsers->count() > 1)
 			<p class="item" @click="showReport('bottomLine')">Bottom Line</p>
 			<p class="item" @click="showReport('distribution')">Distribution</p>
 			<p class="item" @click="showReport('top-spenders')">Top Spenders</p>
@@ -72,7 +72,7 @@
 			</a>
 		</p>
 
-		@if ($trip->users->count() > 1)
+		@if ($trip->allUsers->count() > 1)
 			<p class="item" @click="showReport('closeout')">Closeout</p>
 		@endif
 
