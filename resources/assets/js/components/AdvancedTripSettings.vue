@@ -23,14 +23,6 @@
             <p>Enable virtual users</p>
         </div>
 
-        <!-- Easy transactions -->
-        <!-- <div class="ui-checkbox" @click="form.toggle('easyTransactions')">
-            <input type="hidden" v-model="form.easyTransactions">
-            <div class="ui-input-btn no-hover"
-                v-html="form.easyTransactions ? '&#10004;' : '' "></div>
-            <p>Enable easy transactions</p>
-        </div> -->
-
         <button class="btn-full form-button" type="submit">Apply</button>
     </form>
     </div>
@@ -48,9 +40,7 @@ data() {
     return {
         form: new Form ({
             private_transactions: false,
-            editable_transactions: false,
             virtual_users: false
-            //easyTransactions: false
         })
     };
 },
@@ -72,6 +62,7 @@ methods: {
     onSubmit() {
         this.form.patch(`/trip/${this.trip_id}/advancedSettings`)
         .then( response => {
+            this.$emit('changestate', this.form.virtual_users);
             this.hide();
         })
         .catch();

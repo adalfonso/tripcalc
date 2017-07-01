@@ -8,6 +8,8 @@ use App\Hashtag;
 use App\Transaction;
 use App\Trip;
 use App\User;
+use App\VirtualUser;
+
 
 class Maker {
 
@@ -29,6 +31,17 @@ class Maker {
         ]);
 
         $user->activated = 1;
+        $user->save();
+
+        return $user;
+    }
+
+    public function virtualUser(Trip $trip) {
+
+        $user = new VirtualUser;
+        $user->name = $this->faker->firstName;
+        $user->trip_id = $trip->id;
+
         $user->save();
 
         return $user;

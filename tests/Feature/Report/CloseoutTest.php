@@ -13,7 +13,7 @@ class CloseoutTest extends DuskTestCase {
         parent::setUp();
         $this->maker = new Maker;
 
-        $this->trip = $this->maker->trip();
+        $this->trip  = $this->maker->trip();
         $this->user1 = $this->maker->user();
         $this->user2 = $this->maker->user();
         $this->user3 = $this->maker->user();
@@ -87,6 +87,30 @@ class CloseoutTest extends DuskTestCase {
         $this->assertEquals(36, $spenders[3]['credits'][$this->user1->type . '_' . $this->user1->id]);
         $this->assertEquals(4, $spenders[3]['credits'][$this->user5->type . '_' . $this->user5->id]);
         $this->assertEquals(47, $spenders[4]['credits'][$this->user1->type . '_' . $this->user1->id]);
+    }
+
+    /** @test */
+    public function it_accurately_calculate_credit_and_debits_with_virtual_users() {
+        $this->maker->login($this->user1);
+        $this->user6  = $this->maker->virtualUser($this->trip);
+
+        $transaction1 = $this->maker->transaction(
+            $this->trip, $this->user1, 200
+        );
+
+        $spenders = $this->get('/trip/' . $this->trip->id . '/report/closeout')->json()['spenders'];
+
+        foreach ($spenders as $spender) {
+            $error = sizeof($spender['credits']) > 0 && sizeof($spender['debits']) > 0;
+            $this->assertEquals(false, $error);
+            $this->assertEquals(0, $spender['total']);
+        }
+
+        $this->assertEquals(33.34, $spenders[5]['credits'][$this->user2->type . '_' . $this->user2->id]);
+        $this->assertEquals(33.33, $spenders[5]['credits'][$this->user3->type . '_' . $this->user3->id]);
+        $this->assertEquals(33.33, $spenders[5]['credits'][$this->user4->type . '_' . $this->user4->id]);
+        $this->assertEquals(33.33, $spenders[5]['credits'][$this->user5->type . '_' . $this->user5->id]);
+        $this->assertEquals(33.33, $spenders[5]['credits'][$this->user6->type . '_' . $this->user6->id]);
     }
 
     /** @test */

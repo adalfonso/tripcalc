@@ -22,7 +22,7 @@
     </trip-form>
 
 	<advanced-trip-settings v-if="advancedSettings.visible" :trip_id="{{$trip->id}}"
-		@hide="hideAll">
+		@hide="hideAll" @changestate="changeVirtualUserState">
     </advanced-trip-settings>
 
     <invite-friend v-if="inviteFriend.visible" :trip_id="{{$trip->id}}"
@@ -94,6 +94,10 @@
 			},
 
 		    methods: {
+
+				changeVirtualUserState(state) {
+					this.menuItems[1].active = state;
+				},
 
 				hideAll() {
 					this.advancedSettings.visible = false;
