@@ -21,7 +21,7 @@
                     <td><strong>{{ balanceVerbiage }}</strong></td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td class="align-right">{{ fixedLength(netTotal) }}</td>
+                    <td class="align-right">{{ fixedLength(Math.abs(netTotal)) }}</td>
                 </tr>
             </table>
         </div>
