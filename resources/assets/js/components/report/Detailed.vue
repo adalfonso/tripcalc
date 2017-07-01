@@ -21,7 +21,7 @@
                     <td><strong>{{ balanceVerbiage }}</strong></td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td class="align-right">{{ netTotal }}</td>
+                    <td class="align-right">{{ fixedLength(netTotal) }}</td>
                 </tr>
             </table>
         </div>
@@ -48,13 +48,13 @@ export default {
         .then(response => {
            this.transactions = response.data.transactions;
            this.multiUser = response.data.multiUser;
-           this.netTotal = response.data.netTotal;
+           this.netTotal =  response.data.netTotal;
         });
 	},
 
     computed: {
         balanceVerbiage() {
-            return this.balance > 0 ? 'You are owed' : 'You owe';
+            return this.netTotal > 0 ? 'You are owed' : 'You owe';
         }
     },
 
