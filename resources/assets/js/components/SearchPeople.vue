@@ -1,5 +1,5 @@
 <template>
-    <div id="searchFriendsWrapper">
+    <div id="searchFriendsWrapper" class="nav-right">
         <div id="searchFriends">
 
             <img src="/img/icon/search.png">

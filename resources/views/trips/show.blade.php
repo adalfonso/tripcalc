@@ -1,21 +1,40 @@
 @extends('layout')
 
+@section('nav-right')
+	<context-menu :items="menuItems"
+		@advanced="showAdvancedSettings"
+		@invite="showInviteFriendsForm"
+		@virtual="showVirtualUsersForm">
+	</context-menu>
+@stop
+
+@section('nav-settings')
+	<a @click="showTripForm" class="link-enhanced clearfix">
+		<img src="/img/icon/gear-64x64.png">
+		<p class="fake-link">Settings</p>
+	</a>
+@stop
+
 @section('content')
 <div id="trip">
 	<trip-form v-if="tripForm.visible" :trip_id="{{$trip->id}}"
 		@hide="hideAll">
     </trip-form>
 
+	<advanced-trip-settings v-if="advancedSettings.visible" :trip_id="{{$trip->id}}"
+		@hide="hideAll" @changestate="changeVirtualUserState">
+    </advanced-trip-settings>
+
     <invite-friend v-if="inviteFriend.visible" :trip_id="{{$trip->id}}"
     	@hide="hideAll">
     </invite-friend>
 
+	<virtual-user-manager v-if="virtualUsers.visible" :trip_id="{{$trip->id}}"
+		@hide="hideAll">
+	</virtual-user-manager>
+
 	<div class="trip-header clearfix">
-		<h3 id="name">
-		{{ $trip->name }}
-			<img trip class="btn-edit" src="/img/icon/edit.png"
-				@click="showTripForm">
-		</h3>
+		<h3 id="name">{{ $trip->name }}</h3>
 
 		@if ($trip->start_date != "00/00/0000")
 			<h6 id="dateRange">
@@ -38,14 +57,36 @@
 
 		    data: {
 
-		        tripForm: { visible: false },
+				advancedSettings: { visible: false },
 
-		        inviteFriend: { visible: false },
+				inviteFriend: { visible: false },
+
+				menuItems: [
+					{
+						display: 'Invite Friends',
+						active: true,
+						emit: 'invite'
+					},
+					{
+						display: 'Manage Virtual Users',
+						active: {{ json_encode($trip->virtual_users) }},
+						emit: 'virtual'
+					},
+					{
+						display: 'Advanced',
+						active: true,
+						emit: 'advanced'
+					}
+				],
 
 				report: {
 					visible: false,
 					type: null
-				}
+				},
+
+				tripForm: { visible: false },
+
+				virtualUsers: { visible: false }
 		    },
 
 			created() {
@@ -54,14 +95,25 @@
 
 		    methods: {
 
+				changeVirtualUserState(state) {
+					this.menuItems[1].active = state;
+				},
+
 				hideAll() {
-					this.tripForm.visible = false;
+					this.advancedSettings.visible = false;
 					this.inviteFriend.visible = false;
 					this.report.visible = false;
+					this.tripForm.visible = false;
+					this.virtualUsers.visible = false;
 				},
 
 				createPost() {
 					bus.$emit('submit');
+				},
+
+				showAdvancedSettings() {
+					bus.$emit('closeModals');
+					this.advancedSettings.visible = true;
 				},
 
 				showTripForm() {
@@ -78,6 +130,11 @@
 				showTransactionForm() {
 			    	bus.$emit('showTransactionForm');
 			    },
+
+				showVirtualUsersForm() {
+					bus.$emit('closeModals');
+					this.virtualUsers.visible = true;
+				},
 
 				showReport(type) {
 					if (!type) {

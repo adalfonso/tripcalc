@@ -21,6 +21,11 @@ class Transaction extends Model {
             ->withPivot('split_ratio');
     }
 
+    public function virtualUsers() {
+        return $this->belongsToMany('App\VirtualUser', 'transaction_virtual_user')
+            ->withPivot('split_ratio');
+    }
+
     public function creator() {
         return $this->belongsTo('App\User', 'created_by');
     }
@@ -42,7 +47,7 @@ class Transaction extends Model {
 	 * @return boolean
 	 */
     public function isEvenSplit() {
-        return $this->users->isEmpty();
+        return $this->allUsers->isEmpty();
     }
 
     /**
@@ -50,8 +55,17 @@ class Transaction extends Model {
 	 * @return boolean
 	 */
 	public function isPersonal() {
-		return $this->users->count() === 1
+		return $this->allUsers->count() === 1
 			&& $this->users->first()->id === \Auth::id();
+	}
+
+    public function getAllUsersAttribute() {
+		return $this->users->merge($this->virtualUsers)
+			->each(function($user) {
+				$user->type = get_class($user) === 'App\VirtualUser'
+				? 'virtual'
+				: 'regular';
+			});
 	}
 
     public function getDateFormatAttribute() {
@@ -85,6 +99,6 @@ class Transaction extends Model {
 	 * @return number
 	 */
 	public function getSplitTotalAttribute() {
-		return $this->users->sum('pivot.split_ratio');
+		return $this->allUsers->sum('pivot.split_ratio');
 	}
 }

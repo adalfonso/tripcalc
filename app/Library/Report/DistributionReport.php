@@ -9,14 +9,7 @@ class DistributionReport extends Report {
 	public function __construct(\App\Trip $trip) {
 		parent::__construct($trip);
 
-		$this->report = $this->allUsers()->map(function($user) {
-			return (object) [
-				'id'         => $user->id,
-				'first_name' => $user->first_name,
-				'last_name'  => $user->last_name,
-				'total'      => 0
-			];
-		});
+		$this->report = $this->allUsersMap();
 	}
 
 	/**

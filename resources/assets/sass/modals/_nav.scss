@@ -3,7 +3,7 @@
 	position: fixed;
 	z-index: 1;
 
-    > a {
+    a {
     	border-bottom: 1px solid $midnight;
     	background: $paleBlue;
     	display: none;
@@ -11,9 +11,17 @@
     	margin: 0;
     	padding: .6rem;
     	width: 100%;
+
+		img {
+			height: 1.2rem;
+			transition: .2rem;
+		}
+
+		img:hover { opacity: .8; }
     }
 
-    .menu {
+
+    .hamburger {
         display: block;
 
         div {
@@ -27,32 +35,128 @@
             &:last-child  { margin-bottom: 0; }
         }
     }
+
+	.link-enhanced {
+		> * { float: left; }
+
+		p {
+			line-height: 1.2rem;
+			margin: 0 0 0 .5rem;
+		}
+	}
+
+	#nav-search {
+		float: none;
+		width: 100%;
+	}
+
+	#nav-links {
+		.menu {
+			.caret { line-height: 2rem; }
+			.body {
+				right: -.4rem;
+				top: calc(100% - .8rem;)
+			}
+		}
+	}
+}
+
+@media (min-width: 1016px) {
+	#nav {
+		padding: .8em 0;
+		width: 1000px;
+	}
+}
+
+@media (max-width: 1015px) and (min-width: 768px) {
+	#nav {
+		padding: .8rem .4em;
+		width: 100%;
+	}
 }
 
 @media (min-width: 768px) {
 	#nav {
-		padding: .8em 1.4rem;
+		display: table;
+		margin: 0 auto;
 		position: relative;
 
-		> a {
+		a {
 			background: transparent;
 			border: none;
 			display: block;
 			float: left;
+			line-height: 2rem;
 			margin: 0 1rem 0 0;
 			padding: 0;
 			width: auto;
+
+			img { height: 2rem; }
 		}
 
-		a.menu { display: none; }
+		a.hamburger { display: none; }
 
-		.logout, .login, .settings {
+		.link-enhanced {
+			> * { float: none; }
+
+			p { display: none; }
+		}
+
+
+		#nav-search {
+			float: left;
+			margin: 0 2% 0 0;
+			width: 38%;
+
+		}
+
+		#nav-links {
 			float: right;
 			margin: 0;
-		}
+			width: 60%;
 
-		.logout {
-			margin: 0 0 0 1rem;
+			#nav-left {
+				float: left;
+			}
+
+			#nav-right {
+				float: right;
+
+				> * { margin: 0 0 0 1rem; }
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	#nav-links {
+		.menu {
+			display: none;
+			float: none;
+
+			.trigger { display: none; }
+
+			.body {
+				border: none;
+				box-shadow: none;
+				margin: 0;
+				opacity: 1;
+				padding: 0;
+				position: static;
+				visibility: visible;
+
+				.arw-up, .invis { display: none; }
+
+				li {
+					border-bottom: 1px solid #495a69;
+					color: $cool;
+					font-size: 1.2rem;
+					font-weight: 700;
+					height: auto;
+					padding: .6rem;
+				}
+
+			}
 		}
 	}
 }

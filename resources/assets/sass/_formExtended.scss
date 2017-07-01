@@ -3,9 +3,19 @@
 	position: relative;
     top: .1em;
     transition: .2s;
+	user-select: none;
     z-index: 0;
 
     &:hover { opacity: .5; }
+}
+
+// Not a standard button
+.btn-count {
+	font-size: 20px;
+    letter-spacing: .2rem;
+	user-select: none;
+
+	&:hover { font-weight: 700; }
 }
 
 .btn-full {
@@ -19,9 +29,9 @@
 }
 
 .btn-extra-thin {
-	height: auto;
+	height: 1.8rem;
 	line-height: 1em;
-	padding: .2em .8em;
+	padding: .4em .8em;
 }
 
 .form-transparent {

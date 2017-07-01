@@ -43,6 +43,22 @@ textarea {
 	padding: .5rem;
 	width: 100%;
 
+	&.plain {
+    	background: transparent;
+        box-shadow: none;
+        border: 1px solid $smoke;
+    	color: $midnight;
+
+		&:focus  {
+	    	background: rgba(73,90,105,.1);
+	    }
+    }
+
+	&.thin {
+		height: 1.8rem;
+		line-height: 1.6rem;
+	}
+
     &.transparent {
         background: rgba(228,242,253,.02);
         border: 1px solid rgba(228,242,253,.1);

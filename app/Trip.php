@@ -10,7 +10,8 @@ class Trip extends Model {
 		'start_date',
 		'end_date',
 	    'budget',
-	    'description'
+	    'description',
+		'virtual_users'
 	];
 
 	public function posts() {
@@ -29,6 +30,15 @@ class Trip extends Model {
 			->where('active', true);
 	}
 
+	public function userSettings() {
+		return $this->hasOne('App\TripUserSetting')
+			->where('user_id', \Auth::id());
+	}
+
+	public function virtualUsers() {
+		return $this->hasMany('\App\VirtualUser');
+	}
+
 	public function getDateRangeAttribute() {
 		$start = Carbon::parse($this->start_date);
 		$end = Carbon::parse($this->end_date);
@@ -44,5 +54,14 @@ class Trip extends Model {
 		}
 
 		return $start->format('F j, Y') . ' - ' . $end->format('F j, Y');
+	}
+
+	public function getAllUsersAttribute() {
+		return $this->users->merge($this->virtualUsers)
+			->each(function($user) {
+				$user->type = get_class($user) === 'App\VirtualUser'
+				? 'virtual'
+				: 'regular';
+			});
 	}
 }

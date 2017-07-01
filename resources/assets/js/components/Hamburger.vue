@@ -1,5 +1,5 @@
 <template>
-    <a class="menu" @click="toggleMobileMenu">
+    <a class="hamburger" @click="toggleMobileMenu">
         <div></div>
         <div></div>
         <div></div>
@@ -23,7 +23,7 @@ export default {
     methods: {
         toggleMobileMenu() {
             let links = document.querySelectorAll(
-                '#nav > a:nth-of-type(n+2), #nav > div'
+                '#nav-search > *, #nav-left > *, #nav-right > *'
             );
 
             links.forEach( link => {

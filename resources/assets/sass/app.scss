@@ -11,6 +11,7 @@
 // Modal Styles
 @import "modals/activity";
 @import "modals/carousel";
+@import "modals/contextMenu";
 @import "modals/datePicker";
 @import "modals/nav";
 @import "modals/popup";
@@ -117,14 +118,16 @@ ul {
 }
 
 .align-right, .align-right > * { text-align: right; }
+.float-left,
 .floatable-left > *            { float: left; }
+.font-dark                     { color: $midnight; }
 .hidden, .delay-visible        { display: none; }
 .hovertext:hover               { opacity: .5; }
 .left-col                      { margin: .5rem .5rem .25rem .5rem; }
 .right-col                     { margin: .25rem .5rem; }
 .margin-bottom                 { margin-bottom: .5rem; }
 .margin-top                    { margin-top: .5rem; }
-.marginless                    { margin: 0; }
+.marginless                    { margin: 0 !important; }
 .space-upper                   { margin: .6rem 0; }
 .visible                       { display: block !important; }
 
@@ -132,6 +135,10 @@ ul {
  	background: $paleBlue;
 	margin-bottom: .5rem;
 	padding: .8rem;
+}
+
+.table-full {
+	width: 100%;
 }
 
 .wordmark {
@@ -240,6 +247,18 @@ ul {
 	display: none
 }
 
+@media (min-width: 1016px) {
+	#main {
+		width: 1000px;
+	}
+}
+
+@media (max-width: 1015px) and (min-width: 768px) {
+	#main {
+		padding: 0 .5em;
+	}
+}
+
 // Responsive
 @media (min-width: 768px) {
 	body {
@@ -267,7 +286,6 @@ ul {
 
 	#main {
 		margin: 0 auto;
-		min-width: 900px; max-width: 1000px;
 	}
 
 	.trip-header { padding: 0; }

@@ -5,7 +5,7 @@ use Tests\Library\Maker;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ProgressTest extends DuskTestCase {
+class DistributionTest extends DuskTestCase {
 
     use DatabaseTransactions;
 

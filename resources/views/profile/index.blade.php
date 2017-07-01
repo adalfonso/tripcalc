@@ -1,5 +1,14 @@
 @extends('layout')
 
+@section('nav-settings')
+	@if ($profile->isCurrentUser())
+		<a @click="showProfileInfoForm" class="link-enhanced clearfix settings">
+			<img src="/img/icon/gear-64x64.png">
+			<p class="fake-link">Settings</p>
+		</a>
+	@endif
+@stop
+
 @section('content')
 <div id="profile">
 	<div id="profile-info" class="left-col section">

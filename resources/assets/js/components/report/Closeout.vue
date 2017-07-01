@@ -8,19 +8,27 @@
             <div v-for="spender in spendersByLastName" class="spenderGroup">
                 <h5>
                     <strong>
-                        {{ spender.last_name }}, {{ spender.first_name}}
+                        <div v-if="spender.type === 'virtual'">
+                            <span style="font-weight: normal">[V]</span>
+                            {{ spender.name }}
+                        </div>
+                        <div v-else>
+                            {{ spender.last_name }}, {{ spender.first_name}}
+                        </div>
                     </strong>
                 </h5>
                 <p class="description">{{ description(spender) }}</p>
 
                 <p v-for="(credit, id) in spender.credits" class="line">
                     <span>${{ currency(credit) }} &larr;</span>
-                    {{ allUsers[id] }}
+                    <span v-if="allUsers[id].type === 'virtual'">[V]</span>
+                    {{ allUsers[id].name }}
                 </p>
 
                 <p v-for="(debit, id) in spender.debits" class="line">
                     <span>${{ currency(debit) }} &rarr;</span>
-                    {{ allUsers[id] }}
+                    <span v-if="allUsers[id].type === 'virtual'">[V]</span>
+                    {{ allUsers[id].name }}
                 </p>
                 <hr>
             </div>

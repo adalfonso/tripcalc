@@ -15,34 +15,37 @@ use Response;
 class TransactionController extends Controller {
 
 	public function show(Trip $trip, Transaction $transaction) {
-		$travelers = DB::select('
-			SELECT * FROM (
-				SELECT u.id AS join_on, u.id AS id,
-					CONCAT(u.first_name, " ", u.last_name) AS full_name
-				FROM users u
-				JOIN trip_user tu ON u.id = tu.user_id
-				JOIN trips t      ON tu.trip_id = t.id
-				WHERE t.id = :trip_id
-				AND u.activated = true
-				AND tu.active = true
+			$spenders = $transaction->allUsers;
 
-			) tb1
-			LEFT JOIN (
-				SELECT user_id AS join_on, split_ratio, count(*) AS is_spender
-				FROM transaction_user
-				WHERE transaction_id = :transaction_id
-				GROUP BY user_id, split_ratio
-			) tb2
-			ON tb1.join_on = tb2.join_on
-			', [
-				'trip_id'        => $trip->id,
-				'transaction_id' => $transaction->id
-			]);
+			$travelers = $trip->allUsers
+				->map(function($user) use ($spenders) {
+					$spender = $spenders
+						->where('type', $user->type)
+						->where('id', $user->id);
+
+					$split_ratio = $spender->isEmpty()
+						? null
+						: $spender->first()->pivot->split_ratio;
+
+					$name = $user->type === 'virtual'
+						? $user->name
+						: $user->full_name;
+
+					return [
+						'id' => $user->id,
+		                'type' => $user->type,
+		                'full_name'   => $name,
+		                'is_spender'  => $split_ratio !== null,
+		                'split_ratio' => $split_ratio
+					];
+				})
+				->sortBy('full_name')
+				->values();
 
 		return [
 			'transaction' => $transaction,
 			'hashtags'    => $transaction->hashtags->pluck('tag'),
-			'travelers'   => collect($travelers)->keyBy('id'),
+			'travelers'   => $travelers,
 			'creator'     => $transaction->creator->fullname,
 			'user'        => Auth::id()
 		];
@@ -51,54 +54,41 @@ class TransactionController extends Controller {
 	public function store(Request $request, Trip $trip) {
 		$this->validateTransaction();
 
-		return $transaction = DB::transaction(function() use ($request, $trip) {
-
-			$transaction = new Transaction([
+		return DB::transaction(function() use ($request, $trip) {
+			$this->transaction = new Transaction([
 				'amount'      => request('amount'),
 				'date'        => request('date'),
 				'description' => request('description')
 			]);
 
-			$transaction->trip_id = $trip->id;
-			$transaction->created_by = Auth::user()->id;
-			$transaction->updated_by = Auth::user()->id;
-			$transaction->save();
+			$this->transaction->trip_id = $trip->id;
+			$this->transaction->created_by = Auth::user()->id;
+			$this->transaction->updated_by = Auth::user()->id;
+			$this->transaction->save();
 
-			$spenders = $this->parseSpenders($request->split['travelers']);
-			$transaction->users()->sync($spenders);
+			$this->syncSpenders(collect($request->split));
+			$this->syncHashtags(collect($request->hashtags));
 
-			foreach ($request->hashtags['items'] as $hashtag) {
-				$hashtag = Hashtag::firstOrCreate(['tag' => $hashtag]);
-				$hashtag->transactions()->attach($transaction->id);
-			}
-
-			return $transaction;
+			return $this->transaction;
 		});
 	}
 
 	public function update(Request $request, Trip $trip, Transaction $transaction) {
 		$this->validateTransaction();
+		$this->transaction = $transaction;
 
-		return DB::transaction(function() use ($request, $transaction) {
+		DB::transaction(function() use ($request) {
+			$this->transaction->date = request('date');
+			$this->transaction->amount = request('amount');
+			$this->transaction->description = request('description');
+			$this->transaction->updated_by = Auth::user()->id;
+			$this->transaction->save();
 
-			$transaction->date = request('date');
-			$transaction->amount = request('amount');
-			$transaction->description = request('description');
-			$transaction->updated_by = Auth::user()->id;
-			$transaction->save();
-
-			$transaction->users()->sync(
-				$this->parseSpenders($request->split['travelers'])
-			);
-
-			$hashtags = collect($request->hashtags['items'])->map(function($hashtag) {
-				return Hashtag::firstOrCreate([ 'tag' => $hashtag ])->id;
-			});
-
-			$transaction->hashtags()->sync($hashtags);
-
-			return $transaction;
+			$this->syncSpenders(collect($request->split));
+			$this->syncHashtags(collect($request->hashtags));
 		});
+
+		return $this->transaction;
 	}
 
 	public function destroy(Request $request, Trip $trip, Transaction $transaction) {
@@ -120,28 +110,38 @@ class TransactionController extends Controller {
 			'date' => 'required|date_format:Y-n-j',
 			'amount' => 'required|regex:/^\d+(\.\d{1,2})?$/',
 			'description' => 'max:50',
-			'hashtags.items.*' => 'regex:/^[^,#\s]{1,32}$/',
-			'split.travelers.*.split_ratio' => [
+			'hashtags.*' => 'regex:/^[^,#\s]{1,32}$/',
+			'split.*.split_ratio' => [
 				'nullable', 'regex:/(^\d*\.?\d+$)|(^\d+\.?\d*$)/'
 			]
 		]);
 	}
 
-	protected function parseSpenders($travelers) {
-		return collect($travelers)
+	protected function syncHashtags($hashtags) {
+		$hashtags = $hashtags->map(function($hashtag) {
+			return Hashtag::firstOrCreate([ 'tag' => $hashtag ])->id;
+		});
 
-		->filter(function($spender) {
-			return $this->isSpender($spender);
+		$this->transaction->hashtags()->sync($hashtags);
+	}
+
+	protected function syncSpenders($users) {
+		$regularSpenders = $this->parseSpenders($users->where('type', 'regular'));
+		$this->transaction->users()->sync($regularSpenders);
+
+		$virtualSpenders = $this->parseSpenders($users->where('type', 'virtual'));
+		$this->transaction->virtualUsers()->sync($virtualSpenders);
+	}
+
+	protected function parseSpenders($spenders) {
+		return $spenders ->filter(function($user) {
+			return $user['is_spender'] && !empty($user['split_ratio']);
 		})
 
 		->keyBy('id')
 
-		->map(function($spender){
+		->map(function($spender) {
 			return ['split_ratio' => $spender['split_ratio']];
 		});
-	}
-
-	protected function isSpender($spender) {
-		return $spender['is_spender'] && !empty($spender['split_ratio']);
 	}
 }

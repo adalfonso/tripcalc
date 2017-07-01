@@ -2,22 +2,35 @@
 	<nav id="nav" class="clearfix">
 		<hamburger></hamburger>
 
-		<a href="/profile">My Profile</a>
+		<div id="nav-search" class="clearfix">
+			<search-people></search-people>
+		</div>
 
-		@unless (isset($trips))
-			<a href="/trips">My Trips</a>
-		@endif
+		<div id="nav-links">
+			<div id="nav-left" class="clearfix">
+				<a href="/profile" class="link-enhanced clearfix">
+					<img src="/img/icon/profile-64x64.png">
+					<p class="fake-link">
+						{{ Auth::user()->first_name }}
+					</p>
+				</a>
 
-		@if (isset($friendsInvitable))
-			<a @click="showInviteFriendsForm">Invite Friends</a>
-		@endif
+				@unless (isset($trips))
+					<a href="/trips">My Trips</a>
+				@endif
 
-		<logout></logout>
+				@yield('nav-left')
+			</div>
 
-		@if (isset($profile) && $profile->isCurrentUser())
-			<a @click="showProfileInfoForm" class="settings">Settings</a>
-		@endif
+			<div id="nav-right" class="clearfix">
 
-		<search-people></search-people>		
+				@yield('nav-right')
+
+				<logout></logout>
+
+				@yield('nav-settings')
+			</div>
+		</div>
+
 	</nav>
 @stop

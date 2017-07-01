@@ -14,13 +14,12 @@ Vue.component('alert', require('./components/Alert.vue'));
 Vue.component('carousel', require('./components/Carousel.vue'));
 Vue.component('date-picker', require('./components/DatePicker.vue'));
 Vue.component('hamburger', require('./components/Hamburger.vue'));
-Vue.component('invite-friend', require('./components/InviteFriend.vue'));
 Vue.component('loading', require('./components/Loading.vue'));
 Vue.component('logout', require('./components/Logout.vue'));
+Vue.component('context-menu', require('./components/ContextMenu.vue'));
 Vue.component('post', require('./components/Post.vue'));
 Vue.component('request-popup', require('./components/RequestPopup.vue'));
 Vue.component('search-people', require('./components/SearchPeople.vue'));
-Vue.component('trip-form', require('./components/TripForm.vue'));
 
 // Profile
 Vue.component('friend-preferences', require('./components/FriendPreferences.vue'));
@@ -43,3 +42,9 @@ Vue.component('report-closeout', require('./components/report/Closeout.vue'));
 Vue.component('report-detailed', require('./components/report/Detailed.vue'));
 Vue.component('report-distribution', require('./components/report/Distribution.vue'));
 Vue.component('report-top-spenders', require('./components/report/TopSpenders.vue'));
+
+// Trip
+Vue.component('advanced-trip-settings', require('./components/AdvancedTripSettings.vue'));
+Vue.component('invite-friend', require('./components/InviteFriend.vue'));
+Vue.component('trip-form', require('./components/TripForm.vue'));
+Vue.component('virtual-user-manager', require('./components/VirtualUserManager.vue'));

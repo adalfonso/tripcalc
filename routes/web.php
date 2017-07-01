@@ -42,13 +42,19 @@ Route::group(['middleware' => 'activeAccount'], function() {
 	Route::group(['middleware' => 'canAccessTrip'], function() {
 		Route::get('/trip/{trip}', 'TripController@show');
 		Route::patch('/trip/{trip}', 'TripController@update');
+		Route::delete('/trip/{trip}', 'TripController@destroy');
 		Route::post('/trip/{trip}/activities', 'TripController@activities');
-	    Route::delete('/trip/{trip}', 'TripController@destroy');
+		Route::get('/trip/{trip}/advancedSettings', 'TripController@getAdvancedSettings');
+		Route::patch('/trip/{trip}/advancedSettings', 'TripController@updateAdvancedSettings');
 		Route::get('/trip/{trip}/data', 'TripController@data');
 		Route::post('/trip/{trip}/eligibleFriends', 'TripController@eligibleFriends');
 		Route::post('/trip/{trip}/inviteFriends', 'FriendController@inviteToTrip');
 		Route::post('/trip/{trip}/transactions', 'TransactionController@store');
 		Route::get('/trip/{trip}/travelers', 'TripController@travelers');
+		Route::get('/trip/{trip}/virtualUsers', 'VirtualUserController@index');
+		Route::post('/trip/{trip}/virtualUsers', 'VirtualUserController@store');
+		Route::patch('/trip/{trip}/virtualUser/{virtualUser}', 'VirtualUserController@update');
+		Route::delete('/trip/{trip}/virtualUser/{virtualUser}', 'VirtualUserController@destroy');
 		Route::get('/trip/{trip}/report/bottomLine', 'ReportController@bottomLine');
 		Route::get('/trip/{trip}/report/closeout', 'ReportController@closeout');
 		Route::get('/trip/{trip}/report/detailed', 'ReportController@detailed');

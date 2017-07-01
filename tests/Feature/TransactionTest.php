@@ -110,16 +110,13 @@ class TransactionTest extends DuskTestCase {
             'amount'   => 5,
             'date'     => '2010-1-1',
             'description' => '',
-            'hashtags' => [
-                'items' => [1, 2, 3]
-            ],
+            'hashtags' => [1, 2, 3],
             'split' => [
-                'travelers' => [
-                    [
-                        'id' => $this->user1->id,
-                        'split_ratio' => 2,
-                        'is_spender' => true
-                    ]
+                [
+                    'id' => $this->user1->id,
+                    'type' => 'regular',
+                    'split_ratio' => 2,
+                    'is_spender' => true
                 ]
             ]
         ]);
@@ -141,8 +138,8 @@ class TransactionTest extends DuskTestCase {
             'amount'   => 666,
             'date'     => '2010-12-12',
             'description' => 'hello',
-            'hashtags' => [ 'items' => [] ],
-            'split' => [ 'travelers' => [] ]
+            'hashtags' => [],
+            'split' => []
         ]);
 
         $find = Transaction::find($this->transaction->id);
@@ -162,14 +159,13 @@ class TransactionTest extends DuskTestCase {
             'amount'   => 666,
             'date'     => '2010-12-12',
             'description' => 'hello',
-            'hashtags' => [ 'items' => [] ],
+            'hashtags' => [],
             'split' => [
-                'travelers' => [
-                    [
-                        'id' => $this->user1->id,
-                        'split_ratio' => 2.00,
-                        'is_spender' => true
-                    ]
+                [
+                    'id' => $this->user1->id,
+                    'type' => 'regular',
+                    'split_ratio' => 2.00,
+                    'is_spender' => true
                 ]
             ]
         ]);
@@ -194,14 +190,13 @@ class TransactionTest extends DuskTestCase {
             'amount'   => 666,
             'date'     => '2010-12-12',
             'description' => 'hello',
-            'hashtags' => [ 'items' => [] ],
+            'hashtags' => [],
             'split' => [
-                'travelers' => [
-                    [
-                        'id' => $this->user1->id,
-                        'split_ratio' => 2.00,
-                        'is_spender' => true
-                    ]
+                [
+                    'id' => $this->user1->id,
+                    'type' => 'regular',
+                    'split_ratio' => 2.00,
+                    'is_spender' => true
                 ]
             ]
         ]);
@@ -226,8 +221,8 @@ class TransactionTest extends DuskTestCase {
             'amount'   => 666,
             'date'     => '2010-12-12',
             'description' => 'hello',
-            'hashtags' => [ 'items' => [] ],
-            'split' => [ 'travelers' => [] ]
+            'hashtags' => [],
+            'split' => []
         ]);
 
         $spenders = $this->transaction->fresh()->users;
@@ -244,8 +239,8 @@ class TransactionTest extends DuskTestCase {
             'amount'   => 666,
             'date'     => '2010-12-12',
             'description' => 'hello',
-            'hashtags' => [ 'items' => ['hello'] ],
-            'split' => [ 'travelers' => [] ]
+            'hashtags' => ['hello'],
+            'split' => []
         ]);
 
         $hashtags = $this->transaction->fresh()->hashtags;
@@ -267,8 +262,8 @@ class TransactionTest extends DuskTestCase {
             'amount'   => 666,
             'date'     => '2010-12-12',
             'description' => 'hello',
-            'hashtags' => [ 'items' => [] ],
-            'split' => [ 'travelers' => [] ]
+            'hashtags' => [],
+            'split' => []
         ]);
 
         $hashtags = $this->transaction->fresh()->hashtags;
@@ -288,8 +283,8 @@ class TransactionTest extends DuskTestCase {
             'amount'   => 666,
             'date'     => '2010-12-12',
             'description' => 'hello',
-            'hashtags' => [ 'items' => [' dsf', 'dfgdf,g', '#sdf'] ],
-            'split' => [ 'travelers' => [] ]
+            'hashtags' => [' dsf', 'dfgdf,g', '#sdf'],
+            'split' => []
         ]);
         $hashtags = $this->transaction->fresh()->hashtags;
         $this->assertEquals(0, $hashtags->count());
@@ -305,8 +300,8 @@ class TransactionTest extends DuskTestCase {
             'amount'   => 666,
             'date'     => '2010-12-12',
             'description' => 'hello',
-            'hashtags' => [ 'items' => [] ],
-            'split' => [ 'travelers' => [] ],
+            'hashtags' => [],
+            'split' => [],
             'deletable' => true,
             'password' =>'password'
         ]);
@@ -326,8 +321,8 @@ class TransactionTest extends DuskTestCase {
             'amount'   => 666,
             'date'     => '2010-12-12',
             'description' => 'hello',
-            'hashtags' => [ 'items' => [] ],
-            'split' => [ 'travelers' => [] ],
+            'hashtags' => [],
+            'split' => [],
             'deletable' => true,
             'password' =>'wrongpassword'
         ]);
@@ -348,8 +343,8 @@ class TransactionTest extends DuskTestCase {
             'amount'   => 666,
             'date'     => '2010-12-12',
             'description' => 'hello',
-            'hashtags' => [ 'items' => [] ],
-            'split' => [ 'travelers' => [] ],
+            'hashtags' => [],
+            'split' => [],
             'delete' => true,
             'delete_confirmation' => true,
             'password' =>'password'

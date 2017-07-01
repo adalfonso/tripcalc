@@ -1,0 +1,66 @@
+.menu {
+    position: relative;
+
+    .trigger {
+        &:hover  + .body {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .caret {
+            color: $midnight;
+            font-size: .8rem;
+        }
+    }
+
+    .body {
+        background: $paleBlue;
+        border: 1px solid $midnight;
+        border-radius: .2rem;
+        box-shadow: black 1px 1px 2px;
+        visibility: hidden;
+        opacity: 0;
+        padding: .4rem .4rem .3rem .4rem;
+        position: absolute;
+        right: 0; top: calc(100% + .8rem;);
+        transition: visibility 0s, opacity 0.1s linear;
+        transition-delay: .2s;
+        z-index: 2;
+
+        li {
+            white-space: nowrap;
+
+            &:hover { color: $cool; }
+        }
+
+        &:hover {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        p {
+            height: 1.4rem;
+            line-height: 1rem;
+            padding: .2rem;
+            margin: 0;
+        }
+
+        .arw-up {
+            border: .8em solid transparent;
+            border-bottom: .8em solid $midnight;
+            content: " ";
+            height: 0;
+            right: 0;
+            position: absolute;
+            bottom: 100%;
+        }
+
+        .invis {
+            height: 1rem;
+            width: 100%;
+            right: 0;
+            position: absolute;
+            bottom: 100%;
+        }
+    }
+}

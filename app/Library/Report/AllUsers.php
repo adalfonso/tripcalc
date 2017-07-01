@@ -12,13 +12,46 @@ trait AllUsers {
 	public function allUsers() {
 		$usersFromSpend = $this->transactions->pluck('creator');
 
-		$usersFromSplit = $this->transactions->pluck('users')->collapse();
+		$regularUsersFromSplit = $this->transactions
+            ->pluck('users')->collapse();
 
-		return $this->trip->users
+        $virtualUsersFromSplit = $this->transactions
+            ->pluck('virtualUsers')->collapse();
+
+		return $this->trip->allUsers
 			->merge($usersFromSpend)
-			->merge($usersFromSplit)
-		    ->unique('id');
+			->merge($regularUsersFromSplit)
+            ->merge($virtualUsersFromSplit)
+		    ->unique(function($user) {
+                return get_class($user) . $user->id;
+            });
 	}
+
+    /**
+	 * Get all users mapped for reporting
+	 * @return Illuminate\Database\Eloquent\Collection
+	 */
+    protected function allUsersMap(){
+        return $this->allUsers()->map(function($user) {
+			$type = get_class($user) === 'App\VirtualUser'
+				? 'virtual' : 'regular';
+
+			$virtual = $type === 'virtual';
+
+			$name = $virtual ? $user->name : $user->full_name;
+
+			return (object) [
+				'id'         => $user->id,
+				'type'       => $type,
+				'first_name' => $virtual ? null : $user->first_name,
+				'last_name'  => $virtual ? null : $user->last_name,
+				'name'       => $name,
+				'total'      => 0,
+				'credits'   => collect([]),
+				'debits'   => collect([])
+			];
+		});
+    }
 
     /**
      * Get just the debtors
@@ -44,7 +77,11 @@ trait AllUsers {
         $this->transactions->each(function($transaction) {
 
 			// If user entered the transaction it is subtracted from their total
-            $user = $this->report->where('id', $transaction->created_by)->first();
+            $user = $this->report
+                ->where('id', $transaction->created_by)
+                ->where('type', 'regular')
+                ->first();
+
             $user->total = bcsub($user->total, $transaction->amount, 2);
 
 			if ($transaction->isEvenSplit()) {
@@ -53,6 +90,8 @@ trait AllUsers {
 
 			return $this->splitUnevenly($transaction);
 		});
+
+
 
         $this->migrateFractionalCents();
     }
@@ -65,6 +104,7 @@ trait AllUsers {
 
         // Set original total
         $this->originalTotal = $this->absoluteTotal();
+
 
         // Remove fractional cents from each speder's net total
 		$this->report->each(function($spender) {
@@ -182,7 +222,7 @@ trait AllUsers {
     public function splitUnevenly($transaction) {
         return $this->report->each(function($user) use($transaction) {
             $splitPercent =
-                $this->splitRatio($user->id, $transaction) /
+                $this->splitRatio($user, $transaction) /
                 $transaction->splitTotal;
 
             $user->total += $transaction->amount * $splitPercent;

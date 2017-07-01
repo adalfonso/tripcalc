@@ -1,6 +1,7 @@
 <template>
     <div class="tile">
-        <p>{{ spender.first_name }}</p>
+        <p v-if="spender.type === 'virtual'">{{ spender.name}} </p>
+        <p v-else>{{ spender.first_name }}</p>
         <div class="progressbar" :style="{ width: width }">
         </div>
     </div>
