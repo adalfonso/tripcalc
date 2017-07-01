@@ -41,7 +41,8 @@ class ReportController extends Controller {
 
         return [
             'transactions' => $transactions,
-            'multiUser' => $multiUser
+            'multiUser' => $multiUser,
+            'netTotal' => $this->bottomLine($trip)
         ];
     }
 
@@ -49,7 +50,7 @@ class ReportController extends Controller {
         $transactions = DetailedReport::make($trip);
 
         $total = $transactions->where('isCreator', true)->sum('amount');
-        $netTotal = $transactions->sum('net');
+        $netTotal = $this->bottomLine($trip);
 
         return view('report.extended', compact('transactions', 'total', 'netTotal'));
     }
