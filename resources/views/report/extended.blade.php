@@ -30,7 +30,7 @@
 			</tr>
 		@endforeach
 		<tr class="total">
-			<td><strong>{{ $total > 0 ? 'You are owed' : 'You Owe' }}</strong></td>
+			<td><strong>{{ $netTotal > 0 ? 'You are owed' : 'You Owe' }}</strong></td>
 			<td colspan="5">&nbsp;</td>
 			<td class="align-right">{{ money_format("%i", abs($netTotal)) }}</td>
 		</tr>
