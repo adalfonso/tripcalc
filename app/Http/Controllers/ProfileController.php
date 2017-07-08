@@ -9,23 +9,15 @@ use DB;
 class ProfileController extends Controller {
 
     public function personal() {
-    	$profile = Auth::user();
-    	$user_id = $profile->id;
-
-    	$user = User::where('id', $user_id)
-    		->with('pendingFriendRequests', 'pendingTripRequests')
-    		->first();
-
-    	$friendRequests = Auth::user()->pendingFriendRequests->count();
-    	$tripRequests = Auth::user()->pendingTripRequests->count();
+    	$profile = Auth::user()->load(
+            'pendingFriendRequests', 'pendingTripRequests'
+        );
 
         $posts = $this->posts($profile);
 
-    	$friends = $user->friends;
+        $friends = $profile->friends;
 
-    	return view('profile/personal', compact(
-    		'friendRequests', 'tripRequests', 'friends', 'profile', 'posts'
-    	));
+    	return view('profile.show', compact('profile', 'posts', 'friends'));
     }
 
     public function show($username) {
@@ -45,11 +37,13 @@ class ProfileController extends Controller {
     		'recipient_id' => $user->id, 'requester_id' => $profile->id
     	])->first();
 
-        $posts = is_null($friendship) ? null : $this->posts($profile);
 		$friends = $profile->friends;
 
-    	return view('profile/show', compact('profile', 'friendship', 'friends', 'posts'));
+        $posts = is_null($friendship) ? null : $this->posts($profile);
 
+    	return view('profile.show',
+            compact('profile', 'friendship', 'friends', 'posts')
+        );
     }
 
     public function fetchMorePosts(User $user, Request $request) {
