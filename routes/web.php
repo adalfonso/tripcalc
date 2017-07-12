@@ -32,7 +32,9 @@ Route::group(['middleware' => 'activeAccount'], function() {
 	Route::post('/trips', 'TripController@store');
 	Route::get('/user', 'UserController@info');
 	Route::patch('/user', 'UserController@update');
+	Route::get('/user/requests', 'UserController@requests');
 	Route::post('/user/search', 'UserController@search');
+
 	Route::get('/friends', 'FriendController@friends');
 	Route::get('/friend/requests', 'FriendController@getPendingRequests');
 	Route::post('/friend/{friend}/request', 'FriendController@sendRequest');

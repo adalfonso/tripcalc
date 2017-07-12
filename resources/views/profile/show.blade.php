@@ -37,7 +37,7 @@
 				@hide="profileInfoForm.visible = false">
 		    </profile-info-form>
 
-			@if($profile->pendingFriendRequests->count())
+			{{-- @if($profile->pendingFriendRequests->count())
 				<request-popup :type="'friend'" >
 		    	</request-popup>
 			@endif
@@ -45,7 +45,7 @@
 			@if($profile->pendingTripRequests->count())
 				<request-popup :type="'trip'" >
 		    	</request-popup>
-			@endif
+			@endif --}}
 
 		{{-- Other User's Profile--}}
 		@elseif (Auth::user()->activated)

@@ -4,7 +4,7 @@
             <div class="caret">&#9660;</div>
         </div>
         <ul class="body">
-            <div class="arw-up"></div>
+            <div class="arw-up-right"><div></div></div>
             <div class="invis"></div>
             <li v-for="item in localItems.where('active', true).data"
             @click="handle(item)">
@@ -29,7 +29,7 @@ export default {
             localItems: new Collection(this.items)
         };
     },
-    
+
     methods: {
         handle(item) {
             if (item.hasOwnProperty('emit')) {

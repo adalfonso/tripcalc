@@ -14,7 +14,7 @@
 
 		img {
 			height: 1.2rem;
-			transition: .2rem;
+			transition: .2s;
 		}
 
 		img:hover { opacity: .8; }
@@ -54,7 +54,7 @@
 		.menu {
 			.caret { line-height: 2rem; }
 			.body {
-				right: -.4rem;
+				right: .325rem;
 				top: calc(100% - .8rem;)
 			}
 		}
@@ -145,7 +145,7 @@
 				position: static;
 				visibility: visible;
 
-				.arw-up, .invis { display: none; }
+				.arw-up-right, .invis { display: none; }
 
 				li {
 					border-bottom: 1px solid #495a69;

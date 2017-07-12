@@ -63,6 +63,20 @@ class UserController extends Controller {
     	return $results;
     }
 
+	public function requests() {
+		$user = Auth::user();
+
+		$requests = collect([
+			'friend' => $user->pendingFriendRequests,
+			'trip' =>  $user->pendingTripRequests
+		]);
+
+		return [
+			'requests' => $requests,
+			'count' => $requests->collapse()->count()
+		];
+	}
+
 	public function uploadPhoto(User $user, Request $request) {
 
 		$file = $request->file('photo')->store('photo');

@@ -15,9 +15,8 @@
 
     .body {
         background: $paleBlue;
-        border: 1px solid $midnight;
+        border: 1px solid $smoke;
         border-radius: .2rem;
-        box-shadow: black 1px 1px 2px;
         visibility: hidden;
         opacity: 0;
         padding: .4rem .4rem .3rem .4rem;
@@ -45,14 +44,23 @@
             margin: 0;
         }
 
-        .arw-up {
-            border: .8em solid transparent;
-            border-bottom: .8em solid $midnight;
-            content: " ";
-            height: 0;
-            right: 0;
+        .arw-up-right {
+            width: 0;
+    		height: 0;
+    		border-bottom: 12px solid $smoke;
+    		border-left: 12px solid transparent;
+            right: -.8px; top: -11.2px;
             position: absolute;
-            bottom: 100%;
+
+    		> div {
+    			width: 0;
+    			height: 0;
+    			border-bottom: 11px solid $paleBlue;
+    			border-left: 11px solid transparent;
+    			right: 1px;
+    			position: absolute;
+    			top: 2.5px;
+    		}
         }
 
         .invis {

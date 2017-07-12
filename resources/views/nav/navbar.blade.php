@@ -8,8 +8,12 @@
 
 		<div id="nav-links">
 			<div id="nav-left" class="clearfix">
-				<a href="/profile" class="link-enhanced clearfix">
+				<a href="/profile" class="link-enhanced clearfix"
+					style="position:relative;">
 					<img src="/img/icon/profile-64x64.png">
+
+					<notifier></notifier>
+
 					<p class="fake-link">
 						{{ Auth::user()->first_name }}
 					</p>
