@@ -1,16 +1,22 @@
 <template>
-    <div class="menu clearfix float-left">
+    <div id="contextMenu">
         <div class="trigger">
             <div class="caret">&#9660;</div>
         </div>
-        <ul class="body">
-            <div class="arw-up-right"><div></div></div>
+        <div class="menu clearfix" style="right:.35rem;top:1.75rem">
+            <div class="arw-up-right">
+                <div></div>
+            </div>
             <div class="invis"></div>
-            <li v-for="item in localItems.where('active', true).data"
-            @click="handle(item)">
-                {{ item.display }}
-            </li>
-        </ul>
+            <div class="body">
+                <ul>
+                    <li v-for="item in localItems.where('active', true).data"
+                    @click="handle(item)">
+                        {{ item.display }}
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </template>
 

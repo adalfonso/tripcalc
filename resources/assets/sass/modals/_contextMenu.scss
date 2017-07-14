@@ -1,74 +1,157 @@
-.menu {
+.notification-count {
+    background: rgb(246, 85, 85);
+	border-radius: .15rem;
+	color: #fff;
+	font-size: 1rem;
+	left: 50%;
+	line-height: 1rem;
+	opacity: .9;
+	padding: .15rem .25rem;
+	position: absolute;
+	top: -.2rem;
+	width: auto;
+	transition: .2s;
+
+
+	&:hover {
+		opacity: 1;
+
+		#contextMenu .menu {
+	        visibility: visible;
+	        opacity: 1;
+	    }
+	}
+
+	#contextMenu {
+		position: absolute;
+		left: 0;
+		top: 1.75rem;
+
+        p { white-space: nowrap;}
+
+        li {
+            &:hover {
+                color: $midnight;
+            }
+        }
+	}
+}
+
+#contextMenu {
+    float: left;
     position: relative;
 
     .trigger {
-        &:hover  + .body {
-            visibility: visible;
-            opacity: 1;
-        }
-
         .caret {
             color: $midnight;
             font-size: .8rem;
         }
     }
 
+    &:hover .menu {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+
+.menu {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.1s linear;
+    transition-delay: .2s;
+    z-index: 2;
+
+    .arw-up-right,
+    .arw-up-left {
+        width: 0;
+        height: 0;
+        border-bottom: 12px solid $smoke;
+
+        > div {
+			width: 0;
+			height: 0;
+			border-bottom: 11px solid $paleBlue;
+			position: absolute;
+			top: 2.5px;
+		}
+    }
+
+    .arw-up-right {
+        border-left: 12px solid transparent;
+        right: 0; top: -11px;
+        position: absolute;
+
+        div {
+            right: 1px;
+			border-left: 11px solid transparent;
+        }
+
+        ~ .body { border-top-right-radius: 0; }
+    }
+
+    .arw-up-left {
+		border-right: 12px solid transparent;
+
+        div {
+            left: 1px;
+			border-right: 11px solid transparent;
+        }
+
+        ~ .body { border-top-left-radius: 0 }
+	}
+
+    .invis {
+        height: 3rem;
+        width: 100%;
+        right: 0;
+        position: absolute;
+        bottom: 100%;
+    }
+
     .body {
         background: $paleBlue;
         border: 1px solid $smoke;
         border-radius: .2rem;
-        visibility: hidden;
-        opacity: 0;
+
         padding: .4rem .4rem .3rem .4rem;
-        position: absolute;
-        right: 0; top: calc(100% + .8rem;);
-        transition: visibility 0s, opacity 0.1s linear;
-        transition-delay: .2s;
-        z-index: 2;
 
-        li {
-            white-space: nowrap;
+        h6 {
+			font-weight: 700;
+			margin: .2rem 0;
+		}
 
-            &:hover { color: $cool; }
+        p {
+            font-size: .9rem;
+            display: block;
+            height: 1.4rem;
+            line-height: 1rem;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul {
+            margin: 0;
+
+            li {
+    			height: auto;
+    			text-align: left;
+                font-size: 1rem;
+                white-space: nowrap;
+
+                &:hover { color: $cool; }
+            }
         }
 
         &:hover {
             visibility: visible;
             opacity: 1;
         }
-
-        p {
-            height: 1.4rem;
-            line-height: 1rem;
-            padding: .2rem;
-            margin: 0;
-        }
-
-        .arw-up-right {
-            width: 0;
-    		height: 0;
-    		border-bottom: 12px solid $smoke;
-    		border-left: 12px solid transparent;
-            right: -.8px; top: -11.2px;
-            position: absolute;
-
-    		> div {
-    			width: 0;
-    			height: 0;
-    			border-bottom: 11px solid $paleBlue;
-    			border-left: 11px solid transparent;
-    			right: 1px;
-    			position: absolute;
-    			top: 2.5px;
-    		}
-        }
-
-        .invis {
-            height: 1rem;
-            width: 100%;
-            right: 0;
-            position: absolute;
-            bottom: 100%;
-        }
     }
+}
+
+@media (max-width: 768px) {
+	.notification-count {
+		position: static;
+	}
 }

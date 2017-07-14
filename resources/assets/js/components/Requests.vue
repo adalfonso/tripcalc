@@ -1,50 +1,51 @@
 <template>
-    <div id="requests" class="clearfix">
 
+<div id="contextMenu" class="requests clearfix">
 
-        <div class="arw">
-            <div></div>
-        </div>
+<div class="menu clearfix">
 
-        <div class="border">
-            <div class="invis"></div>
-            <ul>
-                <li v-for="(requests, type) in data" v-if="requests.length">
-                    <h6>{{ capitalize(type) + 's' }}</h6>
-                    <ul class="clearfix">
-                        <li v-for="request in requests">
-                        <span v-if="type == 'friend'">
-                            {{ request.first_name }} {{ request.last_name }}
-                        </span>
-
-                        <span v-if="type == 'trip'">
-                            {{ request.name }}
-                        </span>
-                    </li>
-                    </ul>
-                </li>
-            </ul>
-            <!-- <p @click="visible = !visible">
-                You have
-                <a id="friendRequestsNumeric">{{ size }}</a>
-                new {{ type }} requests.
-            </p>
-            <div id="tripRequestGroup" class="pendingRequests clearfix" v-if="visible">
-                <div class="arw-up"></div>
-                <table>
-                    <tr v-for="(request, index) in requests" :id="request.id">
-                        <td>{{ request }}</td>
-                        <td>
-                            <div class="btn" @click="accept(index)">Accept</div>
-                        </td>
-                        <td>
-                            <div class="btn" @click="decline(index)">Decline</div>
-                        </td>
-                    </tr>
-                </table>
-            </div> -->
-        </div>
+    <div class="arw-up-left">
+        <div></div>
     </div>
+
+    <div class="invis"></div>
+
+    <div class="body">
+        <table v-if="Object.keys(data).length">
+            <template v-for="(requests, type) in data" v-if="requests.length">
+                <tr>
+                    <td colspan="3">
+                        <h6>{{ capitalize(type) + 's' }}</h6>
+                    </td>
+                </tr>
+                <tr v-for="request in requests">
+                    <td>
+                        <p v-if="type == 'friend'">
+                            {{ request.first_name }} {{ request.last_name }}
+                        </p>
+
+                        <p v-if="type == 'trip'">
+                            {{ request.name }}
+                        </p>
+                    </td>
+                    <td>
+                        <div class="btn btn-tiny" @click="accept(request.id, type)">
+                            Accept
+                        </div>
+                    </td>
+                    <td>
+                        <div class="btn btn-tiny" @click="decline(request.id, type)">
+                            Decline
+                        </div>
+                    </td>
+                </tr>
+            </template>
+        </table>
+    </div>
+</div>
+
+</div>
+
 </template>
 
 
@@ -74,6 +75,23 @@
         methods: {
             capitalize(word) {
                 return word.charAt(0).toUpperCase() + word.slice(1);
+            },
+
+            accept(id, type) {
+                return this.resolve(id, type, 1);
+            },
+
+            decline(id, type) {
+                return this.resolve(id, type -1);
+            },
+
+            resolve(id, type, resolution) {
+                axios.post(`/${type}/${id}/resolveRequest`, {
+                    resolution: resolution
+                })
+                .then(response => {
+                    this.requests = response.data;
+                });
             }
         }
     }

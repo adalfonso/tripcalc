@@ -14,7 +14,6 @@
 @import "modals/contextMenu";
 @import "modals/datePicker";
 @import "modals/nav";
-@import "modals/notifications";
 @import "modals/popup";
 @import "modals/report";
 @import "modals/search";
@@ -200,31 +199,6 @@ ul {
 	-webkit-animation:spin 1.5s linear infinite;
     -moz-animation:spin 1.5s linear infinite;
     animation:spin 1.5s linear infinite;
-}
-
-.pendingRequests {
-    position: absolute;
-    background: $backgroundTransparent;
-    padding: .6rem;
-    white-space: nowrap;
-    z-index: 2;
-
-    .arw-up {
-    	border: .8em solid transparent;
-    	border-bottom: .8em solid $backgroundTransparent;
-    	content: " ";
-    	height: 0;
-    	left: 0;
-    	position: absolute;
-    	bottom: 100%;
-    }
-
-    .btn {
-     	font-size: .8rem;
-        padding: .1em .5rem;
-        margin-left: .4rem;
-        transition: .2s;
-    }
 }
 
 // Trip List

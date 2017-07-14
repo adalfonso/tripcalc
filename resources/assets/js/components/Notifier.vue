@@ -1,14 +1,10 @@
 <template>
-    <div>
-        <div class="notification-count" v-if="count"
-            @click.prevent="visible = !visible">
+    <div v-if="count">
+        <div class="notification-count">
             {{ count }}
 
             <requests></requests>
         </div>
-
-
-
     </div>
 </template>
 
@@ -22,7 +18,6 @@ export default {
         return {
             count: 0,
             requests: {},
-            visible: false
         };
     },
 
