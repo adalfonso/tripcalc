@@ -118,12 +118,6 @@ class FriendController extends Controller {
         ]);
     }
 
-    public function getPendingRequests() {
-    	return Auth::user()
-    		->pendingFriendRequests
-    		->pluck('full_name', 'id');
-    }
-
     public function resolveRequest(Request $request, $friend) {
         $this->validate($request, [
             'resolution' => 'required|regex:/^-?1$/'
@@ -135,7 +129,7 @@ class FriendController extends Controller {
             'confirmed'    => 0
         ])->update(['confirmed' => $request->resolution]);
 
-        return $this->getPendingRequests();
+        return Auth::user()->allRequests;
     }
 
     public function sendInvitationEmail($user) {

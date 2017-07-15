@@ -89,6 +89,18 @@ class User extends Authenticatable {
             })->values();
     }
 
+    public function getAllRequestsAttribute() {
+        $requests = collect([
+            'friend' => $this->pendingFriendRequests,
+            'trip' =>  $this->pendingTripRequests
+        ]);
+
+        return [
+            'requests' => $requests,
+            'count' => $requests->collapse()->count()
+        ];
+    }
+
     // Accessors
     public function getCurrentPhotoAttribute() {
 		return $this->morphMany('App\Photo', 'related')

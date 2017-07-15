@@ -1,8 +1,8 @@
 <template>
 
-<div id="contextMenu" class="requests clearfix">
+<div class="menu-wrap">
 
-<div class="menu clearfix">
+<div class="menu" id="request-menu">
 
     <div class="arw-up-left">
         <div></div>
@@ -53,23 +53,7 @@
     export default {
 
         props: {
-
-        },
-
-        data() {
-            return {
-                data: []
-            };
-        },
-
-        created() {
-            axios.get('/user/requests')
-            .then(response => {
-                this.data = response.data.requests;
-            });
-        },
-
-        computed: {
+            data: { required: true }
         },
 
         methods: {
@@ -90,7 +74,7 @@
                     resolution: resolution
                 })
                 .then(response => {
-                    this.requests = response.data;
+                    this.$emit('refresh', response.data);
                 });
             }
         }

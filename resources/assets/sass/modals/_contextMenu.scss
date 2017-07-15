@@ -1,7 +1,7 @@
 .notification-count {
-    background: rgb(246, 85, 85);
 	border-radius: .15rem;
 	color: #fff;
+    display: table;
 	font-size: 1rem;
 	left: 50%;
 	line-height: 1rem;
@@ -9,82 +9,104 @@
 	padding: .15rem .25rem;
 	position: absolute;
 	top: -.2rem;
-	width: auto;
 	transition: .2s;
+	width: auto;
+    background: rgb(246, 85, 85);
 
+    &:hover {
+        opacity: 1;
 
-	&:hover {
-		opacity: 1;
-
-		#contextMenu .menu {
-	        visibility: visible;
-	        opacity: 1;
-	    }
-	}
-
-	#contextMenu {
-		position: absolute;
-		left: 0;
-		top: 1.75rem;
-
-        p { white-space: nowrap;}
-
-        li {
-            &:hover {
-                color: $midnight;
-            }
-        }
-	}
-}
-
-#contextMenu {
-    float: left;
-    position: relative;
-
-    .trigger {
-        .caret {
-            color: $midnight;
-            font-size: .8rem;
+        + .menu-wrap .menu {
+            opacity: 1;
+            visibility: visible;
         }
     }
 
-    &:hover .menu {
+    + .menu-wrap .menu {
+        left: 50%;
+        position: absolute;
+        top: -1rem;
+        z-index: 5;
+
+        .btn-tiny {
+            display: block;
+            margin: 0 0 .06rem 0;
+        }
+
+        p {
+            line-height: 1.5rem;
+            white-space: nowrap;
+        }
+
+        li:hover { color: $midnight; }
+    }
+}
+
+.trigger {
+    float: left;
+    line-height: 2rem;
+
+    .caret {
+        color: $midnight;
+        font-size: .8rem;
+    }
+
+    &:hover + .menu {
         visibility: visible;
         opacity: 1;
     }
 }
 
+.menu-wrap {
+    position: relative;
+
+    &:hover .menu {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    &.advanced-settings {
+        float: left;
+
+        .menu {
+            right: calc(100% - 7px);
+            top: 2.25rem;
+        }
+    }
+}
+
 .menu {
-    position: absolute;
-    visibility: hidden;
+    float: left;
     opacity: 0;
+    position: absolute;
     transition: visibility 0s, opacity 0.1s linear;
     transition-delay: .2s;
+    visibility: hidden;
     z-index: 2;
 
     .arw-up-right,
     .arw-up-left {
-        width: 0;
-        height: 0;
         border-bottom: 12px solid $smoke;
+        height: 0;
+        width: 0;
 
         > div {
-			width: 0;
-			height: 0;
 			border-bottom: 11px solid $paleBlue;
+			height: 0;
 			position: absolute;
 			top: 2.5px;
+			width: 0;
 		}
     }
 
     .arw-up-right {
         border-left: 12px solid transparent;
-        right: 0; top: -11px;
         position: absolute;
+        right: 0; top: -11px;
 
         div {
-            right: 1px;
 			border-left: 11px solid transparent;
+            right: 1px;
         }
 
         ~ .body { border-top-right-radius: 0; }
@@ -94,26 +116,25 @@
 		border-right: 12px solid transparent;
 
         div {
-            left: 1px;
 			border-right: 11px solid transparent;
+            left: 1px;
         }
 
         ~ .body { border-top-left-radius: 0 }
 	}
 
     .invis {
-        height: 3rem;
-        width: 100%;
-        right: 0;
-        position: absolute;
         bottom: 100%;
+        height: 3rem;
+        position: absolute;
+        right: 0;
+        width: 100%;
     }
 
     .body {
         background: $paleBlue;
-        border: 1px solid $smoke;
         border-radius: .2rem;
-
+        border: 1px solid $smoke;
         padding: .4rem .4rem .3rem .4rem;
 
         h6 {
@@ -122,12 +143,12 @@
 		}
 
         p {
-            font-size: .9rem;
             display: block;
+            font-size: .9rem;
             height: 1.4rem;
             line-height: 1rem;
-            padding: 0;
             margin: 0;
+            padding: 0;
         }
 
         ul {
@@ -144,14 +165,74 @@
         }
 
         &:hover {
-            visibility: visible;
             opacity: 1;
+            visibility: visible;
         }
     }
 }
 
 @media (max-width: 768px) {
+
 	.notification-count {
-		position: static;
+        position: static;
+	}
+
+    #nav-links {
+
+        #request-menu {
+            border-bottom: 1px solid #495a69;
+            left: 0;
+
+            .body {
+
+                table { width: 100%; }
+            }
+
+            &.displayInNav {
+                display: block;
+                position: fixed;
+                left: 0;
+                right: 0;
+                height: 50%;
+                overflow: auto;
+            }
+        }
+
+        .menu-wrap {
+            float: none;
+        }
+
+        .advanced-settings {
+            .menu { position: static; }
+            .body { padding: 0; }
+        }
+
+		.trigger { display: none; }
+
+		.menu {
+			display: none;
+			float: none;
+			opacity: 1;
+			position: static;
+			visibility: visible;
+
+			.arw-up-right,
+			.arw-up-left { display: none; }
+
+            .invis { display: none; }
+
+			.body {
+				border: none;
+
+				li {
+					border-bottom: 1px solid #495a69;
+					color: $cool;
+					font-size: 1.2rem;
+					font-weight: 700;
+					height: auto;
+					padding: .6rem;
+				}
+			}
+		}
 	}
 }

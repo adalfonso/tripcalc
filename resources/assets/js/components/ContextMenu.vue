@@ -1,13 +1,18 @@
 <template>
-    <div id="contextMenu">
+    <div class="menu-wrap advanced-settings">
+
         <div class="trigger">
             <div class="caret">&#9660;</div>
         </div>
-        <div class="menu clearfix" style="right:.35rem;top:1.75rem">
+
+        <div class="menu">
+
             <div class="arw-up-right">
                 <div></div>
             </div>
+
             <div class="invis"></div>
+
             <div class="body">
                 <ul>
                     <li v-for="item in localItems.where('active', true).data"
@@ -16,6 +21,7 @@
                     </li>
                 </ul>
             </div>
+
         </div>
     </div>
 </template>
