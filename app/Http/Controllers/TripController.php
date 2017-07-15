@@ -138,13 +138,7 @@ class TripController extends Controller {
 
     	return $results;
     }
-
-    public function getPendingRequests() {
-        return Auth::user()
-            ->pendingTripRequests
-            ->pluck('name', 'id');
-    }
-
+    
     public function resolveRequest(Request $request, Trip $trip) {
         $this->validate($request, [
             'resolution' => 'required|regex:/^-?1$/'
@@ -162,7 +156,7 @@ class TripController extends Controller {
             ]);
         }
 
-        return $this->getPendingRequests();
+        return Auth::user()->allRequests;
     }
 
     public function validateTripData() {

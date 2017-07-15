@@ -19,6 +19,8 @@ Vue.component('logout', require('./components/Logout.vue'));
 Vue.component('context-menu', require('./components/ContextMenu.vue'));
 Vue.component('post', require('./components/Post.vue'));
 Vue.component('request-popup', require('./components/RequestPopup.vue'));
+Vue.component('notifier', require('./components/Notifier.vue'));
+Vue.component('requests', require('./components/Requests.vue'));
 Vue.component('search-people', require('./components/SearchPeople.vue'));
 
 // Profile

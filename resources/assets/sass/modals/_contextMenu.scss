@@ -1,66 +1,238 @@
-.menu {
+.notification-count {
+	border-radius: .15rem;
+	color: #fff;
+    display: table;
+	font-size: 1rem;
+	left: 50%;
+	line-height: 1rem;
+	opacity: .9;
+	padding: .15rem .25rem;
+	position: absolute;
+	top: -.2rem;
+	transition: .2s;
+	width: auto;
+    background: rgb(246, 85, 85);
+
+    &:hover {
+        opacity: 1;
+
+        + .menu-wrap .menu {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    + .menu-wrap .menu {
+        left: 50%;
+        position: absolute;
+        top: -1rem;
+        z-index: 5;
+
+        .btn-tiny {
+            display: block;
+            margin: 0 0 .06rem 0;
+        }
+
+        p {
+            line-height: 1.5rem;
+            white-space: nowrap;
+        }
+
+        li:hover { color: $midnight; }
+    }
+}
+
+.trigger {
+    float: left;
+    line-height: 2rem;
+
+    .caret {
+        color: $midnight;
+        font-size: .8rem;
+    }
+
+    &:hover + .menu {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+
+.menu-wrap {
     position: relative;
 
-    .trigger {
-        &:hover  + .body {
-            visibility: visible;
-            opacity: 1;
+    &:hover .menu {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    &.advanced-settings {
+        float: left;
+
+        .menu {
+            right: calc(100% - 7px);
+            top: 2.25rem;
+        }
+    }
+}
+
+.menu {
+    float: left;
+    opacity: 0;
+    position: absolute;
+    transition: visibility 0s, opacity 0.1s linear;
+    transition-delay: .2s;
+    visibility: hidden;
+    z-index: 2;
+
+    .arw-up-right,
+    .arw-up-left {
+        border-bottom: 12px solid $smoke;
+        height: 0;
+        width: 0;
+
+        > div {
+			border-bottom: 11px solid $paleBlue;
+			height: 0;
+			position: absolute;
+			top: 2.5px;
+			width: 0;
+		}
+    }
+
+    .arw-up-right {
+        border-left: 12px solid transparent;
+        position: absolute;
+        right: 0; top: -11px;
+
+        div {
+			border-left: 11px solid transparent;
+            right: 1px;
         }
 
-        .caret {
-            color: $midnight;
-            font-size: .8rem;
+        ~ .body { border-top-right-radius: 0; }
+    }
+
+    .arw-up-left {
+		border-right: 12px solid transparent;
+
+        div {
+			border-right: 11px solid transparent;
+            left: 1px;
         }
+
+        ~ .body { border-top-left-radius: 0 }
+	}
+
+    .invis {
+        bottom: 100%;
+        height: 3rem;
+        position: absolute;
+        right: 0;
+        width: 100%;
     }
 
     .body {
         background: $paleBlue;
-        border: 1px solid $midnight;
         border-radius: .2rem;
-        box-shadow: black 1px 1px 2px;
-        visibility: hidden;
-        opacity: 0;
+        border: 1px solid $smoke;
         padding: .4rem .4rem .3rem .4rem;
-        position: absolute;
-        right: 0; top: calc(100% + .8rem;);
-        transition: visibility 0s, opacity 0.1s linear;
-        transition-delay: .2s;
-        z-index: 2;
 
-        li {
-            white-space: nowrap;
+        h6 {
+			font-weight: 700;
+			margin: .2rem 0;
+		}
 
-            &:hover { color: $cool; }
+        p {
+            display: block;
+            font-size: .9rem;
+            height: 1.4rem;
+            line-height: 1rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            margin: 0;
+
+            li {
+    			height: auto;
+    			text-align: left;
+                font-size: 1rem;
+                white-space: nowrap;
+
+                &:hover { color: $cool; }
+            }
         }
 
         &:hover {
-            visibility: visible;
             opacity: 1;
-        }
-
-        p {
-            height: 1.4rem;
-            line-height: 1rem;
-            padding: .2rem;
-            margin: 0;
-        }
-
-        .arw-up {
-            border: .8em solid transparent;
-            border-bottom: .8em solid $midnight;
-            content: " ";
-            height: 0;
-            right: 0;
-            position: absolute;
-            bottom: 100%;
-        }
-
-        .invis {
-            height: 1rem;
-            width: 100%;
-            right: 0;
-            position: absolute;
-            bottom: 100%;
+            visibility: visible;
         }
     }
+}
+
+@media (max-width: 768px) {
+
+	.notification-count {
+        position: static;
+	}
+
+    #nav-links {
+
+        #request-menu {
+            border-bottom: 1px solid #495a69;
+            left: 0;
+
+            .body {
+
+                table { width: 100%; }
+            }
+
+            &.displayInNav {
+                display: block;
+                position: fixed;
+                left: 0;
+                right: 0;
+                height: 50%;
+                overflow: auto;
+            }
+        }
+
+        .menu-wrap {
+            float: none;
+        }
+
+        .advanced-settings {
+            .menu { position: static; }
+            .body { padding: 0; }
+        }
+
+		.trigger { display: none; }
+
+		.menu {
+			display: none;
+			float: none;
+			opacity: 1;
+			position: static;
+			visibility: visible;
+
+			.arw-up-right,
+			.arw-up-left { display: none; }
+
+            .invis { display: none; }
+
+			.body {
+				border: none;
+
+				li {
+					border-bottom: 1px solid #495a69;
+					color: $cool;
+					font-size: 1.2rem;
+					font-weight: 700;
+					height: auto;
+					padding: .6rem;
+				}
+			}
+		}
+	}
 }

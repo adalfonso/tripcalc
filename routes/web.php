@@ -26,15 +26,15 @@ Route::group(['middleware' => 'auth'], function() {
 
 Route::group(['middleware' => 'activeAccount'], function() {
 	Route::get('/profile', 'ProfileController@personal');
-	Route::get('/trip/requests', 'TripController@getPendingRequests');
 	Route::post('/trip/{trip}/resolveRequest', 'TripController@resolveRequest');
 	Route::get('/trips', 'TripController@index');
 	Route::post('/trips', 'TripController@store');
 	Route::get('/user', 'UserController@info');
 	Route::patch('/user', 'UserController@update');
+	Route::get('/user/requests', 'UserController@requests');
 	Route::post('/user/search', 'UserController@search');
+
 	Route::get('/friends', 'FriendController@friends');
-	Route::get('/friend/requests', 'FriendController@getPendingRequests');
 	Route::post('/friend/{friend}/request', 'FriendController@sendRequest');
 	Route::delete('/friend/{friend}/unfriend', 'FriendController@unfriend');
 	Route::post('/friend/{friend}/resolveRequest', 'FriendController@resolveRequest');

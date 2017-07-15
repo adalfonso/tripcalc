@@ -34,5 +34,6 @@
 
         {{-- Use overwrite directive when declaring new Vue instance. --}}
         @yield('vue')
+        
     </body>
 </html>

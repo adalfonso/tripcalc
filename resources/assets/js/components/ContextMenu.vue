@@ -1,16 +1,28 @@
 <template>
-    <div class="menu clearfix float-left">
+    <div class="menu-wrap advanced-settings">
+
         <div class="trigger">
             <div class="caret">&#9660;</div>
         </div>
-        <ul class="body">
-            <div class="arw-up"></div>
+
+        <div class="menu">
+
+            <div class="arw-up-right">
+                <div></div>
+            </div>
+
             <div class="invis"></div>
-            <li v-for="item in localItems.where('active', true).data"
-            @click="handle(item)">
-                {{ item.display }}
-            </li>
-        </ul>
+
+            <div class="body">
+                <ul>
+                    <li v-for="item in localItems.where('active', true).data"
+                    @click="handle(item)">
+                        {{ item.display }}
+                    </li>
+                </ul>
+            </div>
+
+        </div>
     </div>
 </template>
 
@@ -29,7 +41,7 @@ export default {
             localItems: new Collection(this.items)
         };
     },
-    
+
     methods: {
         handle(item) {
             if (item.hasOwnProperty('emit')) {

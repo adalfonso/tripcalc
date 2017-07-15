@@ -63,6 +63,10 @@ class UserController extends Controller {
     	return $results;
     }
 
+	public function requests() {
+		return Auth::user()->allRequests;
+	}
+
 	public function uploadPhoto(User $user, Request $request) {
 
 		$file = $request->file('photo')->store('photo');
