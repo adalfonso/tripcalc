@@ -24,7 +24,7 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/profile/{username}', 'ProfileController@show');
 });
 
-Route::group(['middleware' => 'activeAccount'], function() {
+Route::group(['middleware' => ['auth', 'activeAccount']], function() {
 	Route::get('/profile', 'ProfileController@personal');
 	Route::post('/trip/{trip}/resolveRequest', 'TripController@resolveRequest');
 	Route::get('/trips', 'TripController@index');
