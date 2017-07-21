@@ -230,14 +230,14 @@ class Collection {
 		})
 	}
 
-    where(property, comparisionOrValue, value = null) {
+    where(property, comparisionOrValue, value = undefined) {
 		if (property instanceof Object) {
 			return this.whereMultiple(property);
 		}
 
         var comparison;
 
-        if (!value) {
+        if (value === undefined) {
             value = comparisionOrValue;
             comparison = '=';
         } else {

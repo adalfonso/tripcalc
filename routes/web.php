@@ -55,6 +55,7 @@ Route::group(['middleware' => ['auth', 'activeAccount']], function() {
 		Route::post('/trip/{trip}/virtualUsers', 'VirtualUserController@store');
 		Route::patch('/trip/{trip}/virtualUser/{virtualUser}', 'VirtualUserController@update');
 		Route::delete('/trip/{trip}/virtualUser/{virtualUser}', 'VirtualUserController@destroy');
+		Route::post('/trip/{trip}/virtualUser/{virtualUser}/merge', 'VirtualUserController@attemptMerge');
 		Route::get('/trip/{trip}/report/bottomLine', 'ReportController@bottomLine');
 		Route::get('/trip/{trip}/report/closeout', 'ReportController@closeout');
 		Route::get('/trip/{trip}/report/detailed', 'ReportController@detailed');

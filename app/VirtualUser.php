@@ -17,7 +17,8 @@ class VirtualUser extends Model {
     }
 
     public function transactions() {
-        return $this->belongsToMany('App\Transaction');
+        return $this->belongsToMany('App\Transaction')
+            ->withPivot('split_ratio', 'virtual_user_id');
     }
 
     public function getTypeAttribute() {

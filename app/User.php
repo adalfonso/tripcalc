@@ -62,6 +62,10 @@ class User extends Authenticatable {
         return $this->trips()->wherePivot('active', false);
     }
 
+    public function transactions() {
+        return $this->belongsToMany('App\Transaction');
+    }
+
     public function profilePosts() {
 		return $this->morphMany('App\Post', 'postable');
 	}
