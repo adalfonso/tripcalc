@@ -89,6 +89,16 @@ class Maker {
         ]);
     }
 
+    public function attachTransactionUser(Transaction $transaction, User $user, $split) {
+        $transaction->users()->attach($user
+            ->id, ['split_ratio' => $split]);
+    }
+
+    public function attachTransactionVirtualUser(Transaction $transaction, VirtualUser $user, $split) {
+        $transaction->virtualUsers()->attach($user
+            ->id, ['split_ratio' => $split]);
+    }
+
    	public function attachTripUser(Trip $trip, User $user) {
    		$trip->users()->attach($user->id, ['active' => 1]);
    	}
