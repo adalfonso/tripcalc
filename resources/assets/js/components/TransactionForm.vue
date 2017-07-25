@@ -75,7 +75,7 @@
                         v-if="traveler.type === 'virtual'">[V]</strong>
                     {{ traveler.full_name }}
                 </p>
-                <input type="text" placeholder="Split Ratio" maxlength="5"
+                <input type="number" placeholder="Split" maxlength="5"
                     class="splitRatio" v-model="traveler.split_ratio"
                     @click.stop="selectTraveler(index)">
             </div>
