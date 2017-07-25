@@ -3,7 +3,7 @@
 use App\Transaction;
 use App\Trip;
 use App\VirtualUser;
-use Auth;
+use App\Library\VirtualUser\Merger;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -61,83 +61,13 @@ class VirtualUserController extends Controller {
         return $this->index($trip);
     }
 
-    public function attemptMerge(Request $request, Trip $trip, VirtualUser $virtualUser) {
-        $transactions = Auth::user()->transactions()
-            ->where('trip_id', $trip->id)->get();
+    public function merge(Request $request, Trip $trip, VirtualUser $virtualUser) {
+        $merge = new Merger($request, $trip, $virtualUser);
 
-        $this->conflicts = $virtualUser->transactions
-            ->filter(function($transaction) use ($transactions) {
-                return $transactions->contains('id', $transaction->id);
-            })->pluck('id');
-
-        $this->rules = collect($request->rules);
-
-        if (! $this->resolvesConflicts()) {
-            return response($this->conflicts($virtualUser), 422);
+        if (! $merge->canMerge()) {
+            return $merge->conflictResponse();
         }
 
-        \DB::Transaction(function() use ($virtualUser) {
-            $virtualUser->transactions->each(function($transaction) {
-                $split_ratio = $this->conflicts->contains($transaction->id)
-
-                ? $this->resolvedSplit(
-                    $transaction, $this->rules->where(
-                        'id', $transaction->id
-                    )->first()
-                )
-
-                : $transaction->pivot->split_ratio;
-
-                $transaction->users()->syncWithoutDetaching([
-                    Auth::id() => ['split_ratio' => $split_ratio]
-                ]);
-
-                $transaction->virtualUsers()->detach($transaction->pivot->virtual_user_id);
-            });
-
-            $virtualUser->delete();
-        });
-    }
-
-    public function resolvedSplit($transaction, $rule) {
-        $resolution = $rule['resolution'];
-        $conflict = $rule['conflict'];
-
-        if ($resolution === 'combine') {
-            return floatval($conflict['user']) + floatval($conflict['virtual']);
-        }
-
-        return floatval($conflict[$resolution]);
-    }
-
-    protected function resolvesConflicts() {
-        return $this->conflicts->filter(function($conflict) {
-            $options =  ['user', 'virtual', 'combine'];
-
-            return $this->rules->where('id', $conflict)
-                ->whereIn('resolution', $options)
-                ->isEmpty();
-        })
-        ->isEmpty();
-    }
-
-    protected function conflicts($virtualUser) {
-        return Transaction::whereIn('id', $this->conflicts)
-            ->with('users', 'virtualUsers')
-            ->get()
-            ->each(function($transaction) use ($virtualUser) {
-                $transaction->conflict = [
-                    'user' => $transaction->users
-                        ->where('id', Auth::id())
-                        ->first()->pivot->split_ratio,
-                    'virtual' => $transaction->virtualUsers
-                        ->where('id', $virtualUser->id)
-                        ->first()->pivot->split_ratio
-               ];
-
-               $transaction->resolution = null;
-
-               $transaction->date = Carbon::parse($transaction->date)->format('F j, Y');
-            });
+        $merge->merge();
     }
 }

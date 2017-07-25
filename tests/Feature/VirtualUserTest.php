@@ -26,8 +26,6 @@ class VitualUserTest extends DuskTestCase {
 
     /** @test */
     public function it_merges_a_virtual_user_with_no_conflicts() {
-        //$this->withoutMiddleware();
-
         $transaction = $this->maker->transaction($this->trip, $this->user);
         $this->maker->attachTransactionVirtualUser($transaction, $this->virtUser, 5);
 
@@ -35,7 +33,7 @@ class VitualUserTest extends DuskTestCase {
             'trip/' . $this->trip->id .
             '/virtualUser/' . $this->virtUser->id . '/merge', [
                 '_token' => csrf_token()
-            ]);
+        ]);
 
         $response->assertStatus(200);
 
@@ -66,7 +64,7 @@ class VitualUserTest extends DuskTestCase {
             'trip/' . $this->trip->id .
             '/virtualUser/' . $this->virtUser->id . '/merge', [
                 '_token' => csrf_token()
-            ]);
+        ]);
 
         $response->assertStatus(422);
     }
@@ -130,7 +128,8 @@ class VitualUserTest extends DuskTestCase {
                         'resolution' => 'virtual'
                     ]
                 ]
-            ]);
+            ]
+        );
 
         $response->assertStatus(200);
 
@@ -170,7 +169,8 @@ class VitualUserTest extends DuskTestCase {
                         'resolution' => 'combine'
                     ]
                 ]
-            ]);
+            ]
+        );
 
         $response->assertStatus(200);
 
