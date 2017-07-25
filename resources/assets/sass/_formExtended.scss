@@ -97,6 +97,10 @@ input.splitRatio {
 
     [active="true"] {
     	background: $midnight;
+
+		.font-dark {
+			color: $smoke;
+		}
     }
 }
 

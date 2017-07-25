@@ -1,6 +1,16 @@
 <template>
 <div class="popup-wrap" @click.self="hide">
 <div class="popup">
+
+    <alert v-if="alert" :type="'decide'" @hide="alert = false"
+        @yes="merge" @no="$emit('hide')"
+        :message="'Would you like to merge this user\'s transacations into your account?\n\n(This will also delete the virtual user)'">
+    </alert>
+
+    <conflict-handler v-if="conflict.handle" :data="conflict.data"
+        @hide="conflict.handle = false" @resolve="resolveMerge">
+    </conflict-handler>
+
     <div class="popup-close" @click="hide">&times;</div>
 
     <h4 class="centered">Virtual Users</h4>
@@ -33,6 +43,10 @@
                     <div class="btn btn-extra-thin" v-if="user.deleteable"
                         @click="removeUser(user)">
                         Delete
+                    </div>
+                    <div class="btn btn-extra-thin" v-else
+                        @click="promptMerge(user)">
+                        Merge
                     </div>
                 </td>
             </tr>
@@ -85,9 +99,18 @@ export default {
     data() {
         return {
             addable: false,
+            alert: false,
             newUser: new Form({ name: ''}),
             users: [],
-            edit: new Form({name: '', id: null})
+            edit: new Form({name: '', id: null}),
+            conflict: {
+                handle: false,
+                data: {}
+            },
+            mergeAttempt: {
+                user: null,
+                rules: null
+            }
         };
     },
 
@@ -116,6 +139,42 @@ export default {
             axios.delete(`/trip/${this.trip_id}/virtualUser/${user.id}`)
             .then(response => {
                 this.users = response.data;
+            });
+        },
+
+        promptMerge(user, rules = null) {
+            this.mergeAttempt = {
+                user: user,
+                rules: rules
+            };
+
+            this.alert = true;
+        },
+
+        resolveMerge(data) {
+            this.conflict.handle = false;
+            this.mergeAttempt.rules = data;
+            this.merge();
+        },
+
+        merge() {
+            let user = this.mergeAttempt.user;
+            let rules = this.mergeAttempt.rules;
+
+            this.alert = false;
+
+            axios.post(`/trip/${this.trip_id}/virtualUser/${user.id}/merge`, {
+                rules: rules
+            })
+            .then(response => {
+                this.hide();
+            }).catch(error => {
+                if (error.response.status !== 422) {
+                    return;
+                }
+
+                this.conflict.data = error.response.data;
+                this.conflict.handle = true;
             });
         },
 

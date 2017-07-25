@@ -1,4 +1,4 @@
-<?php namespace Tests\Browser;
+<?php namespace Tests\Feature;
 
 use App\Mail\AccountInvitation;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

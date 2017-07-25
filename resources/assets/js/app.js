@@ -3,8 +3,11 @@
 import Vue from 'vue';
 import axios from 'axios';
 import Form from './lib/Form';
+import Collect from './lib/Collection.js';
+
 
 window.axios = axios;
+window.Collect = Collect;
 window.Form = Form;
 window.Vue = Vue;
 
@@ -50,3 +53,4 @@ Vue.component('advanced-trip-settings', require('./components/AdvancedTripSettin
 Vue.component('invite-friend', require('./components/InviteFriend.vue'));
 Vue.component('trip-form', require('./components/TripForm.vue'));
 Vue.component('virtual-user-manager', require('./components/VirtualUserManager.vue'));
+Vue.component('conflict-handler', require('./components/ConflictHandler.vue'));
