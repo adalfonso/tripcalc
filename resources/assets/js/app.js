@@ -5,7 +5,6 @@ import axios from 'axios';
 import Form from './lib/Form';
 import Collect from './lib/Collection.js';
 
-
 window.axios = axios;
 window.Collect = Collect;
 window.Form = Form;

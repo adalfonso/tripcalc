@@ -160,6 +160,15 @@ class TripController extends Controller {
     	return $results;
     }
 
+    public function removeRequest(Request $request, Trip $trip) {
+        Auth::user()->trips()->detach($trip->id);
+
+        if (!$trip->active) {
+            \Session::flash('alert', 'This trip has been closed and your request could not be resolved.');
+            return redirect('profile');
+        }
+    }
+
     public function resolveRequest(Request $request, Trip $trip) {
         $this->validate($request, [
             'resolution' => 'required|regex:/^-?1$/'

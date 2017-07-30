@@ -16,7 +16,13 @@ class TripIsActive {
      */
     public function handle($request, Closure $next) {
         if (!$request->trip->active) {
-            return redirect('/trip/' . $request->trip->id);
+            $endpoint = '/trip/' . $request->trip->id;
+
+            if (\Route::currentRouteName() === 'resolveTripRequest') {
+                return response(['redirect' => $endpoint . '/removeRequest'], 422);
+            }
+
+            return redirect($endpoint);
         }
 
         return $next($request);

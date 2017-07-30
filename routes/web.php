@@ -26,7 +26,6 @@ Route::group(['middleware' => 'auth'], function() {
 
 Route::group(['middleware' => ['auth', 'activeAccount']], function() {
 	Route::get('/profile', 'ProfileController@personal');
-	Route::post('/trip/{trip}/resolveRequest', 'TripController@resolveRequest'); /////
 	Route::get('/trips', 'TripController@index');
 	Route::post('/trips', 'TripController@store');
 	Route::get('/user', 'UserController@info');
@@ -38,6 +37,13 @@ Route::group(['middleware' => ['auth', 'activeAccount']], function() {
 	Route::post('/friend/{friend}/request', 'FriendController@sendRequest');
 	Route::delete('/friend/{friend}/unfriend', 'FriendController@unfriend');
 	Route::post('/friend/{friend}/resolveRequest', 'FriendController@resolveRequest');
+
+	Route::get('/trip/{trip}/removeRequest', 'TripController@removeRequest');
+
+	Route::group(['middleware' => 'tripIsActive'], function() {
+		Route::post('/trip/{trip}/resolveRequest', 'TripController@resolveRequest')
+			->name('resolveTripRequest');
+	});
 
 	Route::group(['middleware' => 'canAccessTrip'], function() {
 		Route::get('/trip/{trip}', 'TripController@show');

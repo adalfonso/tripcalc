@@ -37,4 +37,25 @@ class InviteTest extends DuskTestCase {
 
         $this->assertEquals(0, $user2->fresh()->pendingTripRequests->count());
     }
+
+    /** @test */
+    public function a_user_cant_accept_a_trip_invite_when_the_trip_is_closed() {
+        Session::start();
+        $user1 = $this->maker->user();
+        $user2 = $this->maker->user();
+        $trip = $this->maker->trip();
+        $this->maker->attachTripUser($trip, $user1);
+        $this->maker->login($user2);
+        $trip->users()->attach($user2->id);
+
+        $trip->active = false;
+        $trip->save();
+
+        $response = $this->post('/trip/' . $trip->id . '/resolveRequest', [
+            '_token' => csrf_token(),
+            'resolution' => 1
+        ]);
+
+        $response->assertStatus(422);
+    }
 }
