@@ -72,10 +72,13 @@ Route::group(['middleware' => ['auth', 'activeAccount']], function() {
 			Route::delete('/trip/{trip}', 'TripController@destroy');
 			Route::post('/trip/{trip}/eligibleFriends', 'TripController@eligibleFriends');
 			Route::post('/trip/{trip}/inviteFriends', 'FriendController@inviteToTrip');
-			Route::post('/trip/{trip}/virtualUsers', 'VirtualUserController@store');
-			Route::patch('/trip/{trip}/virtualUser/{virtualUser}', 'VirtualUserController@update');
-			Route::delete('/trip/{trip}/virtualUser/{virtualUser}', 'VirtualUserController@destroy');
-			Route::post('/trip/{trip}/virtualUser/{virtualUser}/merge', 'VirtualUserController@merge');
+
+			Route::group(['middleware' => 'virtualUsersEnabled'], function() {
+				Route::post('/trip/{trip}/virtualUsers', 'VirtualUserController@store');
+				Route::patch('/trip/{trip}/virtualUser/{virtualUser}', 'VirtualUserController@update');
+				Route::delete('/trip/{trip}/virtualUser/{virtualUser}', 'VirtualUserController@destroy');
+				Route::post('/trip/{trip}/virtualUser/{virtualUser}/merge', 'VirtualUserController@merge');
+			});
 		});
 	});
 

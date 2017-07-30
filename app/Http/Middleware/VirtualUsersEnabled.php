@@ -4,10 +4,10 @@ use Closure;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 
-class TripIsActive {
+class VirtualUsersEnabled {
 
     /**
-     * Trip is in an active state
+     * Virtual user setting is enabled
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure $next
@@ -15,7 +15,7 @@ class TripIsActive {
      * @return mixed
      */
     public function handle($request, Closure $next) {
-        if (!$request->trip->active) {
+        if (!$request->trip->virtual_users) {
             return redirect('/trip/' . $request->trip->id);
         }
 

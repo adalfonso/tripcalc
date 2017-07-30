@@ -236,10 +236,40 @@ class FriendTest extends DuskTestCase {
         ]);
     }
 
-    /**
-    * @group fail
-    * @test
-    */
+    /** @test */
+    public function a_user_cant_invite_a_friend_when_the_trip_is_closed() {
+        Session::start();
+        $user1 = $this->maker->user();
+        $user2 = $this->maker->user();
+        $user3 = $this->maker->user();
+        $trip = $this->maker->trip();
+        $this->maker->attachTripUser($trip, $user1);
+        $this->maker->login($user1);
+        $trip->active = false;
+        $trip->save();
+
+        $response = $this->post(
+            "/trip/$trip->id/inviteFriends", [
+                '_token' => csrf_token(),
+                'friends' => [
+                    [
+                        'data' => $user2->id,
+                        'display' => $user2->first_name,
+                        'type' => 'id'
+                    ],
+                    [
+                        'data' => $user3->id,
+                        'display' => $user2->first_name,
+                        'type' => 'id'
+                    ]
+                ]
+            ]
+        );
+
+        $response->assertStatus(302);
+    }
+
+    /** @test */
     public function a_user_can_invite_a_friend_to_their_trip_by_email() {
         Session::start();
         $user1 = $this->maker->user();

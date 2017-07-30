@@ -52,8 +52,7 @@ class VirtualUserController extends Controller {
 
     public function destroy(Trip $trip, VirtualUser $virtualUser) {
         if ($virtualUser->transactions->count() > 0) {
-            return;
-            // some error
+            return response('Cannot delete a virtual user who has transactions', 422);
         }
 
         $virtualUser->delete();
