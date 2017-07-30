@@ -22,6 +22,12 @@ button, .btn {
     &:hover { background: $smoke; }
 }
 
+button[disabled],
+.btn[disabled] {
+	background: $smoke;
+	color: $disabled;
+}
+
 .input-fake,
 input[type="number"],
 input[type="password"],

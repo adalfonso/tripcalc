@@ -18,11 +18,12 @@
 @section('content')
 <div id="trip">
 	<trip-form v-if="tripForm.visible" :trip_id="{{$trip->id}}"
-		@hide="hideAll">
+		@hide="hideAll" :active="tripIsActive">
     </trip-form>
 
 	<advanced-trip-settings v-if="advancedSettings.visible" :trip_id="{{$trip->id}}"
-		@hide="hideAll" @changestate="changeVirtualUserState">
+		@hide="hideAll" @change-virtual-user-state="changeVirtualUserState"
+		@change-trip-state="changeTripState">
     </advanced-trip-settings>
 
     <invite-friend v-if="inviteFriend.visible" :trip_id="{{$trip->id}}"
@@ -34,13 +35,26 @@
 	</virtual-user-manager>
 
 	<div class="trip-header clearfix">
-		<h3 id="name">{{ $trip->name }}</h3>
+		<div class="clearfix">
+		<h3 id="name">
+			{{ $trip->name }}
+
+			<small v-if="closeoutState === 'closed'" v-cloak>
+				<strong>[closed]</strong>
+			</small>
+		</h3>
 
 		@if ($trip->start_date != "00/00/0000")
 			<h6 id="dateRange">
 				<strong>{{ $trip->dateRange }}</strong>
 			</h6>
 		@endif
+		</div>
+
+		<h6 class="marginless" v-if="closeoutState === 'closing'" v-cloak>
+			<em>Closeout is underway</em>
+		</h6>
+
 	</div>
 
 	@include('trips.stats')
@@ -59,12 +73,14 @@
 
 				advancedSettings: { visible: false },
 
+				closeoutState: '{{ $trip->state }}',
+
 				inviteFriend: { visible: false },
 
 				menuItems: [
 					{
 						display: 'Invite Friends',
-						active: true,
+						active: {{ $trip->active }},
 						emit: 'invite'
 					},
 					{
@@ -84,6 +100,8 @@
 					type: null
 				},
 
+				tripIsActive: {{ $trip->active }},
+
 				tripForm: { visible: false },
 
 				virtualUsers: { visible: false }
@@ -96,7 +114,14 @@
 		    methods: {
 
 				changeVirtualUserState(state) {
-					this.menuItems[1].active = state;
+					new Collect(this.menuItems)
+						.where('display', 'Manage Virtual Users')
+						.first()
+						.active = state;
+				},
+
+				changeTripState(state = active) {
+					this.closeoutState = state;
 				},
 
 				hideAll() {

@@ -35,6 +35,8 @@
 	&:-ms-input-placeholder      { color: $midnight !important; }
 }
 
+[v-cloak] { display: none }
+
 * { box-sizing: border-box; }
 
 html { height: 100%; }
@@ -91,6 +93,8 @@ hr {
 
 p { line-height: 1.5rem; }
 
+small { font-size: 60%; }
+
 th { text-align:left }
 
 ul {
@@ -133,6 +137,7 @@ ul {
 
 .section {
  	background: $paleBlue;
+	border: 1px solid $paleBlueBorder;
 	margin-bottom: .5rem;
 	padding: .8rem;
 }
