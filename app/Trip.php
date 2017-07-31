@@ -30,9 +30,36 @@ class Trip extends Model {
 			->where('active', true);
 	}
 
+	public function allUserSettings() {
+		return $this->hasMany('App\TripUserSetting');
+	}
+
 	public function userSettings() {
 		return $this->hasOne('App\TripUserSetting')
 			->where('user_id', \Auth::id());
+	}
+
+	public function getIsClosedOutAttribute() {
+		$settings = $this->allUserSettings;
+		$closeouts = $settings->where('closeout', true);
+
+		return $settings->count() === $closeouts->count();
+	}
+
+	public function getCloseoutPendingAttribute() {
+		$settings = $this->allUserSettings;
+		$closeouts = $settings->where('closeout', true);
+
+		return $settings->count() > $closeouts->count()
+		    && $closeouts->count() > 0;
+	}
+
+	public function getStateAttribute() {
+		if (!$this->active) {
+			return 'closed';
+		}
+
+		return $this->closeoutPending ? 'closing' : 'active';
 	}
 
 	public function virtualUsers() {

@@ -1,7 +1,8 @@
 <template>
     <div>
         <transaction-form v-if="transactionForm.visible" :trip_id="trip_id"
-            :transaction_id="transactionForm.id" @hide="hideTransactionForm">
+            :transaction_id="transactionForm.id" :active="active"
+            @hide="hideTransactionForm">
         </transaction-form>
 
         <div v-for="item in localFeed" class="activity-item clearfix">
@@ -28,7 +29,8 @@ export default {
 
 props: {
     feed: { default: {} },
-    trip_id: { required: true }
+    trip_id: { required: true },
+    active: { required: true }
 },
 
 data() {

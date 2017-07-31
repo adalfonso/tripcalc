@@ -129,6 +129,37 @@ class TransactionTest extends DuskTestCase {
     }
 
     /** @test */
+    public function it_doesnt_create_a_transaction_when_the_trip_is_closed() {
+        Session::start();
+        $this->maker->login($this->user1);
+
+        $this->trip->active = false;
+        $this->trip->save();
+
+        $response = $this->post('/trip/' . $this->trip->id . '/transactions', [
+            '_token' => csrf_token(),
+            'amount'   => 5,
+            'date'     => '2010-1-1',
+            'description' => '2342346356345234234346536',
+            'hashtags' => [1, 2, 3],
+            'split' => [
+                [
+                    'id' => $this->user1->id,
+                    'type' => 'regular',
+                    'split_ratio' => 2,
+                    'is_spender' => true
+                ]
+            ]
+        ]);
+
+        $response->assertStatus(302);
+
+        $this->assertDatabaseMissing('transactions', [
+            'description' => '2342346356345234234346536'
+        ]);
+    }
+
+    /** @test */
     public function it_updates_transaction_data() {
         Session::start();
         $this->maker->login($this->user1);
@@ -147,6 +178,29 @@ class TransactionTest extends DuskTestCase {
         $this->assertEquals(666, $find->amount);
         $this->assertEquals('2010-12-12', $find->date);
         $this->assertEquals('hello', $find->description);
+    }
+
+    /** @test */
+    public function it_doesnt_update_transaction_data_when_trip_is_closed() {
+        Session::start();
+        $this->maker->login($this->user1);
+        $this->trip->active = false;
+        $this->trip->save();
+
+        $response = $this->patch('/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id, [
+            '_token' => csrf_token(),
+            'amount'   => 666,
+            'date'     => '2010-12-12',
+            'description' => '2342346356345234234346536',
+            'hashtags' => [],
+            'split' => []
+        ]);
+
+        $response->assertStatus(302);
+
+        $this->assertDatabaseMissing('transactions', [
+            'description' => '2342346356345234234346536'
+        ]);
     }
 
     /** @test */
@@ -308,6 +362,31 @@ class TransactionTest extends DuskTestCase {
 
         $response->assertStatus(200)->assertJson([
             'success' => true
+        ]);
+    }
+
+    /** @test */
+    public function it_doesnt_delete_a_transaction_when_trip_is_closed() {
+        Session::start();
+        $this->maker->login($this->user1);
+        $this->trip->active = false;
+        $this->trip->save();
+
+        $response = $this->delete('/trip/' . $this->trip->id . '/transaction/' . $this->transaction->id, [
+            '_token' => csrf_token(),
+            'amount'   => 666,
+            'date'     => '2010-12-12',
+            'description' => 'hello',
+            'hashtags' => [],
+            'split' => [],
+            'deletable' => true,
+            'password' =>'password'
+        ]);
+
+        $response->assertStatus(302);
+
+        $this->assertDatabaseMissing('transactions', [
+            'description' => '2342346356345234234346536'
         ]);
     }
 

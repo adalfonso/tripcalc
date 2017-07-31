@@ -2,7 +2,13 @@
 <div class="popup-wrap" @click.self="hide">
 <form id="transactionForm" class="popup" @submit.prevent="onSubmit">
     <div class="popup-close" @click="hide">&times;</div>
+
     <h4 class="centered">Transaction</h4>
+
+    <p class="centered" v-if="!active">
+        <strong>read-only</strong>
+    </p>
+
     <hr>
 
     <div v-if="isUpdatable()">
@@ -85,7 +91,7 @@
     <hr>
 
     <!-- Delete This Transaction -->
-    <div class="ui-checkbox" v-if="transaction_id" @click="form.toggle('deletable')">
+    <div class="ui-checkbox" v-if="transaction_id && active" @click="form.toggle('deletable')">
         <!-- Fake fields to stop browser from trying to save password -->
         <input style="display:none" type="text">
         <input style="display:none" type="password">
@@ -94,13 +100,15 @@
         <p>Delete this transaction</p>
     </div>
 
-    <hr v-if="transaction_id">
-
     <!-- Password To Delete -->
-    <input type="password" name="deletePassword" v-if="form.isDeletable()" v-model="form.password"
+    <input type="password" name="deletePassword" v-if="form.isDeletable()"
+        v-model="form.password" class="marginless"
         placeholder="Enter password to continue">
 
-    <div class="btn btn-full" @click.prevent="onSubmit">Submit Transaction</div>
+    <hr v-if="transaction_id && active">
+
+    <button class="btn-full" :disabled="active ? false : true"
+        @click.prevent="onSubmit">Submit Transaction</button>
 </form>
 </div>
 
@@ -115,6 +123,7 @@ import DatePicker from '../lib/DatePicker.js';
 export default {
 
 props: {
+    active: { default: true },
     edit: {
         type: Boolean,
         default: false

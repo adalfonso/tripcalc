@@ -26,7 +26,6 @@ Route::group(['middleware' => 'auth'], function() {
 
 Route::group(['middleware' => ['auth', 'activeAccount']], function() {
 	Route::get('/profile', 'ProfileController@personal');
-	Route::post('/trip/{trip}/resolveRequest', 'TripController@resolveRequest');
 	Route::get('/trips', 'TripController@index');
 	Route::post('/trips', 'TripController@store');
 	Route::get('/user', 'UserController@info');
@@ -39,29 +38,54 @@ Route::group(['middleware' => ['auth', 'activeAccount']], function() {
 	Route::delete('/friend/{friend}/unfriend', 'FriendController@unfriend');
 	Route::post('/friend/{friend}/resolveRequest', 'FriendController@resolveRequest');
 
+	Route::get('/trip/{trip}/removeRequest', 'TripController@removeRequest');
+
+	Route::group(['middleware' => 'tripIsActive'], function() {
+		Route::post('/trip/{trip}/resolveRequest', 'TripController@resolveRequest')
+			->name('resolveTripRequest');
+	});
+
 	Route::group(['middleware' => 'canAccessTrip'], function() {
 		Route::get('/trip/{trip}', 'TripController@show');
-		Route::patch('/trip/{trip}', 'TripController@update');
-		Route::delete('/trip/{trip}', 'TripController@destroy');
 		Route::post('/trip/{trip}/activities', 'TripController@activities');
 		Route::get('/trip/{trip}/advancedSettings', 'TripController@getAdvancedSettings');
 		Route::patch('/trip/{trip}/advancedSettings', 'TripController@updateAdvancedSettings');
 		Route::get('/trip/{trip}/data', 'TripController@data');
-		Route::post('/trip/{trip}/eligibleFriends', 'TripController@eligibleFriends');
-		Route::post('/trip/{trip}/inviteFriends', 'FriendController@inviteToTrip');
-		Route::post('/trip/{trip}/transactions', 'TransactionController@store');
 		Route::get('/trip/{trip}/travelers', 'TripController@travelers');
 		Route::get('/trip/{trip}/virtualUsers', 'VirtualUserController@index');
-		Route::post('/trip/{trip}/virtualUsers', 'VirtualUserController@store');
-		Route::patch('/trip/{trip}/virtualUser/{virtualUser}', 'VirtualUserController@update');
-		Route::delete('/trip/{trip}/virtualUser/{virtualUser}', 'VirtualUserController@destroy');
-		Route::post('/trip/{trip}/virtualUser/{virtualUser}/merge', 'VirtualUserController@merge');
 		Route::get('/trip/{trip}/report/bottomLine', 'ReportController@bottomLine');
 		Route::get('/trip/{trip}/report/closeout', 'ReportController@closeout');
 		Route::get('/trip/{trip}/report/detailed', 'ReportController@detailed');
 		Route::get('/trip/{trip}/report/extended', 'ReportController@extended');
 		Route::get('/trip/{trip}/report/distribution', 'ReportController@distribution');
 		Route::get('/trip/{trip}/report/topSpenders', 'ReportController@topSpenders');
+
+		Route::group(['middleware' => 'tripIsActive'], function() {
+			Route::post('/trip/{trip}/transactions', 'TransactionController@store');
+
+			Route::group(['middleware' => 'tripHasTransaction'], function() {
+				Route::patch('/trip/{trip}/transaction/{transaction}', 'TransactionController@update');
+				Route::delete('/trip/{trip}/transaction/{transaction}', 'TransactionController@destroy');
+			});
+		});
+
+		Route::group(['middleware' => 'tripHasTransaction'], function() {
+			Route::get('/trip/{trip}/transaction/{transaction}', 'TransactionController@show');
+		});
+
+		Route::group(['middleware' => 'tripIsActive'], function() {
+			Route::patch('/trip/{trip}', 'TripController@update');
+			Route::delete('/trip/{trip}', 'TripController@destroy');
+			Route::post('/trip/{trip}/eligibleFriends', 'TripController@eligibleFriends');
+			Route::post('/trip/{trip}/inviteFriends', 'FriendController@inviteToTrip');
+
+			Route::group(['middleware' => 'virtualUsersEnabled'], function() {
+				Route::post('/trip/{trip}/virtualUsers', 'VirtualUserController@store');
+				Route::patch('/trip/{trip}/virtualUser/{virtualUser}', 'VirtualUserController@update');
+				Route::delete('/trip/{trip}/virtualUser/{virtualUser}', 'VirtualUserController@destroy');
+				Route::post('/trip/{trip}/virtualUser/{virtualUser}/merge', 'VirtualUserController@merge');
+			});
+		});
 	});
 
 	// Trip Posts
@@ -90,12 +114,6 @@ Route::group(['middleware' => ['auth', 'activeAccount']], function() {
 		Route::group(['middleware' => 'isCurrentUser'], function() {
 			Route::post('/user/{user}/photos/upload', 'UserController@uploadPhoto');
 		});
-	});
-
-	Route::group(['middleware' => ['canAccessTrip', 'tripHasTransaction']], function() {
-		Route::get('/trip/{trip}/transaction/{transaction}', 'TransactionController@show');
-		Route::patch('/trip/{trip}/transaction/{transaction}', 'TransactionController@update');
-		Route::delete('/trip/{trip}/transaction/{transaction}', 'TransactionController@destroy');
 	});
 });
 

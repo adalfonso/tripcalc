@@ -76,27 +76,48 @@ class TripController extends Controller {
     }
 
     public function getAdvancedSettings(Trip $trip) {
+        $settings = $trip->userSettings;
+
         return [
-            'private_transactions' => $trip->userSettings->private_transactions,
-            'editable_transactions' => $trip->userSettings->editable_transactions,
-            'virtual_users' => $trip->virtual_users
+            'settings' => [
+                'private_transactions' => $settings->private_transactions,
+                'editable_transactions' => $settings->editable_transactions,
+                'closeout' => $settings->closeout,
+                'virtual_users' => $trip->virtual_users
+            ],
+            'active' => $trip->active,
+            'virtualUsers' => $trip->virtualUsers
         ];
     }
 
     public function updateAdvancedSettings(Request $request, Trip $trip) {
-        $trip->userSettings->update([
-            'private_transactions' => $request->private_transactions,
-            'editable_transactions' => $request->editable_transactions
-        ]);
+        DB::transaction(function() use($request, $trip) {
+            $trip->userSettings->update([
+                'private_transactions' => $request->private_transactions,
+                'editable_transactions' => $request->editable_transactions
+            ]);
 
-        // Cannot disable virtual users when they already exist
-        if (!$request->virtual_users && $trip->virtualUsers->count() > 0) {
-            return Response::json([
-                'virtual_users' => ['Remove all virtual users to disable this setting.']
-            ], 422);
-        }
+            // Cannot disable virtual users when they already exist
+            if (!$request->virtual_users && $trip->virtualUsers->count() > 0) {
+                return Response::json([
+                    'virtual_users' => ['Remove all virtual users to disable this setting.']
+                ], 422);
+            }
 
-        $trip->update(['virtual_users' => $request->virtual_users]);
+            $trip->update(['virtual_users' => $request->virtual_users]);
+
+            if ($trip->active) {
+                $trip->userSettings->closeout = $request->closeout;
+                $trip->userSettings->save();
+            }
+
+            if ($trip->isClosedOut) {
+                $trip->active = false;
+                $trip->save();
+            }
+        });
+
+        return $trip->state;
     }
 
     public function data(Trip $trip) {
@@ -138,7 +159,16 @@ class TripController extends Controller {
 
     	return $results;
     }
-    
+
+    public function removeRequest(Request $request, Trip $trip) {
+        Auth::user()->trips()->detach($trip->id);
+
+        if (!$trip->active) {
+            \Session::flash('alert', 'This trip has been closed and your request could not be resolved.');
+            return redirect('profile');
+        }
+    }
+
     public function resolveRequest(Request $request, Trip $trip) {
         $this->validate($request, [
             'resolution' => 'required|regex:/^-?1$/'

@@ -65,6 +65,31 @@ class TripTest extends DuskTestCase {
     }
 
     /** @test */
+    public function it_doesnt_updates_a_closed_trip() {
+        Session::start();
+        $this->maker->login($this->user);
+
+        $this->trip->active = false;
+        $this->trip->save();
+
+        $response = $this->patch('/trip/' . $this->trip->id, [
+            '_token' => csrf_token(),
+            'name' => '35245v25g235g35g345',
+            'start_date' => '2017-1-1',
+            'end_date' => '2017-1-3',
+            'budget' => 50,
+            'description' => 'sample description',
+        ]);
+
+        $response->assertStatus(302);
+
+        $this->assertDatabaseMissing('trips', [
+            'id' => $this->trip->id,
+            'name' => '35245v25g235g35g345'
+        ]);
+    }
+
+    /** @test */
     public function it_deletes_a_trip() {
         Session::start();
         $this->maker->login($this->user);
@@ -82,6 +107,25 @@ class TripTest extends DuskTestCase {
         $response->assertStatus(200);
         $this->assertEquals(null, Trip::find($this->trip->id));
         $this->assertEquals(true, $this->trip->posts->isEmpty());
+    }
+
+    /** @test */
+    public function it_doesnt_delete_a_closed_trip() {
+        Session::start();
+        $this->maker->login($this->user);
+        $this->trip->active = false;
+        $this->trip->save();
+
+        $response = $this->delete('/trip/' . $this->trip->id, [
+            '_token' => csrf_token(),
+            'password' => 'password'
+        ]);
+
+        $response->assertStatus(302);
+
+        $this->assertDatabaseHas('trips', [
+            'id' => $this->trip->id,
+        ]);
     }
 
     /** @test */

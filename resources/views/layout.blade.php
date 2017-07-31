@@ -15,6 +15,12 @@
 
     <body id="body">
         <div id="app">
+            @if (Session::has('alert'))
+                <alert v-if="alert.visible"
+                    :message="'{{ Session::get('alert') }}'" @hide="hideAlert">
+                </alert>
+            @endif
+
             @if(Auth::check())
                 @include('nav.navbar')
                 @yield('nav')
@@ -34,6 +40,6 @@
 
         {{-- Use overwrite directive when declaring new Vue instance. --}}
         @yield('vue')
-        
+
     </body>
 </html>

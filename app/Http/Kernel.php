@@ -64,6 +64,8 @@ class Kernel extends HttpKernel
         'ownsPost' => \App\Http\Middleware\OwnsPost::class,
         'canDeleteProfilePost' => \App\Http\Middleware\CanDeleteProfilePost::class,
         'tripHasTransaction' => \App\Http\Middleware\TripHasTransaction::class,
+        'tripIsActive' => \App\Http\Middleware\TripIsActive::class,
+        'virtualUsersEnabled' => \App\Http\Middleware\VirtualUsersEnabled::class,
 
         'isAdmin' => \App\Http\Middleware\IsAdmin::class
     ];

@@ -2,7 +2,13 @@
     <div class="popup-wrap" @click.self="hide">
     <form id="tripForm" class="popup" @submit.prevent="onSubmit">
         <div class="popup-close" @click="hide">&times;</div>
+
         <h4 class="centered">Trip</h4>
+
+        <p class="centered" v-if="!active">
+            <strong>read-only</strong>
+        </p>
+
         <hr>
 
         <!-- Trip Name -->
@@ -46,7 +52,8 @@
         </textarea>
 
         <!-- Delete this trip -->
-        <div class="ui-checkbox" v-if="trip_id" @click="form.toggle('deletable')">
+        <div class="ui-checkbox" v-if="trip_id && active"
+            @click="form.toggle('deletable')">
             <!-- Fake fields to stop browser from trying to save password -->
             <input style="display:none" type="text">
             <input style="display:none" type="password">
@@ -63,7 +70,10 @@
             placeholder="Enter password to continue">
         </div>
 
-        <button class="btn-full form-button" type="submit">Submit Trip</button>
+        <button class="btn-full form-button" type="submit"
+            :disabled="active ? false : true">
+            Submit Trip
+        </button>
     </form>
     </div>
 </template>
@@ -75,7 +85,8 @@ import DatePicker from '../lib/DatePicker.js';
 export default {
 
 props: {
-    trip_id: { default: null }
+    trip_id: { default: null },
+    active: { default: true }
 },
 
 data() {

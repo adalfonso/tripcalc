@@ -75,6 +75,10 @@
                 })
                 .then(response => {
                     this.$emit('refresh', response.data);
+                }).catch(error => {
+                    if (error.response.data.redirect) {
+                        window.location = error.response.data.redirect;
+                    }
                 });
             }
         }

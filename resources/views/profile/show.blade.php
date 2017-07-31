@@ -37,16 +37,6 @@
 				@hide="profileInfoForm.visible = false">
 		    </profile-info-form>
 
-			{{-- @if($profile->pendingFriendRequests->count())
-				<request-popup :type="'friend'" >
-		    	</request-popup>
-			@endif
-
-			@if($profile->pendingTripRequests->count())
-				<request-popup :type="'trip'" >
-		    	</request-popup>
-			@endif --}}
-
 		{{-- Other User's Profile--}}
 		@elseif (Auth::user()->activated)
 			@if (! empty($friendship))
@@ -99,7 +89,10 @@
 
 			data: {
 				friendManager: { visible: false },
-		        profileInfoForm: { visible: false }
+		        profileInfoForm: { visible: false },
+				alert: {
+					visible: {{ Session::has('alert') ? 1 : 0 }}
+				}
 		    },
 
         	methods: {
@@ -121,6 +114,10 @@
 
 				hideAll() {
 					this.friendManager.visible = false;
+				},
+
+				hideAlert() {
+					this.alert.visible = false;
 				},
 
 				showFriendManager() {
