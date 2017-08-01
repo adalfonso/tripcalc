@@ -1,15 +1,13 @@
 @section('nav')
 	<nav id="nav" class="clearfix">
 		<hamburger></hamburger>
-
 		<div id="nav-search" class="clearfix">
 			<search-people></search-people>
 		</div>
 
 		<div id="nav-links">
 			<div id="nav-left" class="clearfix">
-				<a href="/profile" class="link-enhanced clearfix"
-					style="position:relative;">
+				<a href="/profile" class="link-enhanced clearfix profile-link">
 					<img src="/img/icon/profile-64x64.png">
 
 					<notifier></notifier>
@@ -35,6 +33,5 @@
 				@yield('nav-settings')
 			</div>
 		</div>
-
 	</nav>
 @stop

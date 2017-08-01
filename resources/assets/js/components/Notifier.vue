@@ -1,7 +1,6 @@
 <template>
     <div v-if="count" @click.prevent>
-        <div class="notification-count" @click="showRequests"
-            @mouseover="removeOffsetTop">
+        <div class="notification-count" @click="showRequests">
             {{ count }}
         </div>
 
@@ -42,15 +41,7 @@ export default {
             }
 
             let elem = document.getElementById('request-menu');
-            let link = elem.parentElement.parentElement.parentElement;
-            let top = link.clientHeight + link.offsetTop;
-
-            elem.classList.toggle('displayInNav');
-            elem.style.top = top + 'px';
-        },
-
-        removeOffsetTop() {
-            document.getElementById('request-menu').style.top = '';
+            elem.classList.toggle('displayOnHamburger');
         },
 
         isMobile() {

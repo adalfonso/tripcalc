@@ -137,11 +137,13 @@
 				},
 
 				showAdvancedSettings() {
+					bus.$emit('closeNav');
 					bus.$emit('closeModals');
 					this.advancedSettings.visible = true;
 				},
 
 				showTripForm() {
+					bus.$emit('closeNav');
 					bus.$emit('closeModals');
 					this.tripForm.visible = true;
 				},
@@ -157,6 +159,7 @@
 			    },
 
 				showVirtualUsersForm() {
+					bus.$emit('closeNav');
 					bus.$emit('closeModals');
 					this.virtualUsers.visible = true;
 				},

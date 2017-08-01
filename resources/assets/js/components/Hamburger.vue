@@ -1,8 +1,12 @@
 <template>
-    <a class="hamburger" @click="toggleMobileMenu">
-        <div></div>
-        <div></div>
-        <div></div>
+    <a class="hamburger clearfix">
+        <div class="bars" @click="toggleMobileMenu">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+
+        <notifier></notifier>
     </a>
 </template>
 

@@ -66,7 +66,7 @@
             },
 
             decline(id, type) {
-                return this.resolve(id, type -1);
+                return this.resolve(id, type, -1);
             },
 
             resolve(id, type, resolution) {

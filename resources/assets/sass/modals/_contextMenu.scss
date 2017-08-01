@@ -6,7 +6,7 @@
 	left: 50%;
 	line-height: 1rem;
 	opacity: .9;
-	padding: .15rem .25rem;
+	padding: .15rem .25rem .25rem .25rem;
 	position: absolute;
 	top: -.2rem;
 	transition: .2s;
@@ -173,34 +173,20 @@
 
 @media (max-width: 768px) {
 
-	.notification-count {
-        position: static;
-	}
-
-    #nav-links {
+	#nav-links {
 
         #request-menu {
             border-bottom: 1px solid #495a69;
             left: 0;
 
             .body {
-
                 table { width: 100%; }
             }
-
-            &.displayInNav {
-                display: block;
-                position: fixed;
-                left: 0;
-                right: 0;
-                height: 50%;
-                overflow: auto;
-            }
         }
 
-        .menu-wrap {
-            float: none;
-        }
+		.notification-count { display: none; }
+
+        .menu-wrap { float: none; }
 
         .advanced-settings {
             .menu { position: static; }
