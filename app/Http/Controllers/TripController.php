@@ -4,7 +4,6 @@ use App\Transaction;
 use App\Trip;
 use App\TripUserSetting;
 use App\User;
-use App\Post;
 use App\Library\Trip\ActivityFeed;
 use Auth;
 use DB;
@@ -106,18 +105,50 @@ class TripController extends Controller {
 
             $trip->update(['virtual_users' => $request->virtual_users]);
 
-            if ($trip->active) {
+            if ($request->closeout) {
+                $this->userCloseout($trip);
+
+            } else if ($trip->active) {
+                // check if this sets it back to no close outs
                 $trip->userSettings->closeout = $request->closeout;
                 $trip->userSettings->save();
             }
-
-            if ($trip->isClosedOut) {
-                $trip->active = false;
-                $trip->save();
-            }
         });
 
-        return $trip->state;
+        return $trip->fresh()->state;
+    }
+
+    protected function userCloseout(Trip $trip) {
+        // Trip is closed and there is nothing to change
+        if (! $trip->active) {
+            return;
+        }
+
+        // Closeout is being initiated
+        if (! $trip->closeoutPending) {
+
+            // check they dont exist
+
+            $notifications = $trip->users->map(function($user) use ($trip) {
+                $trip->notifications()->updateOrCreate(
+                    ['user_id' => $user->id, 'subtype' => 'closeout'],
+                    [
+                        'seen' => $user->id === Auth::id(),
+                        'created_at' => Carbon::now(),
+                        'created_by' => Auth::id()
+                    ]
+                );
+            });
+        }
+
+        $trip->userSettings->closeout = true;
+        $trip->userSettings->save();
+
+        // Trip is now closed and active status should be changed to false
+        if ($trip->isClosedOut) {
+            $trip->active = false;
+            $trip->save();
+        }
     }
 
     public function data(Trip $trip) {

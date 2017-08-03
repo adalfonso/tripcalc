@@ -30,6 +30,10 @@ class Trip extends Model {
 			->where('active', true);
 	}
 
+	public function notifications() {
+		return $this->morphMany('App\Notification', 'notifiable');
+	}
+
 	public function allUserSettings() {
 		return $this->hasMany('App\TripUserSetting');
 	}
