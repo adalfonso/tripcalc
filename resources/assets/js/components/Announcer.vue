@@ -19,7 +19,7 @@ export default {
     },
 
     methods: {
-        showOnMenu(id, forceful = false) {            
+        showOnMenu(id, forceful = false) {
             let elem = document.getElementById(id);
             let show = !elem.classList.contains('showOnMenu');
 

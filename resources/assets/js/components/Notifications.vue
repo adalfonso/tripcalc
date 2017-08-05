@@ -16,7 +16,8 @@
             <div :class="shadowClass"></div>
         </div>
 
-        <div class='body'>
+        <div class='body scroll scroll-midnight'>
+
             <div v-for="notification in notifications.use()" v-if="notifications.count()">
                 <p :class="notification.seen ? 'unseen' : 'seen'">
                     <span v-if="isCloseout(notification)">
@@ -29,6 +30,7 @@
                     </span>
                 </p>
             </div>
+
         </div>
     </div>
 </div>
@@ -53,9 +55,11 @@
 
         computed: {
             unseen() {
-                return this.notifications
+                let count = this.notifications
                     .where('seen', 0)
                     .count();
+
+                return count > 99 ? 99 : count;
             },
 
             shadowClass() {

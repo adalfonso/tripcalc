@@ -133,10 +133,12 @@
 	}
 
     .body {
-        background: $paleBlue;
-        border-radius: .2rem;
-        border: 1px solid $smoke;
-        padding: .4rem .4rem .3rem .4rem;
+		background: $paleBlue;
+		border-radius: .2rem;
+		border: 1px solid $smoke;
+		max-height: 400px;
+		overflow: auto;
+		padding: .4rem .4rem .3rem .4rem;
 
         h6 {
 			font-weight: 700;
@@ -162,6 +164,8 @@
                 &:hover { color: $cool; }
             }
         }
+
+		table { width: 100%; }
     }
 }
 
@@ -213,6 +217,20 @@
 		td:first-of-type {
 			min-width: 250px;
 		}
+	}
+}
+
+@media (max-height: 475px)
+   and (min-height: 375px)
+   and (orientation: landscape) {
+	.menu .body {
+		max-height: 300px;
+	}
+}
+
+@media (max-height: 350px) and (orientation: landscape) {
+	.menu .body {
+		max-height: 250px;
 	}
 }
 

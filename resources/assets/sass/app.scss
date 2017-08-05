@@ -227,6 +227,23 @@ ul {
 	display: none
 }
 
+.scroll {
+    overflow: auto;
+
+	&.scroll-midnight {
+		&::-webkit-scrollbar {
+		    width: 6px;
+		    background-color: $paleBlueBorder;
+		}
+
+		&::-webkit-scrollbar-thumb {
+		    background-color: $midnight;
+		}
+	}
+}
+
+
+
 @media (min-width: 1016px) {
 	#main {
 		width: 1000px;

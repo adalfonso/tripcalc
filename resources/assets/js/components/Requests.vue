@@ -13,7 +13,7 @@
             <div class="inner-shadow"></div>
         </div>
 
-        <div class='body'>
+        <div class='body scroll scroll-midnight'>
             <table v-if="count">
                 <template v-for="(group, type) in requests" v-if="group.length">
                     <tr>
@@ -73,7 +73,7 @@
                     count += this.requests[type].length;
                 }
 
-                return count;
+                return count > 99 ? 99 : count;
             }
         },
 
