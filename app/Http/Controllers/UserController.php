@@ -66,7 +66,25 @@ class UserController extends Controller {
 	public function notifications() {
 		$notifications = Auth::user()->unseenNotifications;
 
+		if ($notifications->count() < 5) {
+			$more = Auth::user()->notifications()
+				->orderBy('created_at', 'desc')
+				->limit(5)->get();
+
+			$notifications = $notifications
+				->merge($more)
+				->unique('id')
+				->sortByDesc('created_at');
+		}
+
 		return $notifications->load('creator', 'notifiable');
+	}
+
+	public function seeNotifications(Request $request) {
+		$notifications = Auth::user()
+			->notifications()
+			->whereIn('id', $request->seen)
+			->update(['seen' => true]);
 	}
 
 	public function requests() {

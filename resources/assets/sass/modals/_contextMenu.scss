@@ -49,14 +49,16 @@
 		.body {
 			padding: 0;
 			p {
+				border-bottom: 1px solid $paleBlueBorder;
 				padding: .4rem;
 				transition: .2s;
 
-				&.new {
+				&.seen {
+					background: $background;
+				}
 
-					&:hover {
-						border-left: 4px solid $midnight;
-					}
+				&:hover {
+					color: $smoke;
 				}
 			}
 		}
@@ -97,6 +99,8 @@
 			position: absolute;
 			top: 2.5px;
 			width: 0;
+
+			&.lighter { border-bottom: 11px solid $background; }
 		}
     }
 
@@ -190,6 +194,14 @@
 		.menu {
 			right: calc(100% - 7px);
 			top: 2.25rem;
+		}
+	}
+
+	.announcer {
+		.showOnMenu {
+			display: block !important;
+			opacity: 1;
+			visibility: visible;
 		}
 	}
 

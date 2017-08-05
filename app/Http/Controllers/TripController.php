@@ -126,9 +126,6 @@ class TripController extends Controller {
 
         // Closeout is being initiated
         if (! $trip->closeoutPending) {
-
-            // check they dont exist
-
             $notifications = $trip->users->map(function($user) use ($trip) {
                 $trip->notifications()->updateOrCreate(
                     ['user_id' => $user->id, 'subtype' => 'closeout'],

@@ -19,17 +19,17 @@ export default {
     },
 
     methods: {
-        showOnMenu(id) {
-            if (!this.smallScreen) {
-                return;
-            }
-
+        showOnMenu(id, forceful = false) {            
             let elem = document.getElementById(id);
             let show = !elem.classList.contains('showOnMenu');
 
             document.querySelectorAll('.menu').forEach(item => {
                 item.classList.remove('showOnMenu');
             });
+
+            if (!this.smallScreen && !forceful) {
+                return;
+            }
 
             if (show) {
                 bus.$emit('closeNav');

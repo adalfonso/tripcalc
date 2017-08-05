@@ -31,6 +31,7 @@ Route::group(['middleware' => ['auth', 'activeAccount']], function() {
 	Route::get('/user', 'UserController@info');
 	Route::patch('/user', 'UserController@update');
 	Route::get('/user/notifications', 'UserController@notifications');
+	Route::post('/user/notifications/see', 'UserController@seeNotifications');
 	Route::get('/user/requests', 'UserController@requests');
 	Route::post('/user/search', 'UserController@search');
 
