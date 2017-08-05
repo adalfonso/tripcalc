@@ -24,6 +24,18 @@
 	&:hover { opacity: 1; }
 }
 
+.badge-plain {
+	background: $paleBlue;
+	border-radius: .2rem;
+	border: 1px solid $smoke;
+	color: $smoke;
+	display: inline-block;
+	font-size: 1rem;
+	font-weight: bold;
+	padding: 0 .2rem;
+	vertical-align: middle;
+}
+
 .announcer {
 	float: left;
 	margin-right: 1rem;

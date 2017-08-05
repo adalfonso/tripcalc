@@ -29,6 +29,7 @@ export default {
                 #nav-left > *,
                 .mobile-nav > *,
                 #nav-right > *,
+                .nav-right,
                 #nav-right .advanced-settings .menu`
             );
         },

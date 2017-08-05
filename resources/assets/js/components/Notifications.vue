@@ -93,7 +93,7 @@
                     return;
                 }
 
-                axios.post('user/notifications/see', {
+                axios.post('/user/notifications/see', {
                     seen: unseen.pluck('id').use()
                 })
                 .then(response => {})
@@ -101,6 +101,10 @@
             },
 
             showOnMenu(forceful = false) {
+                if (this.notifications.isEmpty()) {
+                    return;
+                }
+
                 this.$emit('show', 'notifications', forceful);
             }
         }

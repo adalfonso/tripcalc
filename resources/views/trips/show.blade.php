@@ -39,9 +39,11 @@
 		<h3 id="name">
 			{{ $trip->name }}
 
-			<small v-if="closeoutState === 'closed'" v-cloak>
-				<strong>[closed]</strong>
-			</small>
+
+				<div class="badge-plain" v-if="closeoutState === 'closed'" v-cloak>
+					Closed Out
+				</div>
+
 		</h3>
 
 		@if ($trip->start_date != "00/00/0000")
@@ -53,6 +55,10 @@
 
 		<h6 class="marginless" v-if="closeoutState === 'closing'" v-cloak>
 			<em>Closeout is underway</em>
+			<closeout-helper
+				:trip_id="{{$trip->id}}"
+				@change-trip-state="changeTripState">
+			</closeout-helper>
 		</h6>
 
 	</div>
@@ -122,6 +128,10 @@
 
 				changeTripState(state = active) {
 					this.closeoutState = state;
+
+					if (state === 'closed') {
+						this.tripIsActive = false;
+					}
 				},
 
 				hideAll() {

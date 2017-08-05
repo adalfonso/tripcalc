@@ -2,25 +2,27 @@
 
 <!-- Main Content -->
 @section('content')
-    <h2 class="centered">Reset Password</h2>
+    <div style="margin: 0 .6rem;">
+        <h2 class="centered">Reset Password</h2>
 
-    <form role="form" class="form-small" method="POST" action="{{ url('/password/email') }}">
+        <form role="form" class="form-small" method="POST" action="{{ url('/password/email') }}">
 
-        @if (session('status'))
-            <p><strong>{{ session('status') }}</strong></p>
-        @endif
+            @if (session('status'))
+                <p><strong>{{ session('status') }}</strong></p>
+            @endif
 
-        {{ csrf_field() }}
+            {{ csrf_field() }}
 
-        @if ($errors->has('email'))
-            <p>{{ $errors->first('email') }}</p>
-        @endif
+            @if ($errors->has('email'))
+                <p>{{ $errors->first('email') }}</p>
+            @endif
 
-        <input id="email" type="email" name="email"
-            value="{{ old('email') }}" placeholder="Email" required>
+            <input id="email" type="email" name="email"
+                value="{{ old('email') }}" placeholder="Email" required>
 
-        <button type="submit" class="btn-full btn-thin">
-            Send Password Reset Link
-        </button>
-    </form>
+            <button type="submit" class="btn-full btn-thin">
+                Send Password Reset Link
+            </button>
+        </form>
+    </div>
 @endsection

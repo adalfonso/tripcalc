@@ -121,7 +121,7 @@ class TripController extends Controller {
     protected function userCloseout(Trip $trip) {
         // Trip is closed and there is nothing to change
         if (! $trip->active) {
-            return;
+            return $trip->fresh()->state;
         }
 
         // Closeout is being initiated
@@ -142,10 +142,12 @@ class TripController extends Controller {
         $trip->userSettings->save();
 
         // Trip is now closed and active status should be changed to false
-        if ($trip->isClosedOut) {
+        if ($trip->fresh()->isClosedOut) {
             $trip->active = false;
             $trip->save();
         }
+
+        return $trip->fresh()->state;
     }
 
     public function data(Trip $trip) {

@@ -52,6 +52,7 @@ Vue.component('report-top-spenders', require('./components/report/TopSpenders.vu
 // Trip
 Vue.component('advanced-trip-settings', require('./components/AdvancedTripSettings.vue'));
 Vue.component('invite-friend', require('./components/InviteFriend.vue'));
+Vue.component('closeout-helper', require('./components/CloseoutHelper.vue'));
 Vue.component('trip-form', require('./components/TripForm.vue'));
 Vue.component('virtual-user-manager', require('./components/VirtualUserManager.vue'));
 Vue.component('conflict-handler', require('./components/ConflictHandler.vue'));

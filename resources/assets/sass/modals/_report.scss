@@ -103,7 +103,10 @@
 
 .distributionReport .total td { border-top: 1px solid $midnight; }
 
-.extendedReport { color: $midnight; }
+.extendedReport {
+	margin: 1rem .6rem .3rem .6rem;
+	color: $midnight;
+}
 
 #mergeVirtualUser {
 	td {

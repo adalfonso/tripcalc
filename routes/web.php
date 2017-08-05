@@ -52,6 +52,7 @@ Route::group(['middleware' => ['auth', 'activeAccount']], function() {
 		Route::post('/trip/{trip}/activities', 'TripController@activities');
 		Route::get('/trip/{trip}/advancedSettings', 'TripController@getAdvancedSettings');
 		Route::patch('/trip/{trip}/advancedSettings', 'TripController@updateAdvancedSettings');
+		Route::post('/trip/{trip}/closeout', 'TripController@userCloseout');
 		Route::get('/trip/{trip}/data', 'TripController@data');
 		Route::get('/trip/{trip}/travelers', 'TripController@travelers');
 		Route::get('/trip/{trip}/virtualUsers', 'VirtualUserController@index');
