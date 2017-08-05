@@ -50,6 +50,16 @@ class User extends Authenticatable {
         return $this->hasOne('App\UserActivation');
     }
 
+    public function notifications() {
+        return $this->hasMany('App\Notification');
+    }
+
+    public function getUnseenNotificationsAttribute() {
+        return $this->hasMany('App\Notification')
+            ->where('seen', false)
+            ->get();
+    }
+
     public function trips() {
         return $this->belongsToMany('\App\Trip');
     }
@@ -94,15 +104,10 @@ class User extends Authenticatable {
     }
 
     public function getAllRequestsAttribute() {
-        $requests = collect([
+        return collect([
             'friend' => $this->pendingFriendRequests,
             'trip' =>  $this->pendingTripRequests
         ]);
-
-        return [
-            'requests' => $requests,
-            'count' => $requests->collapse()->count()
-        ];
     }
 
     // Accessors
@@ -110,6 +115,16 @@ class User extends Authenticatable {
 		return $this->morphMany('App\Photo', 'related')
             ->orderBy('created_at', 'desc')
             ->first();
+	}
+
+    public function getCurrentThumbnailAttribute() {
+		$photo = $this->currentPhoto;
+
+        if (! $photo) {
+            return null;
+        }
+
+        return preg_replace('/.jpeg/', '-thumb.jpeg', $photo->path);
 	}
 
     public function getFriendsAttribute() {

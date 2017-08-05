@@ -7,11 +7,11 @@
 
 		<div id="nav-links">
 			<div id="nav-left" class="clearfix">
+
+				<announcer></announcer>
+
 				<a href="/profile" class="link-enhanced clearfix profile-link">
 					<img src="/img/icon/profile-64x64.png">
-
-					<notifier></notifier>
-
 					<p class="fake-link">
 						{{ Auth::user()->first_name }}
 					</p>

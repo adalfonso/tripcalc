@@ -5,8 +5,6 @@
             <div></div>
             <div></div>
         </div>
-
-        <notifier></notifier>
     </a>
 </template>
 
@@ -20,22 +18,36 @@ export default {
 
     created() {
         bus.$on('closeNav', () => {
-            this.toggleMobileMenu();
+            this.closeMobileMenu();
         });
     },
 
     methods: {
-        toggleMobileMenu() {
-            let links = document.querySelectorAll(
+        links() {
+            return document.querySelectorAll(
                `#nav-search > *,
                 #nav-left > *,
                 .mobile-nav > *,
                 #nav-right > *,
                 #nav-right .advanced-settings .menu`
             );
+        },
 
-            links.forEach( link => {
+        closeMobileMenu () {
+            this.links().forEach(link => {
+                link.style.display = '';
+            });
+
+            this.menuIsVisible = false;
+        },
+
+        toggleMobileMenu() {
+            this.links().forEach(link => {
                 link.style.display = this.menuIsVisible ? '' : 'block';
+            });
+
+            document.querySelectorAll('.menu').forEach(item => {
+                item.classList.remove('showOnMenu');
             });
 
             this.menuIsVisible = !this.menuIsVisible;

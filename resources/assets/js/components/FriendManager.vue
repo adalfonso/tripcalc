@@ -10,7 +10,7 @@
 
                 <div class="left">
                     <div class="img" v-if="friend.path !== null"
-                        :style="'background-image: url(' + friend.path + ')'">
+                        :style="'background-image: url(' + friend.thumb + ')'">
                     </div>
 
                     <div class="img" v-if="friend.path === null">

@@ -24,4 +24,8 @@ class Notification extends Model {
     public function notifiable() {
         return $this->morphTo();
     }
+
+    public function creator() {
+        return $this->belongsTo('App\User', 'created_by');
+    }
 }

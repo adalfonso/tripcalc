@@ -63,6 +63,12 @@ class UserController extends Controller {
     	return $results;
     }
 
+	public function notifications() {
+		$notifications = Auth::user()->unseenNotifications;
+
+		return $notifications->load('creator', 'notifiable');
+	}
+
 	public function requests() {
 		return Auth::user()->allRequests;
 	}

@@ -1,5 +1,5 @@
 <template>
-    <div class="menu-wrap advanced-settings">
+    <div class="advanced-settings">
 
         <div class="trigger">
             <div class="caret">&#9660;</div>
@@ -8,10 +8,9 @@
         <div class="menu">
 
             <div class="arw-up-right">
-                <div></div>
+                <div class="hovercatch"></div>
+                <div class="inner-shadow"></div>
             </div>
-
-            <div class="invis"></div>
 
             <div class="body">
                 <ul>

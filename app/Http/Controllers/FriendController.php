@@ -151,11 +151,13 @@ class FriendController extends Controller {
     public function friends() {
         $friends = Auth::user()->friends->map(function($friend) {
             $path = $friend->currentPhoto->path ?? null;
+            $thumb = $friend->currentThumbnail ?? null;
 
             return (object) [
                 'fullname' => $friend->fullname,
                 'id' => $friend->id,
-                'path' => $path ? asset('storage/' . $path) : null
+                'path' => $path ? asset('storage/' . $path) : null,
+                'thumb' => $thumb ? asset('storage/' . $thumb) : null
             ];
         })->values();
 

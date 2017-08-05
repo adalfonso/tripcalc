@@ -1,59 +1,80 @@
 <template>
+<div class="announcement request">
+    <img src="/img/icon/profile-64x64.png" @click="goToProfile">
 
-<div class="menu-wrap">
-
-<div class="menu" id="request-menu">
-
-    <div class="arw-up-left">
-        <div></div>
+    <div class="badge offset" v-if="count" @click.stop="showOnMenu">
+        {{ count }}
     </div>
 
-    <div class="invis"></div>
+    <div class="menu medium" id="requests">
 
-    <div class="body">
-        <table v-if="Object.keys(data).length">
-            <template v-for="(requests, type) in data" v-if="requests.length">
-                <tr>
-                    <td colspan="3">
-                        <h6>{{ capitalize(type) + 's' }}</h6>
-                    </td>
-                </tr>
-                <tr v-for="request in requests">
-                    <td>
-                        <p v-if="type == 'friend'">
-                            {{ request.first_name }} {{ request.last_name }}
-                        </p>
+        <div class="arw-up-left">
+            <div class="hovercatch"></div>
+            <div class="inner-shadow"></div>
+        </div>
 
-                        <p v-if="type == 'trip'">
-                            {{ request.name }}
-                        </p>
-                    </td>
-                    <td>
-                        <div class="btn btn-tiny" @click="accept(request.id, type)">
-                            Accept
-                        </div>
-                    </td>
-                    <td>
-                        <div class="btn btn-tiny" @click="decline(request.id, type)">
-                            Decline
-                        </div>
-                    </td>
-                </tr>
-            </template>
-        </table>
+        <div class='body'>
+            <table v-if="count">
+                <template v-for="(group, type) in requests" v-if="group.length">
+                    <tr>
+                        <td colspan="3">
+                            <h6>{{ capitalize(type) + 's' }}</h6>
+                        </td>
+                    </tr>
+                    <tr v-for="request in group">
+                        <td>
+                            <p v-if="type == 'friend'">
+                                {{ request.first_name }} {{ request.last_name }}
+                            </p>
+
+                            <p v-if="type == 'trip'">
+                                {{ request.name }}
+                            </p>
+                        </td>
+                        <td>
+                            <div class="btn btn-tiny" @click="accept(request.id, type)">
+                                Accept
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn btn-tiny" @click="decline(request.id, type)">
+                                Decline
+                            </div>
+                        </td>
+                    </tr>
+                </template>
+            </table>
+        </div>
     </div>
 </div>
-
-</div>
-
 </template>
-
 
 <script>
     export default {
 
-        props: {
-            data: { required: true }
+        data() {
+            return {
+                requests: {}
+            };
+        },
+
+        created() {
+            axios.get('/user/requests')
+            .then(response => {
+                this.requests = response.data;
+            });
+        },
+
+        computed: {
+            count() {
+                let count = 0;
+
+                for (let type in this.requests) {
+                    count += this.requests[type].length;
+                }
+
+                return count;
+            }
         },
 
         methods: {
@@ -69,17 +90,25 @@
                 return this.resolve(id, type, -1);
             },
 
+            goToProfile() {
+                window.location = '/profile';
+            },
+
             resolve(id, type, resolution) {
                 axios.post(`/${type}/${id}/resolveRequest`, {
                     resolution: resolution
                 })
                 .then(response => {
-                    this.$emit('refresh', response.data);
+                    this.requests = response.data;
                 }).catch(error => {
                     if (error.response.data.redirect) {
                         window.location = error.response.data.redirect;
                     }
                 });
+            },
+
+            showOnMenu() {
+                this.$emit('show', 'requests');
             }
         }
     }

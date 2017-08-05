@@ -1,15 +1,20 @@
 <template>
-    <div class="friend-preferences menu clearfix">
+    <div class="friend-preferences clearfix">
         <div class="status trigger">
             <p>
                 &#10004; Friends
                 <span class="caret">&#9660;</span>
             </p>
         </div>
-        <div class="body">
-            <div class="arw-up"></div>
-            <div class="invis"></div>
-            <p @click="unfriend"><a>Unfriend</a></p>
+        <div class="menu">
+            <div class="arw-up-right">
+                <div class="hovercatch"></div>
+                <div class="inner-shadow"></div>
+            </div>
+
+            <div class="body">
+                <p @click="unfriend"><a>Unfriend</a></p>
+            </div>
         </div>
     </div>
 </template>
