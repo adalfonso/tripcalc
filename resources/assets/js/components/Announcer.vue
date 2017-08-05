@@ -1,7 +1,10 @@
 <template>
     <div class="announcer clearfix">
 
-        <requests @show="showOnMenu"></requests>
+        <requests
+            @show="showOnMenu"
+            @hideMenus="hideForcefulMenus">
+        </requests>
 
         <notifications @show="showOnMenu"></notifications>
 
@@ -23,9 +26,7 @@ export default {
             let elem = document.getElementById(id);
             let show = !elem.classList.contains('showOnMenu');
 
-            document.querySelectorAll('.menu').forEach(item => {
-                item.classList.remove('showOnMenu');
-            });
+            this.hideForcefulMenus();
 
             if (!this.smallScreen && !forceful) {
                 return;
@@ -34,7 +35,15 @@ export default {
             if (show) {
                 bus.$emit('closeNav');
                 elem.classList.add('showOnMenu');
+                elem.querySelector('.hovercatch').style.display = 'none';
             }
+        },
+
+        hideForcefulMenus() {
+            document.querySelectorAll('.showOnMenu').forEach(item => {
+                item.classList.remove('showOnMenu');
+                item.querySelector('.hovercatch').style.display = '';
+            });
         }
     }
 }

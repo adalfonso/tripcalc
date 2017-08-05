@@ -2,7 +2,9 @@
 <div class="announcement request">
     <img src="/img/icon/profile-64x64.png" @click="goToProfile">
 
-    <div class="badge offset" v-if="count" @click.stop="showOnMenu">
+    <div class="badge offset" v-if="count"
+        @click.stop="showOnMenu"
+        @mouseover="$emit('hideMenus')">
         {{ count }}
     </div>
 

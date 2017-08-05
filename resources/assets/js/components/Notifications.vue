@@ -1,6 +1,6 @@
 <template>
 <div class="announcement notification">
-    <img src="/img/icon/paper_airplane-64x64.png">
+    <img src="/img/icon/paper_airplane-64x64.png" @click="showOnMenu(true)">
 
     <div class="badge offset"
         v-if="unseen"
