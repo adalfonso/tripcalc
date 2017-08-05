@@ -8,7 +8,7 @@
         {{ count }}
     </div>
 
-    <div class="menu medium" id="requests">
+    <div class="menu medium" id="requests" v-if="count">
 
         <div class="arw-up-left">
             <div class="hovercatch"></div>
@@ -33,12 +33,12 @@
                                 {{ request.name }}
                             </p>
                         </td>
-                        <td>
+                        <td class="resolve">
                             <div class="btn btn-tiny" @click="accept(request.id, type)">
                                 Accept
                             </div>
                         </td>
-                        <td>
+                        <td class="resolve">
                             <div class="btn btn-tiny" @click="decline(request.id, type)">
                                 Decline
                             </div>

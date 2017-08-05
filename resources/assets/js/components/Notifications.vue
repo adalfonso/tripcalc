@@ -9,7 +9,7 @@
         {{ unseen }}
     </div>
 
-    <div class="menu medium" id="notifications">
+    <div class="menu medium" id="notifications" v-if="notifications.count()">
 
         <div class="arw-up-left">
             <div class="hovercatch"></div>
@@ -101,10 +101,6 @@
             },
 
             showOnMenu(forceful = false) {
-                if (this.notifications.isEmpty()) {
-                    return;
-                }
-
                 this.$emit('show', 'notifications', forceful);
             }
         }

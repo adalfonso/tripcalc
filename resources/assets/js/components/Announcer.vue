@@ -24,6 +24,12 @@ export default {
     methods: {
         showOnMenu(id, forceful = false) {
             let elem = document.getElementById(id);
+
+            // In case there are no items
+            if (!elem) {
+                return;
+            }
+
             let show = !elem.classList.contains('showOnMenu');
 
             this.hideForcefulMenus();
