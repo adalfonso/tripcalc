@@ -1,19 +1,19 @@
 <?php namespace App\Http\Controllers;
 
-use App\Transaction;
-use App\Trip;
-use App\TripUserSetting;
-use App\User;
+use App\Library\Notification\Notifier;
 use App\Library\Trip\ActivityFeed;
+use App\Trip;
 use Auth;
+use Carbon\Carbon;
 use DB;
 use Hash;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use Response;
-use Validator;
+use App\User;
 
 class TripController extends Controller {
+
+    use Notifier;
 
     public function index () {
     	$trips = Auth::user()->activeTrips->sortByDesc('start_date');
@@ -27,7 +27,7 @@ class TripController extends Controller {
             $trip = Trip::create($request->all());
             $trip->users()->attach(Auth::user()->id, ['active' => 1]);
 
-            $settings = TripUserSetting::firstOrNew([
+            $settings = $trip->allUserSettings()->firstOrNew([
                 'trip_id' => $trip->id,
                 'user_id' => Auth::id()
             ]);
@@ -126,16 +126,7 @@ class TripController extends Controller {
 
         // Closeout is being initiated
         if (! $trip->closeoutPending) {
-            $notifications = $trip->users->map(function($user) use ($trip) {
-                $trip->notifications()->updateOrCreate(
-                    ['user_id' => $user->id, 'subtype' => 'closeout'],
-                    [
-                        'seen' => $user->id === Auth::id(),
-                        'created_at' => Carbon::now(),
-                        'created_by' => Auth::id()
-                    ]
-                );
-            });
+            $notifications = $trip->notifyOthersOnce('closeout');
         }
 
         $trip->userSettings->closeout = true;
@@ -210,8 +201,7 @@ class TripController extends Controller {
             );
 
         if ($request->resolution) {
-            $settings = TripUserSetting::firstOrCreate([
-                'trip_id' => $trip->id,
+            $trip->allUserSettings()->firstOrCreate([
                 'user_id' => Auth::id()
             ]);
         }

@@ -1,16 +1,18 @@
 <?php namespace App;
 
+use App\Library\Notification\Notifier;
 use App\Mail\PasswordReset;
+use Auth;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Mail;
-use Auth;
 
 class User extends Authenticatable {
 
-   // use CanResetPassword;
+ // use CanResetPassword;
+    use Notifier;
     use Notifiable;
 
     protected $fillable = [
@@ -52,6 +54,10 @@ class User extends Authenticatable {
 
     public function notifications() {
         return $this->hasMany('App\Notification');
+    }
+
+    public function notificationsAsModel() {
+        return $this->morphMany('App\Notification', 'notifiable');
     }
 
     public function getUnseenNotificationsAttribute() {

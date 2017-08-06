@@ -20,6 +20,7 @@
 
             <div v-for="notification in notifications.use()" v-if="notifications.count()">
                 <p :class="notification.seen ? 'unseen' : 'seen'">
+
                     <span v-if="isCloseout(notification)">
                         A closeout for
                         <b @click="visit('/trip/' + notification.notifiable_id)">
@@ -28,6 +29,22 @@
                         has been initiated <b>{{ notification.creator.first_name }}
                         {{ notification.creator.last_name }}</b>.
                     </span>
+
+                    <span v-if="isTripPost(notification)">
+                        <b>{{ notification.creator.first_name }} {{ notification.creator.last_name }}</b>
+                        has posted on
+                        <b @click="visit('/trip/' + notification.notifiable_id)">
+                            {{ notification.notifiable.name }}
+                        </b>.
+                    </span>
+
+                    <span v-if="isProfilePost(notification)">
+                        <b>{{ notification.creator.first_name }} {{ notification.creator.last_name }}</b>
+                        has posted on your <b @click="visit('/profile')">profile</b>.
+                    </span>
+
+                    <span class="announce-date">{{ notification.date }}</span>
+
                 </p>
             </div>
 
@@ -80,6 +97,16 @@
             isCloseout(notification) {
                 return notification.notifiable_type === 'App\\Trip'
                     && notification.subtype === 'closeout';
+            },
+
+            isTripPost(notification) {
+                return notification.notifiable_type === 'App\\Trip'
+                    && notification.subtype === 'post';
+            },
+
+            isProfilePost(notification) {
+                return notification.notifiable_type === 'App\\User'
+                    && notification.subtype === 'post';
             },
 
             visit(endpoint) {

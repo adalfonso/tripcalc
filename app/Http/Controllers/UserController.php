@@ -5,9 +5,9 @@ use App\User;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
+use Image;
 use Response;
 use Validator;
-use Image;
 
 class UserController extends Controller {
 
@@ -77,7 +77,11 @@ class UserController extends Controller {
 				->sortByDesc('created_at');
 		}
 
-		return $notifications->load('creator', 'notifiable');
+		return $notifications->load('creator', 'notifiable')
+
+		->each(function($note) {
+			$note->date = $note->created_at->diffForHumans();
+		})->values();
 	}
 
 	public function seeNotifications(Request $request) {

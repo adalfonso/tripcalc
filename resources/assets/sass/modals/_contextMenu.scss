@@ -51,6 +51,11 @@
 	        height: 32px;
 			width: 32px;
 	    }
+
+		.announce-date {
+			color: $smoke;
+			display: block;
+		}
 	}
 
 	.badge:hover + .menu {
@@ -227,7 +232,7 @@
 	}
 
 	.menu.medium {
-		min-width: 300px;
+		min-width: 400px;
 	}
 
 	.request {

@@ -11,6 +11,8 @@ class PostController extends Controller {
     public function storeForTrip(Trip $trip, Request $request) {
         $this->validate(request(), [ 'content' => 'required|max:255' ]);
         $post = $trip->posts()->create($request->all());
+
+        $trip->notifyOthers('post');
     }
 
 	public function updateForTrip(Trip $trip, Post $post, Request $request) {
@@ -25,6 +27,8 @@ class PostController extends Controller {
     public function storeForProfile(User $user, Request $request) {
         $this->validate(request(), [ 'content' => 'required|max:255' ]);
         $post = $user->profilePosts()->create($request->all());
+
+        $user->notifyDirectly('post');
     }
 
     public function updateForProfile(User $user, Post $post, Request $request) {

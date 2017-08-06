@@ -1,9 +1,12 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use \Carbon\Carbon;
+use App\Library\Notification\Notifier;
+use Carbon\Carbon;
 
 class Trip extends Model {
+
+	use Notifier;
 
 	protected $fillable = [
 		'name',
