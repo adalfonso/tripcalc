@@ -30,6 +30,12 @@
                         {{ notification.creator.last_name }}</b>.
                     </span>
 
+                    <span v-if="isClosed(notification)">
+                        <b @click="visit('/trip/' + notification.notifiable_id)">
+                            {{ notification.notifiable.name }}
+                        </b> is now officially closed.
+                    </span>
+
                     <span v-if="isTripPost(notification)">
                         <b>{{ notification.creator.first_name }} {{ notification.creator.last_name }}</b>
                         has posted on
@@ -97,6 +103,11 @@
             isCloseout(notification) {
                 return notification.notifiable_type === 'App\\Trip'
                     && notification.subtype === 'closeout';
+            },
+
+            isClosed(notification) {
+                return notification.notifiable_type === 'App\\Trip'
+                    && notification.subtype === 'closed';
             },
 
             isTripPost(notification) {

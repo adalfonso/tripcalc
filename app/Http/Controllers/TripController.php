@@ -136,6 +136,7 @@ class TripController extends Controller {
         if ($trip->fresh()->isClosedOut) {
             $trip->active = false;
             $trip->save();
+            $trip->notifyAll('closed');
         }
 
         return $trip->fresh()->state;

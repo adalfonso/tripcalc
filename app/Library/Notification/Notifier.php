@@ -19,6 +19,21 @@ trait Notifier {
     }
 
     /**
+     * Notiify everyone related to this model
+     * @param string
+     */
+    public function notifyAll($subtype = null) {
+        $this->users()->each(function($user) use ($subtype) {
+            $this->notifications()->create([
+                'subtype' => $subtype,
+                'user_id' => $user->id,
+            ]);
+        });
+
+        return $this;
+    }
+
+    /**
      * Notiify anyone related to this model
      * @param string
      */
