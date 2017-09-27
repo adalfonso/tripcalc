@@ -94,8 +94,16 @@ class User extends Authenticatable {
         $comparison = is_null($date) ? '<=' : '<';
         $date = is_null($date) ? Carbon::now() : Carbon::parse($date);
 
-        return $this->profilePosts->where('created_at', $comparison, $date)
-            ->sortByDesc('created_at')->take(15)
+        return $this->profilePosts()->where('created_at', $comparison, $date)
+            ->with('comments.user')
+            ->where('created_at', $comparison, $date)
+            ->orderBy('created_at', 'DESC')
+            ->limit(15)->get()
+            ->each(function($post) {
+                $post->comments->each(function($comment) {
+                    $comment->dateForHumans = $comment->diffForHumans;
+                });
+            })
             ->map(function($item) {
                 return (object) [
                     'type' => 'post',
@@ -104,7 +112,8 @@ class User extends Authenticatable {
                     'created_at' => $item->created_at,
                     'editable' => $item->created_by === \Auth::id(),
                     'content' => $item->content,
-                    'dateForHumans' => $item->created_at->diffForHumans()
+                    'dateForHumans' => $item->created_at->diffForHumans(),
+                    'comments' => $item->comments
                 ];
             })->values();
     }

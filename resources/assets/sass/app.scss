@@ -71,6 +71,14 @@ a, .fake-link {
     	color: $smoke;
         font-weight: normal;
     }
+
+	&.midnight{
+		color: $midnight;
+
+		&:hover {
+			color: $smoke;
+		}
+	}
 }
 
 h1, h2, h3, h4, h5, h6, p {
@@ -122,8 +130,8 @@ ul {
 }
 
 .align-right, .align-right > * { text-align: right; }
-.float-left,
-.floatable-left > *            { float: left; }
+.float-left                    { float: left; }
+.float-right                   { float: right; }
 .font-dark                     { color: $midnight; }
 .hidden, .delay-visible        { display: none; }
 .hovertext:hover               { opacity: .5; }
@@ -133,6 +141,7 @@ ul {
 .margin-top                    { margin-top: .6rem; }
 .marginless                    { margin: 0 !important; }
 .space-upper                   { margin: .6rem 0; }
+.spread						   { width: 100%; }
 .visible                       { display: block !important; }
 
 .section {

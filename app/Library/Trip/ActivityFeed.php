@@ -59,10 +59,16 @@ class ActivityFeed {
     }
 
     protected function posts() {
-        return $this->trip->posts
+        return $this->trip->posts()
+        ->with('comments.user')
         ->where('created_at', $this->dateComparison, $this->afterDate)
-        ->sortByDesc('created_at')
-        ->take($this->amount)
+        ->orderBy('created_at', 'DESC')
+        ->limit($this->amount)->get()
+        ->each(function($post) {
+            $post->comments->each(function($comment) {
+                $comment->dateForHumans = $comment->diffForHumans;
+            });
+        })
         ->map(function($post) {
             return $this->mapPosts($post);
         });
@@ -76,7 +82,8 @@ class ActivityFeed {
             'created_at' => $post->created_at,
             'editable' => $post->created_by === Auth::id(),
             'content' => $post->content,
-            'dateForHumans' => $post->created_at->diffForHumans()
+            'dateForHumans' => $post->created_at->diffForHumans(),
+            'comments' => $post->comments
         ];
     }
 

@@ -74,6 +74,22 @@ input.splitRatio {
 	width: 5.7rem;
 }
 
+.nested {
+	padding: 0 !important;
+
+	textarea {
+		border-radius: 0;
+		border-left: none;
+		border-right: none;
+		width: 100%;
+
+		&.last {
+			border-bottom: none;
+			margin-bottom: 0;
+		}
+	}
+}
+
 .toggleGroup {
 	display: table;
 	margin: 0 auto;

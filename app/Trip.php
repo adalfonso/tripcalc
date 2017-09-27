@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Library\Notification\Notifier;
 use Carbon\Carbon;
+use Auth;
 
 class Trip extends Model {
 
@@ -43,7 +44,7 @@ class Trip extends Model {
 
 	public function userSettings() {
 		return $this->hasOne('App\TripUserSetting')
-			->where('user_id', \Auth::id());
+			->where('user_id', Auth::id());
 	}
 
 	public function getIsClosedOutAttribute() {
@@ -60,6 +61,13 @@ class Trip extends Model {
 		return $settings->count() > $closeouts->count()
 		    && $closeouts->count() > 0;
 	}
+
+	public function getOthersAttribute() {
+        return $this
+            ->users()
+            ->where('id', '!=', Auth::id())
+            ->get();
+    }
 
 	public function getStateAttribute() {
 		if (!$this->active) {

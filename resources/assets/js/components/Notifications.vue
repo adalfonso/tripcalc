@@ -49,6 +49,17 @@
                         has posted on your <b @click="visit('/profile')">profile</b>.
                     </span>
 
+                    <span v-if="isComment(notification)">
+                        <b>{{ notification.creator.first_name }} {{ notification.creator.last_name }}</b>
+                        has replied to your
+                        <span v-if="createdByUser(notification)">
+                            post.
+                        </span>
+                        <span v-else>
+                            comment.
+                        </span>
+                    </span>
+
                     <span class="announce-date">{{ notification.date }}</span>
 
                 </p>
@@ -100,6 +111,10 @@
 
         methods: {
 
+            createdByUser(notification) {
+                return notification.notifiable.created_by === parseInt(userId);
+            },
+
             isCloseout(notification) {
                 return notification.notifiable_type === 'App\\Trip'
                     && notification.subtype === 'closeout';
@@ -108,6 +123,11 @@
             isClosed(notification) {
                 return notification.notifiable_type === 'App\\Trip'
                     && notification.subtype === 'closed';
+            },
+
+            isComment(notification) {
+                return notification.notifiable_type === 'App\\Post'
+                    && notification.subtype === 'comment';
             },
 
             isTripPost(notification) {

@@ -38,7 +38,7 @@ trait Notifier {
      * @param string
      */
     public function notifyOthers($subtype = null) {
-        $this->others()->each(function($user) use ($subtype) {
+        $this->others->each(function($user) use ($subtype) {
             $this->notifications()->create([
                 'subtype' => $subtype,
                 'user_id' => $user->id,
@@ -53,7 +53,7 @@ trait Notifier {
      * @param string
      */
     public function notifyOthersOnce($subtype = null) {
-        $this->others()->each(function($user) use ($subtype) {
+        $this->others->each(function($user) use ($subtype) {
             $this->notifications()->updateOrCreate([
                 'subtype' => $subtype,
                 'user_id' => $user->id,
@@ -64,16 +64,5 @@ trait Notifier {
         });
 
         return $this;
-    }
-
-    /**
-     * Get everyone realted to this model except the current user
-     * @return Illuminate\Database\Eloquent\Collection
-     */
-    protected function others() {
-        return $this
-            ->users()
-            ->where('id', '!=', Auth::id())
-            ->get();
     }
 }

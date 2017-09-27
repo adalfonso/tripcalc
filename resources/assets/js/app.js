@@ -9,6 +9,7 @@ window.axios = axios;
 window.Collect = Collect;
 window.Form = Form;
 window.Vue = Vue;
+window.userId = document.querySelector('[name="user-id"]').content;
 
 window.bus = new Vue();
 
