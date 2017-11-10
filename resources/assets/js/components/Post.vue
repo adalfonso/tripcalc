@@ -7,8 +7,7 @@
 		<div class="info">
 			<div class="clearfix">
 				<p class="float-left">
-					<strong>{{ data.dateForHumans }}</strong>
-					| {{ data.poster }}
+					<strong>{{ data.poster }}</strong>
 				</p>
 
 				<div class="float-right action-bar">
@@ -16,14 +15,20 @@
 						src="/img/icon/edit.png" @click="editPost()">
 				</div>
 			</div>
+			
+			<div class="date">{{ data.dateForHumans }}</div>
 
 			<p v-show="!editing">{{ data.content }}</p>
 
-			<form @submit.prevent="update">
+			<form class="edit-form" @submit.prevent="update">
 				<p class="ui-error" v-if="editForm.errors.has('content')"
 					v-text="editForm.errors.get('content')"></p>
-				<textarea v-if="editing" maxlength="255" class="plain placeholder-dark"
-					placeholder="Enter a message..." v-model="editForm.content">
+				<textarea
+					v-if="editing"
+					v-model="editForm.content"
+					autofocus
+					maxlength="255" class="plain placeholder-dark"
+					placeholder="Enter a message..." >
 				</textarea>
 
 				<div class="button-bar clearfix">
@@ -34,24 +39,14 @@
 			</form>
 
 			<template v-if="more">
-				<div class="comment clearfix"
+				<comment :data="comment"
 					v-for="comment in comments">
-					<p>
-						<a :href="'/profile/' +  comment.user.id" class="midnight">
-						{{ comment.user.first_name }}
-						{{ comment.user.last_name }}
-					</a>{{ comment.content }}, {{ comment.dateForHumans }}</p>
-				</div>
+				</comment>
 			</template>
 
-			<div class="comment clearfix"
-				v-else-if="comments.length">
-				<p>
-					<a :href="'/profile/' +  firstComment.user.username" class="midnight">
-					{{ firstComment.user.first_name }}
-					{{ firstComment.user.last_name }}
-				</a>{{ firstComment.content }}, {{ firstComment.dateForHumans }}</p>
-			</div>
+			<template v-else-if="comments.length">
+				<comment :data="firstComment"></comment>
+			</template>
 
 			<p class="more fake-link midnight"
 				v-if="showMore"
@@ -64,10 +59,11 @@
 					v-text="commentForm.errors.get('content')"></p>
 				<textarea maxlength="255"
 					style="height:2rem;"
-					class="plain placeholder-dark last"
+					class="plain placeholder-dark last enterComment"
 					placeholder="Enter a comment..."
 					v-model="commentForm.content"
-					@keydown.enter="comment">
+					@keyup.enter="comment"
+					@keyup="commentForm.errors.clear()">
 				</textarea>
 			</form>
 		</div>
@@ -121,6 +117,7 @@ methods: {
 		this.editForm.patch(`/${ this.type }/${ this.id }/post/${ this.data.id }`)
         .then(data => {
 			this.editing = false;
+			this.deletable = false;
 			this.data.content = this.editForm.content;
 			this.editForm.errors.clear();
 		})

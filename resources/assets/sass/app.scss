@@ -75,9 +75,13 @@ a, .fake-link {
 	&.midnight{
 		color: $midnight;
 
-		&:hover {
-			color: $smoke;
-		}
+		&:hover { color: $smoke; }
+	}
+
+	&.smoke{
+		color: $smoke;
+
+		&:hover { color: $midnight;	}
 	}
 }
 

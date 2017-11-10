@@ -40,7 +40,9 @@ class PostController extends Controller {
 
         $post->load('comments.user');
 
-        return $post->comments;
+        return $post->comments->each(function($comment) {
+            $comment->dateForHumans = $comment->diffForHumans;
+        });
     }
 
     public function storeForProfile(User $user, Request $request) {
@@ -49,7 +51,7 @@ class PostController extends Controller {
 
         if ($user->id !== Auth::id()) {
             $user->notifyDirectly('post');
-        }        
+        }
     }
 
     public function updateForProfile(User $user, Post $post, Request $request) {

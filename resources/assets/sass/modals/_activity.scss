@@ -12,11 +12,39 @@
 		}
 	}
 
-	.button-bar .btn {
-		display: block;
-		float: left;
-		margin: 0 .5rem .5rem 0;
-		padding: .25rem .6rem;
+	.date {
+		color: $smoke;
+		font-size: .75rem;
+		margin: 0 0 .75rem 0;
+		line-height: 1em;
+	}
+
+	.edit-form {
+		padding: 0 !important;
+
+		textarea {
+			border: 1px solid #bcd1e1;
+			border-left: none;
+			border-right: none;
+			border-radius: 0;
+		}
+
+		.button-bar {
+			padding: 0 .6rem;
+
+			.btn {
+				display: block;
+				float: left;
+				margin: 0 .5rem .5rem 0;
+				padding: .25rem .6rem;
+			}
+		}
+	}
+
+	.enterComment {
+		background: $paleBlueBorder;
+		border-bottom-left-radius: .2rem;
+		border-bottom-right-radius: .2rem;
 	}
 }
 
@@ -85,12 +113,17 @@
 	}
 
 	.comment {
-		background: $background;
 		border-top: 1px solid $paleBlueBorder;
+
 		color: $smoke;
 		overflow: auto;
 
-		p { font-size: 75%; }
+		p {
+			font-size: .8rem;
+
+			a { font-size: .77rem; }
+		}
+
 
 		&:last-child {
 			border-bottom-left-radius: .2rem;
@@ -99,6 +132,7 @@
 	}
 
 	.more {
+		border-top: 1px solid $paleBlueBorder;
 		font-size: .9rem;
 		font-weight: bold;
 		margin: 0;

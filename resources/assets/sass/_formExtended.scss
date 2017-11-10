@@ -90,6 +90,22 @@ input.splitRatio {
 	}
 }
 
+.post-form {
+	textarea {
+		float: left;
+		width: calc(100% - 2.5rem);
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	button {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+		height: 4rem;
+		width: 2.5rem;
+	}
+}
+
 .toggleGroup {
 	display: table;
 	margin: 0 auto;
@@ -221,6 +237,10 @@ input.splitRatio {
     	vertical-align: middle;
     	width: 2em;
     }
+}
+
+@media (max-width: 768px) {
+	.post-form { margin-top: 1.5rem }
 }
 
 @media (min-width: 768px) {

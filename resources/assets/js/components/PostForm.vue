@@ -1,20 +1,21 @@
-<style>
-    @media (max-width: 768px) {
-        .post-form { margin-top: 1.5rem }
-    }
-</style>
-
 <template>
     <form @submit.prevent="create" class="post-form">
 
         <!-- Content -->
-        <p class="ui-error" v-if="form.errors.has('content')" v-text="form.errors.get('content')"></p>
+        <p class="ui-error"
+            v-if="form.errors.has('content')"
+            v-text="form.errors.get('content')">
+        </p>
+
         <textarea maxlength="255" v-model="form.content"
             class="plain placeholder-dark" placeholder="Enter a message...">
         </textarea>
 
-         <button v-if="includeButton" @click.prevent="create" type="submit">Post</button>
-
+         <button v-if="includeButton"
+             @click.prevent="create"
+             type="submit">
+             &#10003;
+         </button>
     </form>
 </template>
 

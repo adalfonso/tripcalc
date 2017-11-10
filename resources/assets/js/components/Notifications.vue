@@ -112,7 +112,7 @@
         methods: {
 
             createdByUser(notification) {
-                return notification.notifiable.created_by === parseInt(userId);
+                return notification.created_by === parseInt(userId);
             },
 
             isCloseout(notification) {

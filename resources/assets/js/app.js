@@ -38,6 +38,7 @@ Vue.component('profile-photo', require('./components/ProfilePhoto.vue'));
 
 // Activity Feed
 Vue.component('activity-feed', require('./components/ActivityFeed.vue'));
+Vue.component('comment', require('./components/Comment.vue'));
 Vue.component('post-form', require('./components/PostForm.vue'));
 Vue.component('transaction', require('./components/Transaction.vue'));
 Vue.component('transaction-form', require('./components/TransactionForm.vue'));
