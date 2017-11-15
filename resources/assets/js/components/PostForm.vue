@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="create" class="post-form">
+    <form @submit.prevent="create" :class="'post-form ' + type">
 
         <!-- Content -->
         <p class="ui-error"
