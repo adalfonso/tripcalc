@@ -10,7 +10,7 @@ class Comment extends Model {
     public static function boot() {
         parent::boot();
 
-        static::saving(function($table) {
+        static::creating(function($table) {
             $table->created_by = Auth::id();
             $table->updated_by = Auth::id();
         });

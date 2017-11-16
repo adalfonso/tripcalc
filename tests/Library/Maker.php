@@ -81,6 +81,11 @@ class Maker {
     }
 
     public function trip() {
+        // Needs logged in user to create trip
+        if (!Auth::id()) {
+            Auth::loginUsingId(57);
+        }
+
         return Trip::create([
             'name'       => $this->faker->company,
             'budget'     => $this->faker->numberBetween(0, 1000),

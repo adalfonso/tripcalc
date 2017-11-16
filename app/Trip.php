@@ -19,6 +19,15 @@ class Trip extends Model {
 	];
 
 	public static function boot() {
+		static::creating(function($trip) {
+            $trip->created_by = Auth::id();
+            $trip->updated_by = Auth::id();
+        });
+
+        static::updating(function($trip) {
+            $trip->updated_by = Auth::id();
+        });
+
 		static::deleting(function($trip) {
 			$trip->notifications()->delete();
 			$trip->posts()->delete();

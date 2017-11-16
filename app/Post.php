@@ -14,7 +14,7 @@ class Post extends Model {
     public static function boot() {
         parent::boot();
 
-        static::saving(function($post) {
+        static::creating(function($post) {
             $post->created_by = Auth::id();
             $post->updated_by = Auth::id();
         });
