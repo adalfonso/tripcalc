@@ -77,9 +77,12 @@ class UserController extends Controller {
 				->sortByDesc('created_at');
 		}
 
-		return $notifications->load('creator', 'notifiable')
+		$notifications->load('creator', 'notifiable');
 
-		->each(function($note) {
+		$notifications->where('notifiable_type', 'App\Post')
+			->load('notifiable.comments', 'notifiable.user');
+
+		return $notifications->each(function($note) {
 			$note->date = $note->created_at->diffForHumans();
 		})->values();
 	}

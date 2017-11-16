@@ -18,6 +18,14 @@ class Trip extends Model {
 		'virtual_users'
 	];
 
+	public static function boot() {
+		static::deleting(function($trip) {
+			$trip->notifications()->delete();
+			$trip->posts()->delete();
+		});
+	}
+
+
 	public function posts() {
 		return $this->morphMany('App\Post', 'postable');
 	}

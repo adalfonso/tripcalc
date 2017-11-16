@@ -58,7 +58,6 @@ trait Notifier {
                 'subtype' => $subtype,
                 'user_id' => $user->id,
                 'seen' => $user->id === Auth::id(),
-                'created_at' => Carbon::now(),
                 'created_by' => Auth::id()
             ]);
         });

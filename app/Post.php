@@ -14,13 +14,17 @@ class Post extends Model {
     public static function boot() {
         parent::boot();
 
-        static::saving(function($table) {
-            $table->created_by = Auth::id();
-            $table->updated_by = Auth::id();
+        static::saving(function($post) {
+            $post->created_by = Auth::id();
+            $post->updated_by = Auth::id();
         });
 
-        static::updating(function($table) {
-            $table->updated_by = Auth::id();
+        static::updating(function($post) {
+            $post->updated_by = Auth::id();
+        });
+
+        static::deleting(function($post) {
+            $post->notifications()->delete();
         });
     }
 
@@ -41,13 +45,17 @@ class Post extends Model {
         return $this->belongsTo('App\User', 'created_by')
             ->select('id', 'first_name', 'last_name');
     }
-    
+
 
     public function getUsersAttribute() {
-        $this->load('user', 'comments.user');
+        $this->load('user', 'comments.user', 'postable');
+        $users = $this->comments->pluck('user')->push($this->user);
 
-        return $this->comments->pluck('user')
-            ->push($this->user)->unique();
+        if (class_basename($this->postable) === 'User') {
+            $users->push($this->postable);
+        }
+
+        return $users->unique();
     }
 
     public function getOthersAttribute() {

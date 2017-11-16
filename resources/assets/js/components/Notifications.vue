@@ -51,12 +51,23 @@
 
                     <span v-if="isComment(notification)">
                         <b>{{ notification.creator.first_name }} {{ notification.creator.last_name }}</b>
-                        has replied to your
-                        <span v-if="createdByUser(notification)">
-                            post.
+
+                        <span v-if="createdByUser(notification.notifiable)">
+                            has commented on your post.
                         </span>
+
+                        <span v-else-if="createdByNotifier(notification)">
+                            has commented on their post.
+                        </span>
+
+                        <span v-else-if="hasCommented(notification.notifiable)">
+                            has replied to your comment.
+                        </span>
+
                         <span v-else>
-                            comment.
+                            has commented on
+                            {{ notification.notifiable.user.first_name}}
+                            {{ notification.notifiable.user.last_name}}'s post.
                         </span>
                     </span>
 
@@ -110,9 +121,12 @@
         },
 
         methods: {
+            createdByNotifier(notification) {
+                return notification.created_by === notification.notifiable.created_by;
+            },
 
-            createdByUser(notification) {
-                return notification.created_by === parseInt(userId);
+            createdByUser(notifiable) {
+                return notifiable.created_by === userId;
             },
 
             isCloseout(notification) {
@@ -138,6 +152,11 @@
             isProfilePost(notification) {
                 return notification.notifiable_type === 'App\\User'
                     && notification.subtype === 'post';
+            },
+
+            hasCommented(notifiable) {
+                return new Collect(notifiable.comments)
+                    .where('created_by', userId).isNotEmpty();
             },
 
             visit(endpoint) {
