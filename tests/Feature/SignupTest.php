@@ -159,12 +159,15 @@ class SignupTest extends DuskTestCase {
     /** @test */
     public function it_migrates_pending_trips() {
 
+        $this->maker->login($this->maker->user());
+        Session::start();
+
         \App\PendingEmailTrip::create([
             'email'   => 'iosdufijefiesnfiuse@walkichaw.us',
             'trip_id' => 1
         ]);
 
-        Session::start();
+        \Auth::logout();
 
         $response = $this->post('/register', [
             '_token' => csrf_token(),
@@ -180,6 +183,7 @@ class SignupTest extends DuskTestCase {
         $user = \App\User::where('email', 'iosdufijefiesnfiuse@walkichaw.us')->first();
 
         $this->assertEquals(1, $user->trips->count());
+
         $this->assertEquals(0, $user->trips->first()->pivot->active);
     }
 
