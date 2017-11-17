@@ -56,7 +56,7 @@ class FriendController extends Controller {
             });
         }
 
-       	DB::Transaction(function() use ($emails, $ids){
+       	DB::transaction(function() use ($emails, $ids) {
             $this->inviteById($ids);
             $this->inviteByEmail($emails);
         });
