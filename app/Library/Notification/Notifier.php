@@ -2,17 +2,18 @@
 
 use Carbon\Carbon;
 use Auth;
+use App\User;
 
 trait Notifier {
 
     /**
-     * Notify this user directly
+     * Notify oen user
      * @param string
      */
-    public function notifyDirectly($subtype = null) {
-        $this->notificationsAsModel()->create([
+    public function notifyOne(User $user, $subtype = null) {
+        $this->notifications()->create([
             'subtype' => $subtype,
-            'user_id' => $this->id,
+            'user_id' => $user->id,
         ]);
 
         return $this;
@@ -44,6 +45,7 @@ trait Notifier {
                 'user_id' => $user->id,
             ]);
         });
+        dd($this->others);
 
         return $this;
     }

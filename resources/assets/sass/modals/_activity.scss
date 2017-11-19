@@ -138,6 +138,20 @@
 		padding: .25em;
 		text-align: center;
 	}
+
+	.ui-error {
+		margin-left: .5rem;
+    	font-size: .85rem;
+	}
+}
+
+#post-standalone {
+	.info {
+		border-radius: .2rem;
+		width: 100%;
+	}
+
+	.type { display: none; }
 }
 
 #profile-feed .activity-item {

@@ -28,7 +28,6 @@ class Post extends Model {
         });
     }
 
-
     public function comments() {
         return $this->hasMany('App\Comment');
     }
@@ -42,7 +41,7 @@ class Post extends Model {
     }
 
     public function user() {
-        return $this->belongsTo('App\User', 'created_by')
+    return $this->belongsTo('App\User', 'created_by')
             ->select('id', 'first_name', 'last_name');
     }
 

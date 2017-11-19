@@ -30,10 +30,12 @@ class Trip extends Model {
 
 		static::deleting(function($trip) {
 			$trip->notifications()->delete();
-			$trip->posts()->delete();
+
+			$trip->posts->each(function($post) {
+				$post->delete();
+			});
 		});
 	}
-
 
 	public function posts() {
 		return $this->morphMany('App\Post', 'postable');

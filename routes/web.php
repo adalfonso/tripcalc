@@ -91,6 +91,10 @@ Route::group(['middleware' => ['auth', 'activeAccount']], function() {
 		});
 	});
 
+	Route::group(['middleware' => 'canAccessPost'], function() {
+		Route::get('post/{post}', 'PostController@show');
+	});
+
 	// Trip Posts
 	Route::group(['middleware' => 'canAccessTrip'], function() {
 		Route::post('trip/{trip}/posts', 'PostController@storeForTrip');
@@ -124,6 +128,10 @@ Route::group(['middleware' => ['auth', 'activeAccount']], function() {
 
 // Placed at bottom. Conflicts with user/activation/pending and resend
 Route::get('user/activation/{token}', 'ActivationController@activateUser')->name('user.activate');
+
+Route::group(['middleware' => 'auth'], function() {
+	Route::get('user/{user}', 'UserController@profile');
+});
 
 Route::group(['middleware' => 'isAdmin'], function() {
 	Route::get('maintenance/loadHashtags', 'MaintenanceController@loadHashtags');

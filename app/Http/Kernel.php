@@ -58,6 +58,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 
         'activeAccount' => \App\Http\Middleware\ActiveAccount::class,
+        'canAccessPost' => \App\Http\Middleware\CanAccessPost::class,
         'canAccessTrip' => \App\Http\Middleware\CanAccessTrip::class,
         'hasActiveFriendshipWith' => \App\Http\Middleware\HasActiveFriendshipWith::class,
         'isCurrentUser' => \App\Http\Middleware\IsCurrentUser::class,

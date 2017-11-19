@@ -15,7 +15,7 @@
 						src="/img/icon/edit.png" @click="editPost()">
 				</div>
 			</div>
-			
+
 			<div class="date">{{ data.dateForHumans }}</div>
 
 			<p v-show="!editing">{{ data.content }}</p>
@@ -126,7 +126,11 @@ methods: {
 
 	deletePost() {
         this.editForm.delete(`/${ this.type }/${ this.id }/post/${ this.data.id }`)
-        .then(data => { window.location = window.location.href })
+        .then(data => {
+			return this.type === 'profile'
+				? window.location = '/user/' + this.id
+				: window.location = '/' + this.type + '/' + this.id;
+		})
         .catch(errors => {});
     },
 

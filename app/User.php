@@ -56,10 +56,6 @@ class User extends Authenticatable {
         return $this->hasMany('App\Notification');
     }
 
-    public function notificationsAsModel() {
-        return $this->morphMany('App\Notification', 'notifiable');
-    }
-
     public function getUnseenNotificationsAttribute() {
         return $this->hasMany('App\Notification')
             ->where('seen', false)
@@ -146,6 +142,10 @@ class User extends Authenticatable {
         $this->setRelation('friends', $this->mergeFriends());
 
         return $this->getRelation('friends');
+    }
+
+    public function isFriendsWith($friend) {
+        return $this->friends->where('id', $friend->id)->count();
     }
 
     public function getFullNameAttribute() {

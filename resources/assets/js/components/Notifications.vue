@@ -19,38 +19,47 @@
         <div class='body scroll scroll-midnight'>
 
             <div v-for="notification in notifications.use()" v-if="notifications.count()">
-                <p :class="notification.seen ? 'unseen' : 'seen'">
+                <p :class="notification.seen ? 'unseen' : 'seen'"
+                    @click="link(notification)">
 
                     <span v-if="isCloseout(notification)">
                         A closeout for
-                        <b @click="visit('/trip/' + notification.notifiable_id)">
-                            {{ notification.notifiable.name }}
-                        </b>
-                        has been initiated <b>{{ notification.creator.first_name }}
-                        {{ notification.creator.last_name }}</b>.
-                    </span>
-
-                    <span v-if="isClosed(notification)">
-                        <b @click="visit('/trip/' + notification.notifiable_id)">
-                            {{ notification.notifiable.name }}
-                        </b> is now officially closed.
-                    </span>
-
-                    <span v-if="isTripPost(notification)">
-                        <b>{{ notification.creator.first_name }} {{ notification.creator.last_name }}</b>
-                        has posted on
-                        <b @click="visit('/trip/' + notification.notifiable_id)">
-                            {{ notification.notifiable.name }}
+                        <b>{{ notification.notifiable.name }}</b>
+                        has been initiated by
+                        <b>
+                            {{ notification.creator.first_name }}
+                            {{ notification.creator.last_name }}
                         </b>.
                     </span>
 
-                    <span v-if="isProfilePost(notification)">
-                        <b>{{ notification.creator.first_name }} {{ notification.creator.last_name }}</b>
-                        has posted on your <b @click="visit('/profile')">profile</b>.
+                    <span v-if="isClosed(notification)">
+                        <b>{{ notification.notifiable.name }}</b>
+                        is now officially closed.
+                    </span>
+
+                    <span v-if="isPost(notification) && !isComment(notification)">
+                        <b>
+                            {{ notification.creator.first_name }}
+                            {{ notification.creator.last_name }}
+                        </b>
+
+                        <template v-if="isTripPost(notification)">
+                            has posted on
+                            <b @click.stop="visit('/trip/' + notification.notifiable.postable_id)">
+                                {{ notification.notifiable.postable.name }}</b>.
+                        </template>
+
+                        <template v-if="isProfilePost(notification)">
+                            has posted on your
+                            <b @click.stop="visit('/profile')">profile</b>.
+                        </template>
                     </span>
 
                     <span v-if="isComment(notification)">
-                        <b>{{ notification.creator.first_name }} {{ notification.creator.last_name }}</b>
+                        <b>
+                            {{ notification.creator.first_name }}
+                            {{ notification.creator.last_name }}
+                        </b>
 
                         <span v-if="createdByUser(notification.notifiable)">
                             has commented on your post.
@@ -72,7 +81,6 @@
                     </span>
 
                     <span class="announce-date">{{ notification.date }}</span>
-
                 </p>
             </div>
 
@@ -129,34 +137,47 @@
                 return notifiable.created_by === userId;
             },
 
+            isTrip(notification) {
+                return notification.notifiable_type === 'App\\Trip';
+            },
+
             isCloseout(notification) {
-                return notification.notifiable_type === 'App\\Trip'
-                    && notification.subtype === 'closeout';
+                return this.isTrip(notification) && notification.subtype === 'closeout';
             },
 
             isClosed(notification) {
-                return notification.notifiable_type === 'App\\Trip'
-                    && notification.subtype === 'closed';
+                return this.isTrip(notification) && notification.subtype === 'closed';
             },
 
             isComment(notification) {
-                return notification.notifiable_type === 'App\\Post'
-                    && notification.subtype === 'comment';
+                return this.isPost(notification) && notification.subtype === 'comment';
+            },
+
+            isPost(notification) {
+                return notification.notifiable_type === 'App\\Post';
             },
 
             isTripPost(notification) {
-                return notification.notifiable_type === 'App\\Trip'
-                    && notification.subtype === 'post';
+                return this.isPost(notification) && notification.subtype === 'trip';
             },
 
             isProfilePost(notification) {
-                return notification.notifiable_type === 'App\\User'
-                    && notification.subtype === 'post';
+                return this.isPost(notification) && notification.subtype === 'profile';
             },
 
             hasCommented(notifiable) {
                 return new Collect(notifiable.comments)
                     .where('created_by', userId).isNotEmpty();
+            },
+
+            link (notification) {
+                if (this.isTrip(notification)) {
+                    window.location = '/trip/' + notification.notifiable_id;
+                }
+
+                if (this.isPost(notification)) {
+                    window.location = '/post/' + notification.notifiable_id;
+                }
             },
 
             visit(endpoint) {

@@ -43,8 +43,8 @@ class UserController extends Controller {
     		'input' => 'required'
     	]);
 
-    	$results = DB::select("
-    		SELECT first_name, last_name, username
+    	$results = DB::select(
+    	   "SELECT first_name, last_name, username
 			FROM users
 			WHERE (
 				(first_name LIKE :input1 OR last_name LIKE :input2)
@@ -80,7 +80,11 @@ class UserController extends Controller {
 		$notifications->load('creator', 'notifiable');
 
 		$notifications->where('notifiable_type', 'App\Post')
-			->load('notifiable.comments', 'notifiable.user');
+			->load(
+				'notifiable.comments',
+				'notifiable.user',
+				'notifiable.postable'
+			);
 
 		return $notifications->each(function($note) {
 			$note->date = $note->created_at->diffForHumans();
@@ -92,6 +96,12 @@ class UserController extends Controller {
 			->notifications()
 			->whereIn('id', $request->seen)
 			->update(['seen' => true]);
+	}
+
+	public function profile(User $user) {
+		return $user->id === Auth::id()
+			? redirect('profile')
+			: redirect('profile/' . $user->username);
 	}
 
 	public function requests() {

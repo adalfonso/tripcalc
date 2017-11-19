@@ -57,7 +57,7 @@ methods: {
     create() {
         this.form.post(`/${ this.type }/${ this.id }/posts`)
         .then(data => {
-             window.location = window.location.href;
+            window.location = window.location.href;
         })
         .catch(errors => {});
     }
