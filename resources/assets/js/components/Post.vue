@@ -58,7 +58,6 @@
 				<p class="ui-error" v-if="commentForm.errors.has('content')"
 					v-text="commentForm.errors.get('content')"></p>
 				<textarea maxlength="255"
-					style="height:2rem;"
 					class="plain placeholder-dark last enterComment"
 					placeholder="Enter a comment..."
 					v-model="commentForm.content"

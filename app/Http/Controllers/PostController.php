@@ -15,6 +15,10 @@ class PostController extends Controller {
         $isOwner = $post->postable_type === 'App\User'
             && $post->postable_id === \Auth::id();
 
+        $post->comments->each(function($comment) {
+            $comment->dateForHumans = $comment->diffForHumans;
+        });
+
         $mapped = (object) [
             'type' => 'post',
             'id' => $post->id,
