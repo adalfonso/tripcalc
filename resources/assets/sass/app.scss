@@ -255,8 +255,6 @@ ul {
 	}
 }
 
-
-
 @media (min-width: 1016px) {
 	#main {
 		width: 1000px;
@@ -284,7 +282,7 @@ ul {
 
 	.left-col, .right-col { float: left; }
 
-	.left-col {
+	.left-col,  {
 		margin: 0 2% 0 0;
 		width: 38%;
 	}
@@ -306,4 +304,8 @@ ul {
 		#name { float: left; }
 		#dateRange { float: right; }
 	}
+}
+
+@media (max-width: 768px) {
+	.single-col { margin: .6rem; }
 }

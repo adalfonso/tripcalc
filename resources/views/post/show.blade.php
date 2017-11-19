@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-	<div id="post-standalone" class="activity-item">
+	<div id="post-standalone" class="activity-item single-col">
 		<post :data="data"
 			:id="id"
 			:type="type"

@@ -134,7 +134,11 @@ methods: {
         .catch(errors => {});
     },
 
-	comment() {
+	comment($event) {
+		if (event.shiftKey) {
+            return;
+        }
+
 		this.commentForm.post(`/${ this.type }/${ this.id }/post/${ this.data.id }/comment`)
         .then(data => {
 			this.commentForm.content = '';

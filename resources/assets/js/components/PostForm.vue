@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="create" :class="'post-form ' + type">
+    <form @submit.prevent="submit" :class="'post-form ' + type">
 
         <!-- Content -->
         <p class="ui-error"
@@ -7,12 +7,16 @@
             v-text="form.errors.get('content')">
         </p>
 
-        <textarea maxlength="255" v-model="form.content"
-            class="plain placeholder-dark" placeholder="Enter a message...">
+        <textarea maxlength="255"
+            class="plain placeholder-dark"
+            placeholder="Enter a message..."
+            v-model="form.content"
+            @keyup.enter="submit"
+            @keyup="form.errors.clear()">
         </textarea>
 
          <button v-if="includeButton"
-             @click.prevent="create"
+             @click.prevent="submit"
              type="submit">
              &#10003;
          </button>
@@ -32,7 +36,7 @@ props: {
 
 created() {
     bus.$on('submit', () => {
-        return this.create();
+        return this.submit();
     });
 },
 
@@ -54,7 +58,11 @@ methods: {
         return false;
     },
 
-    create() {
+    submit($event) {
+        if (event.shiftKey) {
+            return;    
+        }
+
         this.form.post(`/${ this.type }/${ this.id }/posts`)
         .then(data => {
             window.location = window.location.href;
