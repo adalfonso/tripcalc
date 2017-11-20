@@ -9,7 +9,7 @@ use Auth;
 class PostController extends Controller {
 
     public function show(Post $post) {
-        $post->load('comments.user', 'postable', 'user');
+        $post->load('comments.user', 'comments.post', 'postable', 'user');
         $base = strtolower(class_basename($post->postable));
 		$type = $base === 'user' ? 'profile' : $base;
         $isOwner = $post->postable_type === 'App\User'
@@ -38,9 +38,11 @@ class PostController extends Controller {
         $post->comments()->create($request->all());
         $post->notifyOthersOnce('comment');
 
-        $post->load('comments.user');
+        $post->load('comments.user', 'comments.post');
 
-        return $post->comments;
+         return $post->comments->each(function($comment) {
+            $comment->dateForHumans = $comment->diffForHumans;
+        });
     }
 
     public function storeForTrip(Trip $trip, Request $request) {
@@ -69,7 +71,7 @@ class PostController extends Controller {
         $post->comments()->create($request->all());
         $post->notifyOthersOnce('comment');
 
-        $post->load('comments.user');
+        $post->load('comments.user', 'comments.post');
 
         return $post->comments->each(function($comment) {
             $comment->dateForHumans = $comment->diffForHumans;

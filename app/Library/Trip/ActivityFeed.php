@@ -60,7 +60,7 @@ class ActivityFeed {
 
     protected function posts() {
         return $this->trip->posts()
-        ->with('comments.user')
+        ->with('comments.user', 'comments.post')
         ->where('created_at', $this->dateComparison, $this->afterDate)
         ->orderBy('created_at', 'DESC')
         ->limit($this->amount)->get()

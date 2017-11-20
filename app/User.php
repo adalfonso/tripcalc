@@ -91,7 +91,7 @@ class User extends Authenticatable {
         $date = is_null($date) ? Carbon::now() : Carbon::parse($date);
 
         return $this->profilePosts()->where('created_at', $comparison, $date)
-            ->with('comments.user')
+            ->with('comments.user', 'comments.post')
             ->where('created_at', $comparison, $date)
             ->orderBy('created_at', 'DESC')
             ->limit(15)->get()

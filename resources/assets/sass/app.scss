@@ -133,6 +133,22 @@ ul {
 	visibility: hidden;
 }
 
+.close {
+	color: $midnight;
+	height: 1rem; width: 1rem;
+	line-height: 1rem;
+	text-align: center;
+	transition: .3s;
+	user-select: none;
+
+	&::before {
+		content: "\00d7";
+		font-size: 1.75rem;
+	}
+
+	&:hover { opacity: .5; }
+}
+
 .align-right, .align-right > * { text-align: right; }
 .float-left                    { float: left; }
 .float-right                   { float: right; }

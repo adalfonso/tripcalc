@@ -117,8 +117,10 @@
 
 	.comment {
 		border-top: 1px solid $paleBlueBorder;
-
 		color: $smoke;
+		padding: 0;
+
+		.header, .body { padding: 0 .6rem; }
 
 		p {
 			font-size: .8rem;
@@ -126,11 +128,29 @@
 			a { font-size: .77rem; }
 		}
 
+		textarea { font-size: .8rem; }
+
+
+		&:hover .btn-edit, &:hover .close {
+			opacity: 1;
+			visibility: visible;
+		}
 
 		&:last-child {
 			border-bottom-left-radius: .2rem;
 			border-bottom-right-radius: .2rem;
 		}
+
+		.btn-edit, .close {
+			opacity: 0;
+			visibility: hidden;
+		}
+
+		.date {
+			margin: 0 0 .5rem 0;
+		}
+
+
 	}
 
 	.more {

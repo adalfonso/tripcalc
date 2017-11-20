@@ -38,20 +38,16 @@
 				</div>
 			</form>
 
-			<template v-if="more">
-				<comment :data="comment"
-					v-for="comment in comments">
-				</comment>
-			</template>
-
-			<template v-else-if="comments.length">
-				<comment :data="firstComment"></comment>
-			</template>
+			<comment :data="comment"
+				v-for="(comment, index) in comments.use()"
+				v-show="index === 0 || more"
+				@delete="removeComment(index)">
+			</comment>
 
 			<p class="more fake-link midnight"
 				v-if="showMore"
 				@click="more = true">
-				{{ comments.length - 1 }} more replies
+				{{ comments.count() - 1 }} more replies
 			</p>
 
 			<form @submit.prevent="comment" class="nested">
@@ -71,7 +67,6 @@
 
 <script>
 import Form from '../lib/Form.js';
-import DatePicker from '../lib/DatePicker.js';
 
 export default {
 
@@ -87,19 +82,15 @@ data() {
 		editing: false,
 		deletable: false,
 		more: false,
-		comments: this.data.comments,
+		comments: new Collect(this.data.comments),
         editForm: new Form({ content: '' }),
 		commentForm: new Form({ content: '' })
     };
 },
 
 computed: {
-	firstComment() {
-		return this.comments[0];
-	},
-
 	showMore() {
-		return this.comments.length > 1 && !this.more;
+		return this.comments.count() > 1 && !this.more;
 	}
 },
 
@@ -142,9 +133,24 @@ methods: {
         .then(data => {
 			this.commentForm.content = '';
 			this.commentForm.errors.clear();
-			this.comments = data;
+			this.comments = new Collect(data);
 		})
         .catch(errors => {});
+	},
+
+	removeComment(index) {
+		this.comments.forget(index);
+
+		let temp = this.comments;
+		this.comments = new Collect([]);
+
+		setTimeout(() => {
+			this.comments = temp;
+		}, 1);
+
+		if (temp.count() <= 1) {
+			this.more = false;
+		}
 	}
 }
 

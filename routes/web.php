@@ -91,6 +91,14 @@ Route::group(['middleware' => ['auth', 'activeAccount']], function() {
 		});
 	});
 
+	Route::group(['middleware' => 'ownsComment'], function() {
+		Route::patch('comment/{comment}', 'CommentController@update');
+	});
+
+	Route::group(['middleware' => 'canDeleteComment'], function() {
+		Route::delete('comment/{comment}', 'CommentController@destroy');
+	});
+
 	Route::group(['middleware' => 'canAccessPost'], function() {
 		Route::get('post/{post}', 'PostController@show');
 	});
