@@ -9,28 +9,15 @@ use Auth;
 class PostController extends Controller {
 
     public function show(Post $post) {
-        $post->load('comments.user', 'comments.post', 'postable', 'user');
+        $post->load('comments.user', 'comments.post', 'postable', 'user')->map();
         $base = strtolower(class_basename($post->postable));
 		$type = $base === 'user' ? 'profile' : $base;
-        $isOwner = $post->postable_type === 'App\User'
-            && $post->postable_id === \Auth::id();
 
         $post->comments->each(function($comment) {
             $comment->dateForHumans = $comment->diffForHumans;
         });
 
-        $mapped = (object) [
-            'type' => 'post',
-            'id' => $post->id,
-            'poster' => $post->user->fullname,
-            'created_at' => $post->created_at,
-            'editable' => $post->created_by === Auth::id(),
-            'content' => $post->content,
-            'dateForHumans' => $post->created_at->diffForHumans(),
-            'comments' => $post->comments
-        ];
-
-        return view('post.show', compact('mapped', 'post', 'type', 'isOwner'));
+        return view('post.show', compact('post', 'type'));
     }
 
     public function commentOnTrip(Trip $trip, Post $post, Request $request) {

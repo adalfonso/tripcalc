@@ -5,20 +5,27 @@
 		</div>
 
 		<div class="info">
-			<div class="clearfix">
-				<p class="float-left">
-					<strong>{{ data.poster }}</strong>
-				</p>
+			<div class="post">
+				<div class="clearfix">
+					<p class="float-left">
+						<strong>{{ data.poster }}</strong>
+					</p>
 
-				<div class="float-right action-bar">
-					<img class="btn-edit" v-if="data.editable || isOwner"
-						src="/img/icon/edit.png" @click="editPost()">
+					<div class="float-right action-bar">
+		                <img class="btn-edit" v-if="editable"
+		                    src="/img/icon/edit.png" @click="edit">
+
+		                <div class="btn-edit close"
+		                    v-else-if="deleteOnly"
+		                    @click="deleting = true">
+		                </div>
+		            </div>
 				</div>
+
+				<div class="date">{{ data.dateForHumans }}</div>
+
+				<p v-show="!editing">{{ data.content }}</p>
 			</div>
-
-			<div class="date">{{ data.dateForHumans }}</div>
-
-			<p v-show="!editing">{{ data.content }}</p>
 
 			<form class="edit-form" @submit.prevent="update">
 				<p class="ui-error" v-if="editForm.errors.has('content')"
@@ -31,11 +38,29 @@
 					placeholder="Enter a message..." >
 				</textarea>
 
-				<div class="button-bar clearfix">
-					<button class="btn" v-if="editing && data.editable">Update</button>
-					<div class="btn" v-if="editing" @click="deletable = true">Delete</div>
-					<div class="btn" v-if="deletable" @click="deletePost">Are you sure?</div>
-				</div>
+	            <div class="button-bar clearfix">
+	                <button class="btn" v-if="editing">
+	                    Update
+	                </button>
+
+	                <div class="btn"
+	                    v-if="editing && !deleting"
+	                    @click="deleting = true">
+	                    Delete
+	                </div>
+
+                    <div class="btn"
+						v-if="deleting || editing"
+						@click="cancel">
+                        Cancel
+                    </div>
+
+                    <div class="btn"
+						v-if="deleting"
+						@click="deletePost">
+                        Are you sure?
+                    </div>
+	            </div>
 			</form>
 
 			<comment :data="comment"
@@ -72,18 +97,16 @@ export default {
 
 props: {
 	data: { default: {} },
-	id: { required: true },
-	type: { required: true },
-	isOwner: { default: 0 }
+	type: { required: true }
 },
 
 data() {
     return {
 		editing: false,
-		deletable: false,
+		deleting: false,
 		more: false,
 		comments: new Collect(this.data.comments),
-        editForm: new Form({ content: '' }),
+        editForm: new Form({ content: this.data.content }),
 		commentForm: new Form({ content: '' })
     };
 },
@@ -91,20 +114,32 @@ data() {
 computed: {
 	showMore() {
 		return this.comments.count() > 1 && !this.more;
+	},
+
+	editable() {
+		return this.data.created_by === userId;
+	},
+
+	deleteOnly() {
+		return this.data.postable_type === 'App\\User'
+			&& this.data.postable_id === userId
 	}
 },
 
 methods: {
-	editPost() {
-		this.editing = !this.editing;
+	edit() {
+		this.editing = true;
+	},
 
-		this.editing
-			? this.editForm.content = this.data.content
-			: this.deletable = false;
+	cancel() {
+		this.deleting = false;
+		this.editing = false;
+		this.editForm.content = this.data.content;
 	},
 
     update() {
-		this.editForm.patch(`/${ this.type }/${ this.id }/post/${ this.data.id }`)
+		let id = this.data.postable_id;
+		this.editForm.patch(`/${this.type}/${id}/post/${this.data.id}`)
         .then(data => {
 			this.editing = false;
 			this.deletable = false;
@@ -115,21 +150,23 @@ methods: {
     },
 
 	deletePost() {
-        this.editForm.delete(`/${ this.type }/${ this.id }/post/${ this.data.id }`)
+		let id = this.data.postable_id;
+        this.editForm.delete(`/${this.type}/${id}/post/${this.data.id}`)
         .then(data => {
 			return this.type === 'profile'
-				? window.location = '/user/' + this.id
-				: window.location = '/' + this.type + '/' + this.id;
+				? window.location = '/user/' + id
+				: window.location = '/' + this.type + '/' + id;
 		})
         .catch(errors => {});
     },
 
 	comment($event) {
+		let id = this.data.postable_id;
 		if (event.shiftKey) {
             return;
         }
 
-		this.commentForm.post(`/${ this.type }/${ this.id }/post/${ this.data.id }/comment`)
+		this.commentForm.post(`/${this.type}/${id}/post/${this.data.id}/comment`)
         .then(data => {
 			this.commentForm.content = '';
 			this.commentForm.errors.clear();

@@ -115,6 +115,18 @@
 		}
 	}
 
+	.post {
+		&:hover .btn-edit, &:hover .close {
+			opacity: 1;
+			visibility: visible;
+		}
+		
+		.btn-edit, .close {
+			opacity: 0;
+			visibility: hidden;
+		}
+	}
+
 	.comment {
 		border-top: 1px solid $paleBlueBorder;
 		color: $smoke;
@@ -149,8 +161,6 @@
 		.date {
 			margin: 0 0 .5rem 0;
 		}
-
-
 	}
 
 	.more {

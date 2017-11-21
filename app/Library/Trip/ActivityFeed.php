@@ -8,14 +8,10 @@ use Carbon\Carbon;
 class ActivityFeed {
 
     // Period after
-    protected $afterDate;
-
-    protected $dateComparison = '<=';
-
     protected $activities;
-
+    protected $afterDate;
     protected $amount = 15;
-
+    protected $dateComparison = '<=';
     protected $trip;
 
     public function __construct(Trip $trip) {
@@ -60,7 +56,7 @@ class ActivityFeed {
 
     protected function posts() {
         return $this->trip->posts()
-        ->with('comments.user', 'comments.post')
+        ->with('comments.user', 'comments.post', 'postable')
         ->where('created_at', $this->dateComparison, $this->afterDate)
         ->orderBy('created_at', 'DESC')
         ->limit($this->amount)->get()
@@ -70,21 +66,8 @@ class ActivityFeed {
             });
         })
         ->map(function($post) {
-            return $this->mapPosts($post);
+            return $post->map();
         });
-    }
-
-    protected function mapPosts($post) {
-        return (object) [
-            'type' => 'post',
-            'id' => $post->id,
-            'poster' => $post->user->fullname,
-            'created_at' => $post->created_at,
-            'editable' => $post->created_by === Auth::id(),
-            'content' => $post->content,
-            'dateForHumans' => $post->created_at->diffForHumans(),
-            'comments' => $post->comments
-        ];
     }
 
     protected function mapTransactions($transaction) {

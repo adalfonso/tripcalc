@@ -16,7 +16,7 @@
 
             <!-- Post -->
             <div v-else>
-        		<post :data="item" :id="trip_id" :type="'trip'"></post>
+        		<post :data="item" :type="'trip'"></post>
             </div>
 
     	</div>

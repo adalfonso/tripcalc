@@ -41,10 +41,17 @@ class Post extends Model {
     }
 
     public function user() {
-    return $this->belongsTo('App\User', 'created_by')
+        return $this->belongsTo('App\User', 'created_by')
             ->select('id', 'first_name', 'last_name');
     }
 
+    public function map() {
+        $this->type  = 'post';
+        $this->poster = $this->user->fullname;
+        $this->dateForHumans = $this->created_at->diffForHumans();
+
+        return $this;
+    }
 
     public function getUsersAttribute() {
         $this->load('user', 'comments.user', 'postable');
