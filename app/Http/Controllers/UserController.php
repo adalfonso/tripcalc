@@ -63,18 +63,32 @@ class UserController extends Controller {
     	return $results;
     }
 
-	public function notifications() {
-		$notifications = Auth::user()->unseenNotifications;
+	public function notifications(Request $request) {
+		$min = 10; $load = 5;
 
-		if ($notifications->count() < 5) {
-			$more = Auth::user()->notifications()
+		if ($request->has('last')) {
+			$lastDate = \Carbon\Carbon::parse($request->last['created_at']);
+
+			$notifications = Auth::user()->notifications()
 				->orderBy('created_at', 'desc')
-				->limit(5)->get();
+				->where('created_at', '<=', $lastDate)
+				->where('id', '!=', $request->last['id'])
+				->limit($load)
+				->get();
 
-			$notifications = $notifications
-				->merge($more)
-				->unique('id')
-				->sortByDesc('created_at');
+		} else {
+			$notifications = Auth::user()->unseenNotifications;
+
+			if ($notifications->count() < $min) {
+				$more = Auth::user()->notifications()
+					->orderBy('created_at', 'desc')
+					->limit($min)->get();
+
+				$notifications = $notifications
+					->merge($more)
+					->unique('id')
+					->sortByDesc('created_at');
+			}
 		}
 
 		$notifications->load('creator', 'notifiable');

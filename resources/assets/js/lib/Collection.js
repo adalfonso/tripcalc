@@ -188,6 +188,12 @@ class Collection {
 		);
     }
 
+    merge(data) {
+        return data instanceof Collection
+            ? new Collection(this.data.concat(data.data))
+            : new Collection(this.data.concat(data));
+    }
+
 	put(item, index) {
 		this.data.splice(index, 0, item);
 	}

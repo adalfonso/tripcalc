@@ -9,14 +9,14 @@
         {{ unseen }}
     </div>
 
-    <div class="menu medium" id="notifications" v-if="notifications.count()">
+    <div class="menu medium" id="notifications" v-if="notifications.count() || loading">
 
         <div class="arw-up-left">
             <div class="hovercatch"></div>
             <div :class="shadowClass"></div>
         </div>
 
-        <div class='body scroll scroll-midnight'>
+        <div class='body scroll scroll-midnight' ref="scroll">
 
             <div v-for="notification in notifications.use()" v-if="notifications.count()">
                 <p :class="notification.seen ? 'unseen' : 'seen'"
@@ -95,15 +95,22 @@
 
         data() {
             return {
-                notifications: new Collect([])
+                notifications: new Collect([]),
+                loading: true,
+                scrollTimeout : null
             };
         },
 
         created() {
-            axios.get('/user/notifications')
+            axios.post('/user/notifications')
             .then(response => {
                 this.notifications = new Collect(response.data);
+                this.loading = false;
             });
+        },
+
+        mounted() {
+            this.$refs.scroll.addEventListener('scroll', this.scroll);
         },
 
         computed: {
@@ -196,6 +203,38 @@
                 })
                 .then(response => {})
                 .catch(error => {});
+            },
+
+            more() {
+                axios.post('/user/notifications', {
+                    last: this.notifications.last()
+                })
+                .then(response => {
+                    if (response.data.length === 0) {
+                        return;
+                    }
+
+                    this.notifications = this.notifications.merge(response.data);
+                });
+            },
+
+            scroll() {
+                clearInterval(this.scrollTimeout);
+
+                this.scrollTimeout = setTimeout(() => {
+                    this.checkPagePosition();
+                }, 400);
+            },
+
+            checkPagePosition() {
+
+                let elem = this.$refs.scroll;
+                let scrollAmount = elem.scrollTop;
+                let maximumScroll = elem.scrollHeight - elem.clientHeight;
+
+                if (scrollAmount / maximumScroll >= .95) {
+                    this.more();
+                }
             },
 
             showOnMenu(forceful = false) {
