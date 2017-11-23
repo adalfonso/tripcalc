@@ -91,13 +91,15 @@
 </template>
 
 <script>
+    import ScrollTracker from '../lib/ScrollTracker.js';
+
     export default {
 
         data() {
             return {
                 notifications: new Collect([]),
                 loading: true,
-                scrollTimeout : null
+                tracker: ''
             };
         },
 
@@ -110,7 +112,7 @@
         },
 
         mounted() {
-            this.$refs.scroll.addEventListener('scroll', this.scroll);
+            this.tracker = new ScrollTracker(this.$refs.scroll, this.more);
         },
 
         computed: {
@@ -216,25 +218,6 @@
 
                     this.notifications = this.notifications.merge(response.data);
                 });
-            },
-
-            scroll() {
-                clearInterval(this.scrollTimeout);
-
-                this.scrollTimeout = setTimeout(() => {
-                    this.checkPagePosition();
-                }, 400);
-            },
-
-            checkPagePosition() {
-
-                let elem = this.$refs.scroll;
-                let scrollAmount = elem.scrollTop;
-                let maximumScroll = elem.scrollHeight - elem.clientHeight;
-
-                if (scrollAmount / maximumScroll >= .95) {
-                    this.more();
-                }
             },
 
             showOnMenu(forceful = false) {

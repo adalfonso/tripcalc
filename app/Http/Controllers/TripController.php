@@ -68,7 +68,7 @@ class TripController extends Controller {
 
     public function activities(Trip $trip, Request $request) {
         return (new ActivityFeed($trip))->after(
-            Carbon::parse($request->oldestDate['date'])
+            Carbon::parse($request->oldestDate)
         )->take(15);
     }
 

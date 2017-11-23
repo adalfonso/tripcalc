@@ -76,7 +76,7 @@ class ActivityFeed {
             'id' => $transaction->id,
             'creator' => $transaction->creator->fullname,
             'updater' => $transaction->updater->fullname,
-            'created_at' => $transaction->created_at,
+            'created_at' => $transaction->created_at->toDateTimeString(),
             'date' => $transaction->dateFormat,
             'dateForHumans' => $transaction->created_at->diffForHumans(),
             'updatedDateForHumans' => $transaction->updated_at->diffForHumans(),

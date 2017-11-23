@@ -8,47 +8,30 @@
 
 <script>
 
+import ScrollTracker from '../lib/ScrollTracker.js';
+
 export default {
 
 props: {
     feed: { default: {} },
+    id: { required: true }
 },
 
 data() {
     return {
-        scrollTimeout : null,
-        localFeed: {}
+        localFeed: this.feed,
+        tracker: ''
     };
 },
 
-created() {
-    window.addEventListener('scroll', this.scroll);
-
-    this.localFeed = this.feed;
+mounted() {
+    this.tracker = new ScrollTracker(window, this.more);
 },
 
 methods: {
-    scroll() {
-        clearInterval(this.scrollTimeout);
-
-        this.scrollTimeout = setTimeout(() => {
-            this.checkPagePosition();
-        }, 400);
-    },
-
-    checkPagePosition() {
-        let element = document.querySelector('body');
-        let scrollAmount = element.scrollTop;
-        let maximumScroll = element.scrollHeight - element.clientHeight;
-
-        if (scrollAmount / maximumScroll >= .95) {
-            this.growActivityFeed();
-        }
-    },
-
-    growActivityFeed() {
+    more() {
         axios.post(`/profile/${this.id}/posts/fetch`, {
-            oldestDate: this.localFeed[this.localFeed.length - 1].created_at.date
+            oldestDate: this.localFeed[this.localFeed.length - 1].created_at
 
         }).then(response => {
             if (response.data.length === 0) {

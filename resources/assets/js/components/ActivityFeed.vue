@@ -25,6 +25,8 @@
 
 <script>
 
+import ScrollTracker from '../lib/ScrollTracker.js';
+
 export default {
 
 props: {
@@ -35,14 +37,13 @@ props: {
 
 data() {
     return {
-        scrollTimeout : null,
-
         transactionForm: {
             id      : null,
             visible : false
         },
 
-        localFeed: {}
+        localFeed: this.feed,
+        tracker: ''
     };
 },
 
@@ -54,10 +55,10 @@ created() {
 	bus.$on('closeModals', () => {
 		this.hideTransactionForm();
 	});
+},
 
-    window.addEventListener('scroll', this.scroll);
-
-    this.localFeed = this.feed;
+mounted() {
+    this.tracker = new ScrollTracker(window, this.more.bind(this));
 },
 
 methods: {
@@ -72,25 +73,7 @@ methods: {
         this.transactionForm.visible = false;
     },
 
-    scroll() {
-        clearInterval(this.scrollTimeout);
-
-        this.scrollTimeout = setTimeout(() => {
-            this.checkPagePosition();
-        }, 400);
-    },
-
-    checkPagePosition() {
-        let element = document.querySelector('body');
-        let scrollAmount = element.scrollTop;
-        let maximumScroll = element.scrollHeight - element.clientHeight;
-
-        if (scrollAmount / maximumScroll >= .95) {
-            this.growActivityFeed();
-        }
-    },
-
-    growActivityFeed() {
+    more() {
         axios.post(`/trip/${this.trip_id}/activities`, {
             oldestDate: this.localFeed[this.localFeed.length - 1].created_at
 
