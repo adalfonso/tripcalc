@@ -39,7 +39,7 @@
 
 		{{-- Other User's Profile--}}
 		@elseif (Auth::user()->activated)
-			@if (! empty($friendship))
+			@if ($friendship)
 				@if ($friendship->confirmed == 0)
 					@if($friendship->requester_id == $profile->id)
 						<div class="centered">
@@ -71,11 +71,16 @@
 	<div id="profile-feed" class="right-col section">
 		<h3>Profile Feed</h3>
 
-		<post-form ref="post" :id="{{ $profile->id }}" :type="'profile'"></post-form>
 
-		<profile-feed :id="{{ $profile->id }}" :feed="{{ json_encode($posts) }}"
-			:is-owner="{{ $profile->id === Auth::id() ? 1 : 0 }}">
-		</profile-feed>
+		@if ($profile->isCurrentUser() || ($friendship && $friendship->confirmed))
+			<post-form ref="post" :id="{{ $profile->id }}" :type="'profile'"></post-form>
+
+			<profile-feed :id="{{ $profile->id }}" :feed="{{ json_encode($posts) }}"
+				:is-owner="{{ $profile->id === Auth::id() ? 1 : 0 }}">
+			</profile-feed>
+		@else
+			{{ $profile->first_name }}'s content is only available to friends.
+		@endif
 
 	</div>
 </div>
