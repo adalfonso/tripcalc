@@ -20,6 +20,7 @@
             </div>
 
     	</div>
+        <loading v-if="busy"></loading>
     </div>
 </template>
 
@@ -43,7 +44,8 @@ data() {
         },
 
         localFeed: this.feed,
-        tracker: ''
+        tracker: null,
+        busy: false
     };
 },
 
@@ -58,7 +60,7 @@ created() {
 },
 
 mounted() {
-    this.tracker = new ScrollTracker(window, this.more.bind(this));
+    this.tracker = new ScrollTracker(document.querySelector('#app'), this.more.bind(this));
 },
 
 methods: {
@@ -74,15 +76,20 @@ methods: {
     },
 
     more() {
+        this.busy = true;
         axios.post(`/trip/${this.trip_id}/activities`, {
             oldestDate: this.localFeed[this.localFeed.length - 1].created_at
 
         }).then(response => {
+            this.busy = false;
             if (response.data.length === 0) {
                 return;
             }
 
             this.localFeed = this.localFeed.concat(response.data);
+        })
+        .catch(error => {
+            this.busy = false;
         });
     }
 }

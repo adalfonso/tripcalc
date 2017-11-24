@@ -6,7 +6,6 @@ class ScrollTracker {
 
         this.threshold = .95;
         this.timeout = 300;
-        this.timer = setTimeout(() => {}, 0);
 
         this.elem.addEventListener('scroll', this.scroll.bind(this));
     }

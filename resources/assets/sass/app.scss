@@ -181,6 +181,11 @@ ul {
 	text-align: center;
 }
 
+#app {
+	height: 100%; width: 100%;
+	overflow: auto;
+}
+
 #main {
 	max-width: none;
 	width: 100%;
@@ -226,13 +231,19 @@ ul {
 	border-bottom-color: #A3B6C5;
 	border-left-color: $paleBlue;
 	border-radius: 50%;
-	height: 2.4rem; width: 2.4rem;
+	height: 2.5rem; width: 2.5rem;
 	position: absolute;
-	top: calc(50% - .9rem); left: calc(50% - .9rem);
+	top: calc(50% - 1.25rem); left: calc(50% - 1.25rem);
 	z-index: 6;
 	-webkit-animation:spin 1.5s linear infinite;
     -moz-animation:spin 1.5s linear infinite;
     animation:spin 1.5s linear infinite;
+
+	&.stationary {
+		margin-top: 1rem;
+		position: relative;
+		top: auto;
+	}
 }
 
 // Trip List
