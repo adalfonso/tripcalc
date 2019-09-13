@@ -1,5 +1,15 @@
 <div id="stats" class="left-col section clearfix">
 
+	@if ($trip->active)
+		<div class="flex">
+			<div class="btn btn-tiny invite-to-trip" v-cloak
+				@click="showInviteFriendsForm">
+				+ Invite Friends to Trip
+			</div>
+		</div>
+	@endif
+
+
 	@if(!$trip->description && !$trip->budget && $sum === 0)
 		<p>No stats to show yet.</p>
 	@endif

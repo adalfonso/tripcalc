@@ -36,21 +36,20 @@
 
 	<div class="trip-header clearfix">
 		<div class="clearfix">
-		<h3 id="name">
-			{{ $trip->name }}
+			<h3 id="name">
+				{{ $trip->name }}
 
 
 				<div class="badge-plain" v-if="closeoutState === 'closed'" v-cloak>
 					Closed Out
 				</div>
+			</h3>
 
-		</h3>
-
-		@if ($trip->start_date != "00/00/0000")
-			<h6 id="dateRange">
-				<strong>{{ $trip->dateRange }}</strong>
-			</h6>
-		@endif
+			@if ($trip->start_date != "00/00/0000")
+				<h6 id="dateRange">
+					<strong>{{ $trip->dateRange }}</strong>
+				</h6>
+			@endif
 		</div>
 
 		<h6 class="marginless" v-if="closeoutState === 'closing'" v-cloak>
@@ -85,7 +84,7 @@
 
 				menuItems: [
 					{
-						display: 'Invite Friends',
+						display: '+ Invite Friends to Trip',
 						active: {{ $trip->active }},
 						emit: 'invite'
 					},
